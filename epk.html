@@ -117,7 +117,7 @@ const up = [...shows.filter(s => s.d && s.d >= today).sort((a,b) => a.d - b.d), 
 const past = shows.filter(s => s.d && s.d < today).sort((a,b) => b.d - a.d);
 const other = shows.filter(s => !s.d && !s.recurring);
 const row = (s, tag) => '<li><span class="d">'+(s.d ? String(s.d.getDate()).padStart(2,'0')+' '+MON[s.d.getMonth()]+' '+s.d.getFullYear() : esc(s.recurring || s.when || '—'))+'</span>'+
-  '<span class="n">'+esc(s.name)+(s.with ? ' (b2b '+esc(s.with)+')' : '')+'</span>'+
+  '<span class="n">'+esc(s.tag ? s.name + ' — ' + s.tag : s.name)+(s.with ? ' (b2b '+esc(s.with)+')' : '')+'</span>'+
   '<span class="w">'+[s.venue, s.city, TYPES[s.type]].filter(Boolean).map(esc).join(' · ')+(tag ? ' · '+tag : '')+'</span></li>';
 $('shows').innerHTML = up.map(s => row(s, s.recurring ? 'WEEKLY' : 'UPCOMING')).join('') + past.map(s => row(s)).join('') + other.map(s => row(s)).join('');
 

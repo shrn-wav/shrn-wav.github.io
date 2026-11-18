@@ -123,7 +123,7 @@ section{padding:110px var(--gut);position:relative;border-top:1px solid var(--li
 @media(max-width:760px){.gig{grid-template-columns:86px 1fr;gap:6px 16px;}.g-loc{grid-column:2;text-align:left;}}
 
 /* ---------- 02 archive tapes ---------- */
-.dig{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;align-items:center;margin-top:30px;}
+.dig{display:grid;grid-template-columns:380px 360px;justify-content:center;gap:64px;align-items:center;margin-top:30px;}
 .crate{position:relative;height:360px;perspective:1000px;perspective-origin:50% 10%;outline:none;touch-action:pan-y;user-select:none;-webkit-user-select:none;}
 .crate.dragging{cursor:grabbing;}
 .crate .tape{position:absolute;left:50%;bottom:40px;width:300px;margin-left:-150px;transform-origin:50% 100%;will-change:transform;}
@@ -168,7 +168,8 @@ section{padding:110px var(--gut);position:relative;border-top:1px solid var(--li
 .scwrap{height:0;overflow:hidden;}
 .scwrap iframe{width:100%;height:120px;border:0;}
 .flyer{position:fixed;z-index:8600;pointer-events:none;transition:transform .7s cubic-bezier(.5,0,.2,1);}
-@media(max-width:900px){.dig{grid-template-columns:1fr;}.crate{height:320px;}}
+@media(max-width:900px){.dig{grid-template-columns:minmax(0,380px);gap:36px;}.crate{height:320px;}}
+.crate::before{content:'';position:absolute;left:8%;right:8%;bottom:18px;height:46px;background:radial-gradient(ellipse at center,rgba(209,250,29,.2),transparent 70%);filter:blur(8px);pointer-events:none;}
 @media(max-width:420px){.crate .tape{width:260px;margin-left:-130px;}.crate .cas{transform:scale(.87);transform-origin:50% 100%;}}
 
 /* ---------- 03 been there ---------- */
@@ -220,7 +221,7 @@ section{padding:110px var(--gut);position:relative;border-top:1px solid var(--li
 .gal button:hover img{transform:scale(1.04);}
 
 /* ---------- booking ---------- */
-.book{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:6vw;margin-top:30px;align-items:start;}
+.book{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:6vw;margin-top:30px;align-items:end;}
 .book .mail{font-size:12px;color:var(--muted);}
 .book .mail a{color:var(--acid);border-bottom:1px solid var(--acid-dim);}
 form{display:flex;flex-direction:column;gap:10px;}
@@ -250,8 +251,8 @@ textarea{min-height:110px;resize:vertical;}
 @media(max-width:420px){.nav-r .btn{padding:9px 9px;font-size:9px;letter-spacing:.1em;}nav .icon img{height:32px;}}
 
 /* ---------- crate scrollbar ---------- */
-.crate-wrap{position:relative;padding-right:46px;}
-.crate-bar{position:absolute;right:0;top:20px;bottom:30px;width:30px;display:flex;flex-direction:column;align-items:center;gap:8px;touch-action:none;}
+.crate-wrap{position:relative;padding-left:44px;}
+.crate-bar{position:absolute;left:0;top:20px;bottom:30px;width:30px;display:flex;flex-direction:column;align-items:center;gap:8px;touch-action:none;}
 .crate-bar .lbl{font-size:9px;letter-spacing:.2em;color:var(--acid-dim);writing-mode:vertical-rl;}
 .crate-bar .track{position:relative;flex:1;width:8px;background:var(--line);border:1px solid var(--line2);border-radius:8px;cursor:pointer;}
 .crate-bar .thumb{position:absolute;left:-5px;right:-5px;top:0;height:40px;background:var(--acid);border-radius:8px;box-shadow:0 0 14px rgba(209,250,29,.45);cursor:grab;}
@@ -291,10 +292,36 @@ textarea{min-height:110px;resize:vertical;}
 .st-frame{width:auto;height:min(76vh,calc((100vw - 170px) * 16 / 9));aspect-ratio:9/16;border-radius:12px;}
 .st-tap{top:0;bottom:0;}
 .st-ig{position:static;transform:none;align-self:center;}
-.st-arrow{width:56px;height:56px;border-radius:50%;border:1px solid var(--acid);color:var(--acid);background:var(--ink);font-size:22px;flex-shrink:0;transition:background .15s,color .15s,opacity .2s;}
-.st-arrow:hover{background:var(--acid);color:var(--ink);}
-.st-arrow[disabled]{opacity:.2;pointer-events:none;}
-@media(max-width:600px){#story{gap:0;padding:10px;}.st-frame{height:min(70vh,calc((100vw - 20px) * 16 / 9));}.st-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:46px;height:46px;background:rgba(5,5,5,.75);}.st-arrow.l{left:6px;}.st-arrow.r{right:6px;}}
+/* comic arrows: chunky sticker arrows poking out of the story's edges */
+#story{gap:0;padding:16px 100px;}
+.st-stage{position:relative;}
+.st-arrow{position:absolute;top:50%;width:118px;height:80px;margin-top:-40px;z-index:4;padding:0;background:none;border:0;transition:opacity .2s;}
+.st-arrow.l{left:-80px;} .st-arrow.r{right:-80px;}
+.st-arrow svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(5px 6px 0 #5f7210);transition:transform .18s cubic-bezier(.3,1.8,.5,1);}
+.st-arrow path{fill:var(--acid);stroke:var(--ink);stroke-width:5;stroke-linejoin:round;}
+.st-arrow .shine{fill:none;stroke:#f4ffc4;stroke-width:4;stroke-linecap:round;}
+.st-arrow.r svg{animation:nudgeR 1.4s ease-in-out infinite;}
+.st-arrow.l svg{transform:scaleX(-1);animation:nudgeL 1.4s ease-in-out infinite;}
+.st-arrow.r:hover svg{animation:none;transform:translateX(12px) rotate(-7deg) scale(1.14);}
+.st-arrow.l:hover svg{animation:none;transform:scaleX(-1) translateX(12px) rotate(-7deg) scale(1.14);}
+.st-arrow.r:active svg{transform:translateX(20px) scale(.9);}
+.st-arrow.l:active svg{transform:scaleX(-1) translateX(20px) scale(.9);}
+@keyframes nudgeR{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(8px) rotate(-4deg)}}
+@keyframes nudgeL{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}50%{transform:scaleX(-1) translateX(8px) rotate(-4deg)}}
+.st-arrow[disabled]{opacity:.15;pointer-events:none;}
+@media(max-width:600px){#story{padding:10px 36px;}.st-frame{height:min(70vh,calc((100vw - 72px) * 16 / 9));}.st-arrow{width:78px;height:54px;margin-top:-27px;}.st-arrow.l{left:-50px;}.st-arrow.r{right:-50px;}}
+
+/* matte finish: posters and story frames sit in the site's black + chartreuse duotone; full color on hover */
+.card.pic > img{filter:grayscale(1) contrast(1.15) brightness(.62);transition:filter .35s,transform .4s;}
+.card.pic::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:var(--acid);mix-blend-mode:multiply;opacity:.5;transition:opacity .35s;}
+.card.pic:hover > img{filter:none;}
+.card.pic:hover::before{opacity:0;}
+.card.type.pic > img.bg{filter:grayscale(1) contrast(1.1) brightness(.4);}
+.card.type.pic:hover > img.bg{filter:grayscale(.1) brightness(.5);}
+.card .ov{z-index:2;}
+.card .zoom{z-index:3;}
+.card.type > div{z-index:2;}
+.card .tg{color:var(--acid-mid);font-size:11px;letter-spacing:.08em;}
 
 /* one Highlights button per show card */
 .hlb{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;padding:3px 12px 3px 3px;border-radius:999px;background:rgba(5,5,5,.65);border:1px solid var(--acid-dim);transition:border-color .2s,background .2s;}
@@ -339,8 +366,8 @@ textarea{min-height:110px;resize:vertical;}
 #lbX{top:16px;right:16px;} #lbP{left:16px;top:50%;} #lbN{right:16px;top:50%;}
 
 /* ---------- footer ---------- */
-footer{padding:60px var(--gut) 130px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-end;font-size:10px;letter-spacing:.16em;color:var(--muted);}
-footer .flogo{width:min(220px,60vw);}
+footer{padding:60px var(--gut) 130px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:24px;flex-wrap:wrap;align-items:center;font-size:10px;letter-spacing:.16em;color:var(--muted);}
+footer .flogo{width:min(170px,45vw);}
 #egg{opacity:.35;font-size:10px;letter-spacing:.16em;margin-left:14px;}
 #egg:hover{opacity:1;color:var(--acid);}
 
@@ -434,7 +461,7 @@ footer .flogo{width:min(220px,60vw);}
   </div>
 </section>
 
-<section id="gallery">
+<section id="gallery" hidden>
   <h2 class="title" id="galleryTitle"></h2>
   <p class="cap" id="galleryCap" hidden></p>
   <div class="gal" id="gal" aria-label="Gallery. Drag sideways to browse."></div>
@@ -444,7 +471,6 @@ footer .flogo{width:min(220px,60vw);}
   <h2 class="title" id="bookingTitle"></h2>
   <p class="cap big" id="bookingCap"></p>
   <div class="book">
-    <p class="mail">or email <a id="mailLink" href="#"></a></p>
     <form name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="bookForm">
       <input type="hidden" name="form-name" value="booking">
       <p class="sr"><label>Leave empty <input name="bot-field"></label></p>
@@ -464,6 +490,7 @@ footer .flogo{width:min(220px,60vw);}
       <button class="btn p" type="submit" id="sendBtn"></button>
       <div class="status" id="formStatus" role="status"></div>
     </form>
+    <p class="mail">or email <a id="mailLink" href="#"></a></p>
   </div>
 </section>
 
@@ -508,19 +535,21 @@ footer .flogo{width:min(220px,60vw);}
 </div>
 
 <div id="story" role="dialog" aria-modal="true" aria-label="Highlights viewer">
-  <button class="st-arrow l" id="stPrevBtn" aria-label="Previous story">←</button>
   <div class="st-col">
     <div class="st-top">
       <div class="st-bars" id="stBars"></div>
       <div class="st-head"><img id="stAv" alt=""><b id="stTitle"></b><span class="sp"></span><button id="stMute" aria-label="Sound on or off">🔇</button><button id="stX" aria-label="Close">✕</button></div>
     </div>
-    <div class="st-frame">
-      <div class="st-media" id="stMedia"></div>
-      <button class="st-tap l" id="stPrev" aria-label="Previous"></button><button class="st-tap r" id="stNext" aria-label="Next"></button>
+    <div class="st-stage">
+      <div class="st-frame">
+        <div class="st-media" id="stMedia"></div>
+        <button class="st-tap l" id="stPrev" aria-label="Previous"></button><button class="st-tap r" id="stNext" aria-label="Next"></button>
+      </div>
+      <button class="st-arrow l" id="stPrevBtn" aria-label="Previous story"><svg viewBox="0 0 120 80" aria-hidden="true"><path d="M10 25 Q5 25 5 30 L5 50 Q5 55 10 55 L60 55 L60 71 Q60 79 67 75 L112 45 Q118 40 112 35 L67 5 Q60 1 60 9 L60 25 Z"/><path class="shine" d="M14 33 L48 33 M70 18 L96 36"/></svg></button>
+      <button class="st-arrow r" id="stNextBtn" aria-label="Next story"><svg viewBox="0 0 120 80" aria-hidden="true"><path d="M10 25 Q5 25 5 30 L5 50 Q5 55 10 55 L60 55 L60 71 Q60 79 67 75 L112 45 Q118 40 112 35 L67 5 Q60 1 60 9 L60 25 Z"/><path class="shine" d="M14 33 L48 33 M70 18 L96 36"/></svg></button>
     </div>
     <a class="st-ig" id="stIg" target="_blank" rel="noopener">VIEW ON INSTAGRAM ↗</a>
   </div>
-  <button class="st-arrow r" id="stNextBtn" aria-label="Next story">→</button>
 </div>
 
 <div id="pad" role="dialog" aria-modal="true" aria-label="Hidden drum machine">
@@ -555,7 +584,7 @@ addEventListener('mouseover', e => {
 });
 
 /* ---------- nav ---------- */
-const NAV = [['#board','UPCOMING'], ['#tapes','ARCHIVE TAPES'], ['#been','BEEN THERE'], ['#about','ABOUT'], ['#gallery','GALLERY'], ['#socials','SOCIALS']];
+const NAV = [['#board','UPCOMING'], ['#tapes','ARCHIVE TAPES'], ['#been','BEEN THERE'], ['#about','ABOUT'], ['#socials','SOCIALS']];
 $('#navLinks').innerHTML = NAV.map(([h,l]) => '<a href="' + h + '">' + l + '</a>').join('');
 const nav = $('#nav');
 
@@ -769,7 +798,7 @@ const past = shows.filter(s => s.d && s.d < today).sort((a,b) => b.d - a.d);
 const dShort = s => s.d ? DAY[s.d.getDay()] + ' ' + String(s.d.getMonth()+1).padStart(2,'0') + '.' + String(s.d.getDate()).padStart(2,'0') : 'EVERY ' + (s.day || '');
 
 /* ---------- strip ---------- */
-const stripItem = s => { const w = (s.venue || s.city || '').toUpperCase(), n = s.name.toUpperCase(); return dShort(s) + ' · ' + n + (w && w !== n ? ' @ ' + w : ''); };
+const stripItem = s => { const w = (s.venue || s.city || '').toUpperCase(), n = (s.tag || s.name).toUpperCase(); return dShort(s) + ' · ' + n + (w && w !== n ? ' @ ' + w : ''); };
 $('#stripIn').textContent = (upcoming.map(stripItem).join('   ✦   ') + '   ✦   ').repeat(upcoming.length < 3 ? 8 : 4);
 
 /* ---------- titles + captions ---------- */
@@ -800,7 +829,7 @@ if (boardWords.length > 1 && !REDUCE) new IntersectionObserver(es => {
 const bc = $('#boardCap'); bc.textContent = B.cap || ''; bc.hidden = !B.cap;
 $('#gigs').innerHTML = upcoming.length ? upcoming.slice(0, 8).map(s => {
   const date = s.d ? '<b>' + String(s.d.getDate()).padStart(2,'0') + '</b><span>' + MON[s.d.getMonth()] + ' · ' + DAY[s.d.getDay()] + '</span>' : '<b>' + esc(s.day || '∞') + '</b><span>EVERY WEEK</span>';
-  return '<div class="gig"><div class="g-date">' + date + '</div><div class="g-main"><h3>' + esc(s.name) + '</h3>' + (s.with ? '<span class="b2b">B2B ' + esc(s.with).toUpperCase() + '</span>' : '') + '</div><div class="g-loc">' + esc(s.venue || s.city || '') + (s.venue && s.city ? '<small>' + esc(s.city) + '</small>' : '') + '</div></div>';
+  return '<div class="gig"><div class="g-date">' + date + '</div><div class="g-main"><h3>' + esc(s.tag || s.name) + '</h3>' + (s.with ? '<span class="b2b">B2B ' + esc(s.with).toUpperCase() + '</span>' : '') + '</div><div class="g-loc">' + esc(s.venue || s.city || '') + (s.venue && s.city ? '<small>' + esc(s.city) + '</small>' : '') + '</div></div>';
 }).join('') : '<div class="gig"><div class="g-date"><b>—</b></div><div class="g-main"><h3>New dates dropping soon</h3></div><div class="g-loc"></div></div>';
 
 /* =====================================================================
@@ -1017,16 +1046,19 @@ const cityKey = s => {
 };
 const groups = (() => { const m = new Map(); past.forEach(s => { const k = cityKey(s); if (!m.has(k)) m.set(k, []); m.get(k).push(s); }); return [...m.entries()].sort((a,b) => b[1].length - a[1].length); })();
 const TYPES = {club:'CLUB', popup:'POP-UP', radio:'RADIO', stream:'STREAM', festival:'FESTIVAL', competition:'COMPETITION'};
-/* each show card: tap the card (or its Highlights button) to watch that show's highlights */
+/* each show card: title + one tagline (always present, so every card lines up).
+   Tap the card (or its Highlights button) to watch that show's highlights. */
 const thumbOf = u => u.replace(/\.[^.\/]+$/, '.thumb.jpg');
 const hlBtn = st => st.length ? '<span class="hlb" aria-hidden="true"><span class="sc"><img src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy"></span><span class="hlt">HIGHLIGHTS<i>' + st.length + '</i></span></span>' : '';
+const showLabel = s => s.tag ? s.name + ' — ' + s.tag : s.name;
 const cardHTML = (s, n) => {
-  const g = s.gallery || [], st = (s.stories || []).filter(Boolean), date = String(s.d.getDate()).padStart(2,'0') + ' ' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear();
-  const meta = [s.venue && s.venue !== s.name ? s.venue : '', s.with ? 'b2b ' + s.with : ''].filter(Boolean).map(esc).join(' · ');
+  const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
+  const date = String(s.d.getDate()).padStart(2,'0') + ' ' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear();
+  const tag = '<small class="tg">' + (s.tag ? esc(s.tag) : '&nbsp;') + '</small>';
   const delay = ' style="animation-delay:' + Math.min(n, 12)*45 + 'ms"';
-  const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(s.name) + (st.length ? ', watch highlights' : ', view poster') + '"' : '';
-  if (g.length) return '<div class="card"' + act + delay + '><img src="' + esc(g[0]) + '" alt="" loading="lazy">' + (st.length ? '' : '<span class="zoom">VIEW</span>') + '<div class="ov">' + hlBtn(st) + '<span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
-  return '<div class="card type"' + act + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + ' · ' + (TYPES[s.type] || '') + '</div></div><div>' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
+  const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(showLabel(s)) + (st.length ? ', watch highlights' : ', view poster') + '"' : '';
+  if (g.length) return '<div class="card pic"' + act + delay + '><img src="' + esc(g[0]) + '" alt="" loading="lazy">' + (st.length ? '' : '<span class="zoom">VIEW</span>') + '<div class="ov">' + hlBtn(st) + '<span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + tag + '</div></div>';
+  return '<div class="card type' + (st.length ? ' pic' : '') + '"' + act + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div><div>' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + tag + '</div></div>';
 };
 const tabs = $('#cityTabs'), cards = $('#cards');
 tabs.innerHTML = groups.map(([c,l],k) => '<button role="tab" aria-selected="' + (k===0) + '"' + (k===0 ? ' class="on"' : '') + ' data-k="' + k + '">' + esc(c.split(',')[0].toUpperCase()) + '<sup>' + l.length + '</sup></button>').join('');
@@ -1034,7 +1066,7 @@ const showCity = k => { $$('button', tabs).forEach((b,j) => { b.classList.toggle
 tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCity(+b.dataset.k); });
 const openShow = s => {
   const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
-  if (st.length) openStory([{title: s.name, cover: thumbOf(st[0]), items: [...g.slice(0, 1), ...st], instagram: s.instagram || ''}], 0);
+  if (st.length) openStory([{title: showLabel(s), cover: thumbOf(st[0]), items: [...g.slice(0, 1), ...st], instagram: s.instagram || ''}], 0);
   else if (g.length) openLB(g, 0);
 };
 cards.addEventListener('click', e => { const c = e.target.closest('.card[data-show]'); if (c) openShow(shows[+c.dataset.show]); });

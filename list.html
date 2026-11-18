@@ -60,7 +60,7 @@ if ((S.buttons || {}).join) $('b').textContent = S.buttons.join;
 const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 const today = new Date(); today.setHours(0,0,0,0);
 const nx = S.shows.filter(s => s.date).map(s => { const [y,m,d] = s.date.split('-').map(Number); return {...s, d:new Date(y,m-1,d)}; }).filter(s => s.d >= today).sort((a,b) => a.d - b.d)[0];
-if (nx) $('next').innerHTML = 'NEXT UP: <b>' + MON[nx.d.getMonth()] + ' ' + nx.d.getDate() + ' · ' + esc(nx.name).toUpperCase() + '</b>' + (nx.venue && nx.venue !== nx.name ? ' @ ' + esc(nx.venue).toUpperCase() : '');
+if (nx) $('next').innerHTML = 'NEXT UP: <b>' + MON[nx.d.getMonth()] + ' ' + nx.d.getDate() + ' · ' + esc(nx.tag || nx.name).toUpperCase() + '</b>' + (nx.venue && nx.venue !== (nx.tag || nx.name) ? ' @ ' + esc(nx.venue).toUpperCase() : '');
 const f = $('f'), st = $('status');
 f.addEventListener('submit', async e => {
   e.preventDefault();

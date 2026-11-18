@@ -59,7 +59,7 @@ const next = S.shows.filter(s => s.date).map(s => { const [y,m,d] = s.date.split
 if (next) {
   const n = document.getElementById('next');
   n.hidden = false;
-  n.innerHTML = '<div class="day">'+String(next.d.getDate()).padStart(2,'0')+'</div><div><small>NEXT SHOW · '+MON[next.d.getMonth()]+' '+next.d.getFullYear()+'</small><b>'+esc(next.name)+(next.with?' b2b '+esc(next.with):'')+'</b><span>'+[next.venue,next.city].filter(Boolean).map(esc).join(' · ')+'</span></div>';
+  n.innerHTML = '<div class="day">'+String(next.d.getDate()).padStart(2,'0')+'</div><div><small>NEXT SHOW · '+MON[next.d.getMonth()]+' '+next.d.getFullYear()+'</small><b>'+esc(next.tag || next.name)+(next.with?' b2b '+esc(next.with):'')+'</b><span>'+[next.venue,next.city].filter(Boolean).map(esc).join(' · ')+'</span></div>';
 }
 const soc = document.getElementById('soc');
 soc.innerHTML = S.socials.filter(s => s.active).map(s => s.url
