@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$H₹N — Links</title>
+<meta name="description" content="$H₹N — sets, next show, bookings and socials.">
+<meta property="og:title" content="$H₹N — Links">
+<meta property="og:image" content="assets/og-image.jpg">
+<meta name="theme-color" content="#050505">
+<link rel="icon" type="image/svg+xml" href="assets/brand/shrn-logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@800;900&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#050505;--ink2:#0b0c08;--acid:#D1FA1D;--dim:#5f7210;--line:#262c0e;--paper:#e2e5d6;--muted:#8f9878;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;min-height:100svh;display:flex;justify-content:center;padding:40px 16px 60px;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.25) 3px);}
+main{width:100%;max-width:460px;display:flex;flex-direction:column;align-items:center;}
+.logo{width:min(320px,82vw);}
+.loc{font-size:10px;letter-spacing:3px;color:var(--muted);margin:14px 0 28px;text-align:center;}
+.next{width:100%;border:1px solid var(--acid);padding:16px 18px;margin-bottom:14px;display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit;}
+.next .day{font-family:'Grenze Gotisch',serif;font-weight:900;font-size:46px;line-height:.85;color:var(--acid);}
+.next small{display:block;font-size:10px;letter-spacing:2px;color:var(--dim);}
+.next b{display:block;font-size:14px;color:var(--paper);}
+.next span{font-size:11px;color:var(--muted);}
+a.l,button.l{width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;margin-bottom:10px;border:1px solid var(--line);background:var(--ink2);color:var(--paper);text-decoration:none;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+a.l:hover,button.l:hover{border-color:var(--acid);color:var(--acid);}
+a.l.main{background:var(--acid);color:var(--ink);border-color:var(--acid);}
+a.l.main:hover{background:var(--ink);color:var(--acid);}
+.l i{font-style:normal;font-weight:400;font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:none;}
+.sep{width:100%;font-size:10px;letter-spacing:3px;color:var(--dim);margin:16px 0 10px;}
+footer{margin-top:26px;font-size:10px;letter-spacing:2px;color:var(--dim);}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="assets/brand/shrn-logo.svg" alt="$H₹N">
+  <div class="loc" id="loc"></div>
+  <a class="next" id="next" href="index.html#board" hidden></a>
+  <a class="l main" href="index.html#tapes">▶ Archive Tapes <i>live sets</i></a>
+  <a class="l" href="list.html">Join my announcement list <i>show alerts</i></a>
+  <a class="l" href="index.html#booking">Book $H₹N <i>bookings</i></a>
+  <a class="l" href="index.html#been">All shows <i>past + upcoming</i></a>
+  <a class="l" href="epk.html">Press kit <i>for promoters</i></a>
+  <div class="sep">— FIND ME —</div>
+  <div id="soc" style="width:100%"></div>
+  <a class="l" href="index.html">Full website <i>↗</i></a>
+  <footer>$H₹N</footer>
+</main>
+<script src="content.js"></script>
+<script>
+const S = window.SITE;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+document.getElementById('loc').textContent = S.location;
+const today = new Date(); today.setHours(0,0,0,0);
+const next = S.shows.filter(s => s.date).map(s => { const [y,m,d] = s.date.split('-').map(Number); return {...s, d:new Date(y,m-1,d)}; })
+  .filter(s => s.d >= today).sort((a,b) => a.d - b.d)[0];
+if (next) {
+  const n = document.getElementById('next');
+  n.hidden = false;
+  n.innerHTML = '<div class="day">'+String(next.d.getDate()).padStart(2,'0')+'</div><div><small>NEXT SHOW · '+MON[next.d.getMonth()]+' '+next.d.getFullYear()+'</small><b>'+esc(next.name)+(next.with?' b2b '+esc(next.with):'')+'</b><span>'+[next.venue,next.city].filter(Boolean).map(esc).join(' · ')+'</span></div>';
+}
+const soc = document.getElementById('soc');
+soc.innerHTML = S.socials.filter(s => s.active).map(s => s.url
+  ? '<a class="l" href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.name)+' <i>'+esc(s.handle)+'</i></a>'
+  : '<button class="l" data-copy="'+esc(s.copy || s.handle)+'">'+esc(s.name)+' <i>'+esc(s.handle)+' · tap to copy</i></button>').join('');
+soc.addEventListener('click', e => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const i = b.querySelector('i'), old = i.textContent;
+  (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copy) : Promise.reject()).then(() => { i.textContent = 'copied ✓'; }, () => {});
+  setTimeout(() => { i.textContent = old; }, 2000);
+});
+</script>
+</body>
+</html>

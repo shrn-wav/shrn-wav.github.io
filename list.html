@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$H₹N — Announcement List</title>
+<meta name="description" content="Be first to know where $H₹N is playing next.">
+<meta property="og:title" content="$H₹N — Join the announcement list">
+<meta property="og:image" content="assets/og-image.jpg">
+<meta name="theme-color" content="#050505">
+<link rel="icon" type="image/svg+xml" href="assets/brand/shrn-logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@900&family=Caveat+Brush&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#050505;--ink2:#0b0c08;--acid:#D1FA1D;--dim:#5f7210;--line:#2f3810;--paper:#e2e5d6;--muted:#8f9878;--hand:#c9d39a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--ink);color:var(--paper);font-family:'Space Mono',monospace;min-height:100svh;display:flex;justify-content:center;align-items:center;padding:36px 18px;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.25) 3px);}
+main{width:100%;max-width:440px;text-align:center;}
+.logo{width:min(300px,78vw);margin:0 auto;}
+h1{font-family:'Grenze Gotisch',serif;font-weight:900;font-size:clamp(40px,11vw,58px);line-height:.95;color:var(--acid);margin-top:26px;}
+.cap{font-family:'Caveat Brush',cursive;font-size:22px;color:var(--hand);margin-top:8px;}
+form{display:flex;flex-direction:column;gap:10px;margin-top:26px;text-align:left;}
+label{font-size:10px;letter-spacing:.16em;color:var(--dim);display:flex;flex-direction:column;gap:6px;}
+input{background:var(--ink2);border:1px solid var(--line);color:var(--paper);font-family:inherit;font-size:16px;padding:15px 14px;outline:none;border-radius:0;width:100%;}
+input:focus{border-color:var(--acid);}
+button{margin-top:6px;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.14em;padding:17px;border:1px solid var(--acid);background:var(--acid);color:var(--ink);cursor:pointer;}
+#status{font-family:'Caveat Brush',cursive;font-size:24px;color:var(--acid);min-height:32px;margin-top:14px;}
+.again{display:none;margin-top:6px;background:none;color:var(--acid);border:1px solid var(--dim);font-size:11px;padding:12px;width:100%;}
+.done .again{display:block;}
+.next{margin-top:26px;font-size:11px;letter-spacing:.12em;color:var(--muted);line-height:1.9;}
+.next b{color:var(--acid);font-weight:700;}
+.links{margin-top:20px;font-size:10px;letter-spacing:.16em;}
+.links a{color:var(--muted);text-decoration:none;margin:0 8px;}
+</style>
+</head>
+<body>
+<main id="m">
+  <img class="logo" src="assets/brand/shrn-logo.svg" alt="$H₹N">
+  <h1 id="t">Join my announcement list</h1>
+  <p class="cap" id="c"></p>
+  <form id="f">
+    <label>NAME<input name="name" autocomplete="name"></label>
+    <label>EMAIL<input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@email.com"></label>
+    <label>INSTAGRAM / SOCIALS<input name="socials" autocomplete="off" autocapitalize="none" placeholder="@handle"></label>
+    <button type="submit" id="b">I'M IN →</button>
+  </form>
+  <div id="status" role="status"></div>
+  <button class="again" id="again" type="button">ADD SOMEONE ELSE</button>
+  <p class="next" id="next"></p>
+  <p class="links"><a href="index.html">WEBSITE</a><a href="links.html">LINKS</a></p>
+</main>
+<script src="content.js"></script>
+<script>
+const S = window.SITE, L = S.list || {}, SEC = (S.sections || {}).list || {}, CAP = S.captions || {};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+if (SEC.en) $('t').textContent = SEC.en;
+$('c').textContent = SEC.cap || '';
+if ((S.buttons || {}).join) $('b').textContent = S.buttons.join;
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const today = new Date(); today.setHours(0,0,0,0);
+const nx = S.shows.filter(s => s.date).map(s => { const [y,m,d] = s.date.split('-').map(Number); return {...s, d:new Date(y,m-1,d)}; }).filter(s => s.d >= today).sort((a,b) => a.d - b.d)[0];
+if (nx) $('next').innerHTML = 'NEXT UP: <b>' + MON[nx.d.getMonth()] + ' ' + nx.d.getDate() + ' · ' + esc(nx.name).toUpperCase() + '</b>' + (nx.venue && nx.venue !== nx.name ? ' @ ' + esc(nx.venue).toUpperCase() : '');
+const f = $('f'), st = $('status');
+f.addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd = new FormData(f), name = fd.get('name') || '', email = fd.get('email'), soc = fd.get('socials') || '';
+  if (L.kitFormId) {
+    st.textContent = 'adding you…';
+    try {
+      await fetch('https://app.kit.com/forms/' + encodeURIComponent(L.kitFormId) + '/subscriptions', {method:'POST', mode:'no-cors', body:new URLSearchParams({email_address: email, first_name: name, 'fields[socials]': soc})});
+      f.reset(); st.textContent = CAP.listJoined || "you're on the list."; $('m').classList.add('done');
+    } catch (_) { st.textContent = "that didn't go through. try again?"; }
+  } else {
+    location.href = 'mailto:' + S.email + '?subject=' + encodeURIComponent('Add me to the announcement list') + '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\nSocials: ' + soc);
+    st.textContent = 'opening your email app…';
+  }
+});
+$('again').addEventListener('click', () => { $('m').classList.remove('done'); st.textContent = ''; f.querySelector('input').focus(); });
+</script>
+</body>
+</html>

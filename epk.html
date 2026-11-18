@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$H₹N — Press Kit</title>
+<meta name="description" content="$H₹N electronic press kit: bio, press photos, sets, shows and contact.">
+<meta property="og:title" content="$H₹N — Press Kit">
+<meta property="og:image" content="assets/og-image.jpg">
+<link rel="icon" type="image/svg+xml" href="assets/brand/shrn-logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@800;900&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#050505;--ink2:#0b0c08;--acid:#D1FA1D;--dim:#5f7210;--line:#262c0e;--paper:#e2e5d6;--muted:#8f9878;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.75;padding:48px max(16px,6vw) 80px;max-width:1100px;margin:0 auto;}
+a{color:var(--acid);}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;}
+.top img{width:min(420px,80vw);}
+.meta{font-size:11px;letter-spacing:3px;color:var(--muted);margin-top:14px;}
+.bar{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:2px;padding:12px 18px;border:1px solid var(--acid);background:var(--acid);color:var(--ink);cursor:pointer;text-decoration:none;}
+.btn.o{background:none;color:var(--acid);}
+h2{font-family:'Grenze Gotisch',serif;font-weight:900;font-size:40px;line-height:1;color:var(--acid);margin:56px 0 18px;padding-top:22px;border-top:1px solid var(--line);}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+.facts div{background:var(--ink2);padding:14px 16px;}
+.facts b{display:block;font-size:10px;letter-spacing:2px;color:var(--dim);font-weight:500;}
+.bio p{margin-bottom:14px;max-width:760px;}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.photos a{display:block;border:1px solid var(--line);text-decoration:none;}
+.photos img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+.photos span{display:block;font-size:10px;letter-spacing:2px;padding:8px 10px;color:var(--acid);}
+ul{list-style:none;}
+li{padding:9px 0;border-bottom:1px solid var(--line);display:flex;gap:16px;flex-wrap:wrap;}
+li .d{color:var(--dim);min-width:110px;}
+li .n{color:var(--paper);font-weight:700;}
+li .w{color:var(--muted);}
+.note{font-size:12px;color:var(--muted);}
+@media print{
+  @page{margin:14mm;}
+  body{background:#fff;color:#111;padding:0;font-size:11px;}
+  .bar,.noprint{display:none !important;}
+  .top img{width:260px;filter:none;}
+  h2{color:#3a4a00;border-color:#bbb;font-size:28px;margin-top:28px;}
+  a{color:#3a4a00;}
+  .facts{background:#ccc;border-color:#ccc;}
+  .facts div{background:#fff;}
+  .facts b,li .d,.meta,.note,li .w{color:#555;}
+  li{border-color:#ddd;}
+  li .n{color:#111;}
+  .photos{grid-template-columns:repeat(5,1fr);}
+  .photos span{color:#3a4a00;}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <img src="assets/brand/shrn-logo.svg" alt="$H₹N">
+    <div class="meta" id="meta"></div>
+  </div>
+  <div class="bar">
+    <button class="btn" onclick="window.print()">↓ SAVE AS PDF</button>
+    <a class="btn o" href="index.html">← WEBSITE</a>
+  </div>
+</div>
+
+<h2>At a glance</h2>
+<div class="facts" id="facts"></div>
+
+<h2>Bio</h2>
+<div class="bio" id="bio"></div>
+
+<h2>Press photos</h2>
+<p class="note noprint" style="margin-bottom:14px;">Click a photo to download it in full size.</p>
+<div class="photos" id="photos"></div>
+<p class="note" id="pressFolder" style="margin-top:12px;"></p>
+
+<h2>Archive Tapes</h2>
+<ul id="sets"></ul>
+
+<h2>Shows</h2>
+<ul id="shows"></ul>
+
+<h2>Links</h2>
+<ul id="links"></ul>
+
+<script src="content.js"></script>
+<script>
+const S = window.SITE;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const TYPES = {club:'Club', popup:'Pop-up', radio:'Radio', stream:'Stream', festival:'Festival', competition:'Competition'};
+const soc = S.socials.filter(s => s.active);
+const ig = soc.find(s => s.name === 'Instagram');
+
+$('meta').textContent = 'ELECTRONIC PRESS KIT — ' + S.location;
+$('facts').innerHTML = [
+  ['GENRES', esc(S.genres)],
+  ['BASED', esc(S.location)],
+  ['BOOKING', '<a href="mailto:'+esc(S.email)+'">'+esc(S.email)+'</a>'],
+  ['INSTAGRAM', ig ? '<a href="'+esc(ig.url)+'">'+esc(ig.handle)+'</a>' : '—'],
+  ['SETS', 'Club nights, pop-ups, radio, streams'],
+  ['LISTEN', '<a href="'+esc(S.soundcloudProfile)+'">SoundCloud</a>'],
+].map(([k,v]) => '<div><b>'+k+'</b>'+v+'</div>').join('');
+$('bio').innerHTML = S.bioLong.map(p => '<p>'+esc(p)+'</p>').join('');
+$('photos').innerHTML = S.press.map((p,i) => '<a href="'+esc(p)+'" download><img src="'+esc(p)+'" alt="$H₹N press photo '+(i+1)+'" loading="lazy"><span>↓ PHOTO '+String(i+1).padStart(2,'0')+'</span></a>').join('');
+if (S.pressFolder) $('pressFolder').innerHTML = 'Hi-res photos and full-quality audio: <a href="'+esc(S.pressFolder)+'">'+esc(S.pressFolder)+'</a>';
+
+$('sets').innerHTML = S.sets.map(s => '<li><span class="n">'+esc(s.title)+'</span><span class="w">'+esc(s.series)+' · '+esc(s.genres)+'</span>'+
+  '<a href="'+esc(s.soundcloud || S.soundcloudProfile)+'">listen ↗</a></li>').join('');
+
+const parseD = s => { if (!s) return null; const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const today = new Date(); today.setHours(0,0,0,0);
+const shows = S.shows.map(s => ({...s, d: parseD(s.date)}));
+const up = [...shows.filter(s => s.d && s.d >= today).sort((a,b) => a.d - b.d), ...shows.filter(s => s.recurring)];
+const past = shows.filter(s => s.d && s.d < today).sort((a,b) => b.d - a.d);
+const other = shows.filter(s => !s.d && !s.recurring);
+const row = (s, tag) => '<li><span class="d">'+(s.d ? String(s.d.getDate()).padStart(2,'0')+' '+MON[s.d.getMonth()]+' '+s.d.getFullYear() : esc(s.recurring || s.when || '—'))+'</span>'+
+  '<span class="n">'+esc(s.name)+(s.with ? ' (b2b '+esc(s.with)+')' : '')+'</span>'+
+  '<span class="w">'+[s.venue, s.city, TYPES[s.type]].filter(Boolean).map(esc).join(' · ')+(tag ? ' · '+tag : '')+'</span></li>';
+$('shows').innerHTML = up.map(s => row(s, s.recurring ? 'WEEKLY' : 'UPCOMING')).join('') + past.map(s => row(s)).join('') + other.map(s => row(s)).join('');
+
+$('links').innerHTML = soc.map(s => '<li><span class="d">'+esc(s.name)+'</span>'+(s.url ? '<a href="'+esc(s.url)+'">'+esc(s.url)+'</a>' : '<span>'+esc(s.handle)+'</span>')+'</li>').join('');
+</script>
+</body>
+</html>

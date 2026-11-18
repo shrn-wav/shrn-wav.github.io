@@ -1,0 +1,221 @@
+/* =====================================================================
+   $H₹N — SITE CONTENT
+   This is the ONLY file you need to edit to update the website.
+   - Text goes between "quotes". Keep the commas at the end of lines.
+   - Dates are "YYYY-MM-DD". Shows automatically move from UPCOMING to
+     past on their own once the date passes.
+   - Images: drop files into the assets/ folders, then add the path here.
+   - Leave a field as "" to hide it.
+   ===================================================================== */
+
+window.SITE = {
+
+  /* ---------- identity ---------- */
+  artist: "$H₹N",
+  /* The hero logo cycles through these, in this order.
+     img: path to a logo file. If img is "", the text (txt) is shown instead.
+     scale: shrink/grow one logo so all three feel the same size (1 = normal). */
+  names: [
+    { txt: "$H₹N", cls: "logo", lang: "en", img: "assets/brand/shrn-logo.svg",  scale: 1 },
+    { txt: "ஷரண்", cls: "taml", lang: "ta", img: "assets/brand/shrn-tamil.svg", scale: 1 },
+    { txt: "शरन",  cls: "deva", lang: "hi", img: "assets/brand/shrn-hindi.svg", scale: 0.9 },
+  ],
+  logoHold: 6000,    // how long each logo stays on screen (milliseconds)
+  titleHold: 5000,   // how long each version of the "Upcoming" title stays
+  location: "MADISON, WI",
+
+  /* ---------- section titles ----------
+     Only "board" switches languages (English → Tamil → Hindi).
+     cap = optional line under a title. Use "" to hide it. */
+  sections: {
+    board:   { en: "Upcoming", ta: "என்ன சீன்?", hi: "सीन क्या है?", cap: "going berserk @" },
+    tapes:   { en: "Archive Tapes",           cap: "" },
+    been:    { en: "Been There, Rinsed That", cap: "" },
+    about:   { en: "About",                   cap: "" },
+    gallery: { en: "Gallery",                 cap: "" },
+    booking: { en: "Booking",                 cap: "need a bass dealer for the night? i got you." },
+    socials: { en: "Socials",                 cap: "" },
+    list:    { en: "Join my announcement list", cap: "" },
+  },
+  captions: {
+    deckEmpty: "pick a tape, macha",
+    formSent:  "Received! Talk Soon..",
+    listJoined: "you're on the list. see you on the floor.",
+  },
+  buttons: { send: "SEND IT →", join: "I'M IN →" },
+
+  /* Press kit link. Leave "" to use the built-in press kit page (epk.html),
+     or paste a link to your own (Google Drive / Dropbox PDF, Canva, etc.) */
+  pressKitUrl: "",
+
+  /* ---------- gallery (photos + posters, shown in this order) ---------- */
+  gallery: [
+    "assets/press/shrn-press-01.jpg",
+    "assets/shows/open-decks-2.jpg",
+    "assets/press/shrn-press-03.jpg",
+    "assets/shows/nattspil-2026-09-27.jpg",
+    "assets/press/shrn-press-02.jpg",
+    "assets/shows/mdm-tech-social-hour.jpg",
+    "assets/press/shrn-press-04.jpg",
+    "assets/shows/open-decks-1.jpg",
+    "assets/press/shrn-press-05.jpg",
+    "assets/shows/nattspil-2026-10-24.jpg",
+    "assets/shows/twitch-edm-train.jpg",
+  ],
+
+  /* ---------- announcement list ----------
+     Once you make a free Kit account (kit.com) and create a form, paste its
+     form ID here (the number in the form's share link). Until then, sign-ups
+     are sent to your email so nobody gets lost. */
+  list: { kitFormId: "" },
+  email: "artist.shrn@gmail.com",
+  bpm: 126,                                   // default pulse speed when a set plays
+
+  /* ---------- socials (active:false = hidden until you start using it) ---------- */
+  socials: [
+    { name: "Instagram",  handle: "@shrn.wav",  url: "https://www.instagram.com/shrn.wav/",     active: true },
+    { name: "SoundCloud", handle: "shrnwav",    url: "https://soundcloud.com/shrnwav",          active: true },
+    { name: "YouTube",    handle: "@shrn_wav",  url: "https://www.youtube.com/@shrn_wav",        active: true },
+    { name: "Twitch",     handle: "shrn_wav",   url: "https://www.twitch.tv/shrn_wav",           active: true },
+    { name: "Spotify",    handle: "playlists",  url: "https://open.spotify.com/user/31pqj2hwbu4sug7j5f7hmpgxrnbm", active: false },
+    { name: "Discord",    handle: "shrn.wav",   url: "",  copy: "shrn.wav",                     active: false },
+    { name: "Mixcloud",   handle: "SHRN_WAV",   url: "https://www.mixcloud.com/SHRN_WAV/",      active: false },
+    { name: "Bandcamp",   handle: "shrnwav",    url: "https://shrnwav.bandcamp.com",            active: false },
+    { name: "TikTok",     handle: "@shrn.wav",  url: "https://www.tiktok.com/@shrn.wav",        active: false },
+    { name: "X",          handle: "@shrn_wav",  url: "https://x.com/shrn_wav",                  active: false },
+    { name: "Resident Advisor", handle: "shrn.wav", url: "",                                    active: false },
+  ],
+
+  /* ---------- bio ---------- */
+  bioShort: "$H₹N is an emerging electronic artist delivering high-energy, groove-driven sets rooted in tech house and underground culture. Blending global club sounds with subtle Indian/Tamil influences, his style balances precision and identity. His “Archive Tapes” series captures raw live performances across radio, collectives, and pop-ups. Based in the U.S., he is building momentum in the LA scene and beyond.",
+  bioLong: [
+    "$H₹N is an emerging electronic artist shaping a distinct identity through high-energy, groove-driven DJ sets rooted in tech house and underground club culture. With a strong focus on precision, flow, and dancefloor awareness, his performances are built on tight transitions, rhythmic control, and an instinctive ability to guide energy in real time. His sound blends driving basslines and percussive elements with subtle influences drawn from his Indian/Tamil roots, adding texture, rhythm, and character without losing the core essence of underground electronic music.",
+    "Rather than approaching culture as a surface-level aesthetic, $H₹N incorporates it through rhythm, structure, and sonic detail, creating sets that feel globally relevant while carrying a unique identity. This balance allows his performances to resonate across diverse audiences, from intimate underground spaces to larger festival environments.",
+    "Central to his artistic vision is the “Archive Tapes” series, an evolving collection of live recordings from radio stations, collectives, and pop-up performances. Focused on capturing the raw, unfiltered reality of live DJing, the series documents his growth as a performer while preserving the authenticity of each moment. Each set reflects his technical discipline, experimentation, and deep connection to the dancefloor.",
+    "Currently based in the United States and actively engaging with the Los Angeles electronic music scene, $H₹N is focused on building a strong foundation through consistent live performances, collaborations, and immersion within the underground circuit. His journey includes performing at collectives, intimate venues, participating in DJ competitions, and continuously refining his sound through real-world experience.",
+    "With a long-term vision of performing on globally recognized platforms such as Boiler Room and ARC Music Festival, $H₹N represents a new wave of artists who merge cultural identity with modern club music. His approach is grounded in authenticity, discipline, and a commitment to pushing his sound forward while staying connected to the roots that shape it.",
+  ],
+  genres: "Tech House · Bass House · UKG · DnB · Hip-Hop",
+
+  /* ---------- press photos (shown on About + downloadable in the EPK) ---------- */
+  press: [
+    "assets/press/shrn-press-01.jpg",
+    "assets/press/shrn-press-02.jpg",
+    "assets/press/shrn-press-03.jpg",
+    "assets/press/shrn-press-04.jpg",
+    "assets/press/shrn-press-05.jpg",
+  ],
+  pressFolder: "",   // optional: Google Drive / Dropbox link with hi-res photos + WAVs
+
+  /* ---------- sets ----------
+     PLAY finds the track on your SoundCloud automatically by matching the
+     title (or "match", if the SoundCloud title is written differently).
+     soundcloud: optional exact SoundCloud link (overrides the matching).
+     youtube: optional YouTube link for the same set. */
+  soundcloudProfile: "https://soundcloud.com/shrnwav",
+  sets: [
+    { title: "From the Shadows",       series: "Club Mixes",                      genres: "Tech House · Bass · Hip-Hop",       cover: "assets/sets/from-the-shadows.jpg",  soundcloud: "", youtube: "", bpm: 126 },
+    { title: "Into the Storm",         series: "Club Mixes",                      genres: "Tech House · DnB · Bass",           cover: "assets/sets/into-the-storm.jpg",    soundcloud: "", youtube: "", bpm: 130 },
+    { title: "Retro Sparks",           series: "Club Mixes",                      genres: "Tech House · Bass House · Hip-Hop", cover: "assets/sets/retro-sparks.jpg",      soundcloud: "", youtube: "", bpm: 126 },
+    { title: "Blackout Protocol",      series: "Twitch EDM Train · TMA Network", genres: "Drum & Bass · Dubstep",                     cover: "assets/sets/blackout-protocol.jpg", soundcloud: "", youtube: "", bpm: 174 },
+    { title: "Phase I — Sequence 004", series: "Phase 1 Afters · DTLA",          genres: "Tech House",                    cover: "assets/sets/phase-i.jpg",           soundcloud: "", youtube: "", bpm: 128 },
+    { title: "Maximum Heat",           series: "HÖR DJ Contest 2026",            genres: "Techno",             cover: "assets/sets/hor-max-heat.jpg",      soundcloud: "", youtube: "", bpm: 128 },
+    { title: "Hump Day Freestyle",     match: "humpdayfreestyle", series: "Freestyle Sessions", genres: "Freestyle",       cover: "assets/sets/humpday-freestyle.jpg", soundcloud: "", youtube: "", bpm: 126 },
+  ],
+
+  /* ---------- Instagram highlights (story-style, tap through) ----------
+     Each highlight is a row of story files (photos .jpg or videos .mp4).
+     Put the files in assets/stories/ and list them under items.
+     A highlight with no items stays hidden until you add some.
+     instagram: optional link to the real highlight on Instagram. */
+  highlights: [
+    { title: "Nattspil",   cover: "assets/shows/nattspil-2026-09-04.jpg", items: ["assets/stories/nattspil-2026-09-04-story.jpg", "assets/shows/nattspil-2026-09-27.jpg", "assets/shows/nattspil-2026-10-24.jpg"], instagram: "" },
+    { title: "Open Decks", cover: "assets/shows/open-decks-2.jpg",       items: ["assets/shows/open-decks-1.jpg", "assets/shows/open-decks-2-story.jpg"], instagram: "" },
+    { title: "Twitch",     cover: "assets/sets/blackout-protocol.jpg",   items: ["assets/shows/twitch-edm-train.jpg"], instagram: "" },
+    { title: "Malibu",     cover: "", items: [], instagram: "" },
+    { title: "Topanga",    cover: "", items: [], instagram: "" },
+    { title: "YOUR SHOT",  cover: "", items: [], instagram: "" },
+  ],
+
+  /* ---------- shows ----------
+     type: club | popup | radio | stream | festival | competition
+     date: "YYYY-MM-DD"  (or leave "" and use when: "free text")
+     with: b2b partner(s)
+     gallery: list of image paths (posters, photos) — put files in assets/shows/
+     instagram: link to the Instagram highlight / post for this show
+     stories: Instagram story files for this show (photos/videos) — tapping the card plays them
+     recurring: for weekly residencies, e.g. recurring: "Every Thursday", day: "THU" */
+  shows: [
+    { date: "", recurring: "Every Thursday", day: "THU", name: "Open Decks", type: "club", venue: "Sotto Nightclub", city: "Madison, WI" },
+    { date: "2026-12-13", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
+    { date: "2026-12-03", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
+    { date: "2026-11-21", name: "UKG 2",                            type: "club", venue: "Ruby",     city: "Madison, WI" },
+    { date: "2026-11-20", name: "Open Decks 2",                     type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-2.jpg", "assets/shows/open-decks-2-story.jpg"] },
+    { date: "2026-11-14", name: "GTA Rave 2",                       type: "club", city: "Madison, WI", with: "Teryx" },
+    { date: "2026-11-13", name: "GTA Rave",                         type: "club", city: "Madison, WI", with: "Teryx" },
+    { date: "2026-11-08", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
+    { date: "2026-11-07", name: "UKG",                              type: "club", venue: "Ruby",     city: "Madison, WI" },
+    { date: "2026-11-07", name: "Nostalgia Night: 2010s",           type: "club", venue: "Liquid",   city: "Madison, WI" },
+    { date: "2026-11-06", name: "Open Decks",                       type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-1.jpg"] },
+    { date: "2026-10-30", name: "Thrillaween",                      type: "club", venue: "Liquid",   city: "Madison, WI" },
+    { date: "2026-10-24", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-10-24.jpg"], stories: ["assets/shows/nattspil-2026-10-24.jpg"] },
+    { date: "2026-10-23", name: "Nostalgia Night: Halloween Edition", type: "club", venue: "Liquid", city: "Madison, WI", with: "Biabebo" },
+    { date: "2026-10-10", name: "Local Motive",                     type: "club", city: "Madison, WI", with: "EJKT" },
+    { date: "2026-09-27", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-09-27.jpg"], stories: ["assets/shows/nattspil-2026-09-27.jpg"] },
+    { date: "2026-09-18", name: "Local Motive",                     type: "club", city: "Madison, WI", with: "DIExRICH" },
+    { date: "2026-09-12", name: "Liquid: 2016 vs 2026",             type: "club", venue: "Liquid",   city: "Madison, WI" },
+    { date: "2026-09-04", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-09-04.jpg"], stories: ["assets/stories/nattspil-2026-09-04-story.jpg"] },
+    { date: "2026-04-29", name: "HÖR Maximum Heat — DJ Contest",    type: "competition", venue: "HÖR", city: "Online", note: "50-minute contest set", gallery: ["assets/shows/hor-max-heat-entry.jpg", "assets/sets/hor-max-heat.jpg"] },
+    { date: "2026-04-24", name: "Phase I — Sequence 004",           type: "popup", venue: "Secret location · Phase 1 collective afters", city: "Downtown LA, CA", note: "Recorded as “Phase I — Sequence 004” in Archive Tapes" },
+    { date: "2026-01-24", name: "Tech Social Hour: Burgers, Beats & Builders", type: "popup", venue: "Mission Dolores Manor (tech founders' co-living), Van Ness Ave", city: "San Francisco, CA", gallery: ["assets/shows/mdm-tech-social-hour.jpg"] },
+    { date: "2025-10-11", name: "Twitch EDM Train",                 type: "stream", venue: "TMA Network (Twitch)", city: "Online", note: "Set recorded as “Blackout Protocol” in Archive Tapes", gallery: ["assets/shows/twitch-edm-train.jpg"] },
+    { date: "2025-11-21", name: "Birdcage Radio Set",               type: "radio",  venue: "Birdcage Radio", city: "Utrecht, Netherlands" },
+    { date: "2025-10-31", name: "Viajero Hostel Pool Party #2",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL" },
+    { date: "2025-10-30", name: "Topanga Viewpoint Pop-Up",         type: "popup",  city: "Topanga, Los Angeles, CA", stories: [] },
+    { date: "2025-10-30", name: "South Beach Pop-Up",               type: "popup",  city: "South Beach, Miami, FL", note: "With a fitness influencer" },
+    { date: "2025-10-26", name: "Malibu Beach Pop-Up",              type: "popup",  city: "Malibu, CA", stories: [] },
+    { date: "2025-10-24", name: "Viajero Hostel Pool Party #1",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL" },
+    { date: "2025-09-13", name: "YOUR SHOT 2025 — DJ Competition",  type: "competition", city: "Downtown LA, CA", stories: [] },
+    { date: "2025-08-10", name: "Elements Festival — Camp Pop-Up",  type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA" },
+    { date: "2025-08-09", name: "Elements Festival — Broccoli Bar Pop-Up", type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA" },
+  ],
+
+  /* ---------- from the floor: shows you've been to ----------
+     date: "YYYY-MM-DD" (or "YYYY-MM" if you don't know the day); end: last day of a festival
+     artists: who you saw · also: "also caught" names (shown smaller) */
+  floor: [
+    { date: "2026-07-31", artists: ["Tammy Lakkis"], event: "MSN Jams Weekend", city: "Madison, WI" },
+    { date: "2026-07", artists: ["Special Request", "The Carry Nation"], event: "Fête de Marquette", city: "Madison, WI" },
+    { date: "2026-06-20", artists: ["Strawbry", "Pangea Sounds", "Baile World"], event: "Red Bull Midsummer", venue: "Hollywood Roosevelt", city: "Los Angeles, CA" },
+    { date: "2026-03-14", artists: ["Sidepiece"], venue: "LIV Beach, Fontainebleau", city: "Las Vegas, NV" },
+    { date: "2026-03-13", artists: ["Tiësto"], venue: "LIV, Fontainebleau", city: "Las Vegas, NV" },
+    { date: "2026-02-28", artists: ["Open Mike Eagle", "Cooling Prongs", "clipping."], venue: "The Fonda Theatre", city: "Los Angeles, CA" },
+    { date: "2026-02-27", artists: ["Pyramido"], venue: "Members Club", city: "West Hollywood, CA" },
+    { date: "2026-02-20", artists: ["Rozalesd", "Simon Doty"], venue: "The Spotlight", city: "West Hollywood, CA" },
+    { date: "2026-02-07", artists: ["Bantu"], venue: "The Spotlight", city: "West Hollywood, CA" },
+    { date: "2025-11-14", artists: ["Jai Wolf"], venue: "Stereo Live", city: "Dallas, TX" },
+    { date: "2025-10-31", end: "2025-11-02", artists: ["Azyr", "DJ Stingray 313", "999999999", "Chaos in the CBD", "Cassian", "CamelPhat", "KI/KI", "Sara Landry", "SPFDJ"], event: "Hocus Pocus", venue: "Factory Town", city: "Miami, FL" },
+    { date: "2025-10-17", end: "2025-10-18", artists: ["Barry Can't Swim", "Chase & Status", "Denzel Curry", "It's Murph", "Tinashe", "Thundercat", "Bicep", "Fcukers", "Turnstile"], event: "III Points", venue: "Mana Wynwood", city: "Miami, FL" },
+    { date: "2025-09-26", end: "2025-09-28", artists: ["Dr. Fresch", "LSZEE", "Global Therapy takeover: Andreasone, Mango & Ginger, Shaespins & IJO"], event: "SSBD", venue: "Lake Perris State Park", city: "Perris, CA" },
+    { date: "2025-09-21", artists: ["Daphni", "xClub", "Ben UFO b2b Super Call", "Yousuke Yukimatsu"], also: ["Boys Noize"], event: "Boiler Room LA", venue: "City Market", city: "Los Angeles, CA" },
+    { date: "2025-09-18", artists: ["Underworld"], venue: "Hollywood Palladium", city: "Los Angeles, CA" },
+    { date: "2025-08-29", artists: ["Ahadadream b2b Nikki Nair", "Interplanetary Criminal b2b Malugi", "Eric Prydz", "Hamdi b2b Riordan"], also: ["HAAi b2b Hiroko Yamamura", "Jamie xx"], event: "ARC Music Festival", venue: "Union Park", city: "Chicago, IL" },
+    { date: "2025-08-22", artists: ["Donovan Glover", "Channel Tres", "Rhyw", "Wata Igarashi"], venue: "Lincoln Factory", city: "Detroit, MI" },
+    { date: "2025-08-14", artists: ["Linkin Park"], venue: "Little Caesars Arena", city: "Detroit, MI" },
+    { date: "2025-08-08", end: "2025-08-10", artists: ["Chase & Status", "Sullivan King b2b Kayzo", "Mary Droppinz", "Sara Landry", "Mala vs Malaa", "Tipper", "DJ Diesel"], also: ["Crankdat", "Rezz"], event: "Elements Festival", venue: "Pocono Raceway", city: "Long Pond, PA" },
+    { date: "2025-07-29", artists: ["Glass Beams"], venue: "Majestic Theatre", city: "Madison, WI" },
+    { date: "2025-06-14", artists: ["Black Club", "DJ Hyperactive", "DJ Pierre", "DJ Seinfeld"], event: "Boiler Room Chicago", venue: "Radius", city: "Chicago, IL" },
+    { date: "2025-05-08", artists: ["Punjabi Hit Squad"], venue: "Smoke & Mirrors", city: "Chicago, IL" },
+    { date: "2025-03-14", artists: ["Hamdi", "Kettama"], venue: "Radius", city: "Chicago, IL" },
+    { date: "2025-02-06", artists: ["Tyler, The Creator"], venue: "Fiserv Forum", city: "Milwaukee, WI" },
+    { date: "2025-01-27", artists: ["Mohini Dey"], venue: "Blue Note", city: "New York, NY" },
+    { date: "2025-01-09", artists: ["Kenny Hoopla", "Portugal. The Man"], venue: "The Sylvee", city: "Madison, WI" },
+    { date: "2024-12-06", artists: ["JPEGMAFIA"], venue: "The Sylvee", city: "Madison, WI" },
+    { date: "2024-11-12", artists: ["Lil Darkie"], venue: "The Sylvee", city: "Madison, WI" },
+    { date: "2024-10-13", artists: ["Spirit Mother", "Acid Mothers Temple"], venue: "High Noon Saloon", city: "Madison, WI" },
+    { date: "2024-09-20", artists: ["Fred again.."], venue: "Alpine Valley", city: "East Troy, WI" },
+    { date: "2024-01-17", artists: ["Travis Scott"], venue: "Fiserv Forum", city: "Milwaukee, WI" },
+  ],
+  floorAlso: ["Disco Lines", "IPC", "MPH", "Skream", "Mau P", "Dom Dolla", "Chris Lake", "Skrillex", "Peggy Gou", "FISHER", "John Summit"],
+  floorFavorites: ["Charlotte de Witte", "Amelie Lens", "Rezz", "Yousuke Yukimatsu"],
+};
