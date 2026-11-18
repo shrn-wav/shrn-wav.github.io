@@ -123,61 +123,50 @@ window.SITE = {
     { title: "Hump Day Freestyle",     match: "humpdayfreestyle", series: "Freestyle Sessions", genres: "Freestyle",       cover: "assets/sets/humpday-freestyle.jpg", soundcloud: "", youtube: "", bpm: 126 },
   ],
 
-  /* ---------- Instagram highlights (story-style, tap through) ----------
-     Each highlight is a row of story files (photos .jpg or videos .mp4).
-     Put the files in assets/stories/ and list them under items.
-     A highlight with no items stays hidden until you add some.
-     instagram: optional link to the real highlight on Instagram. */
-  highlights: [
-    { title: "Nattspil",   cover: "assets/shows/nattspil-2026-09-04.jpg", items: ["assets/stories/nattspil-2026-09-04-story.jpg", "assets/shows/nattspil-2026-09-27.jpg", "assets/shows/nattspil-2026-10-24.jpg"], instagram: "" },
-    { title: "Open Decks", cover: "assets/shows/open-decks-2.jpg",       items: ["assets/shows/open-decks-1.jpg", "assets/shows/open-decks-2-story.jpg"], instagram: "" },
-    { title: "Twitch",     cover: "assets/sets/blackout-protocol.jpg",   items: ["assets/shows/twitch-edm-train.jpg"], instagram: "" },
-    { title: "Malibu",     cover: "", items: [], instagram: "" },
-    { title: "Topanga",    cover: "", items: [], instagram: "" },
-    { title: "YOUR SHOT",  cover: "", items: [], instagram: "" },
-  ],
-
   /* ---------- shows ----------
      type: club | popup | radio | stream | festival | competition
      date: "YYYY-MM-DD"  (or leave "" and use when: "free text")
      with: b2b partner(s)
      gallery: list of image paths (posters, photos) — put files in assets/shows/
      instagram: link to the Instagram highlight / post for this show
-     stories: Instagram story files for this show (photos/videos) — tapping the card plays them
+     stories: Instagram story files for this show (photos/videos). They show as small circles
+              inside the show's card; tap one to watch. Thumbnails: run the story tool (ask Claude).
+     instagram: link to the matching Instagram highlight ("View on Instagram" button)
      recurring: for weekly residencies, e.g. recurring: "Every Thursday", day: "THU" */
   shows: [
     { date: "", recurring: "Every Thursday", day: "THU", name: "Open Decks", type: "club", venue: "Sotto Nightclub", city: "Madison, WI" },
+    { date: "2026-08-28", name: "Open Decks",                       type: "club", venue: "Sotto Nightclub", city: "Madison, WI", stories: ["assets/stories/2026-08-28-sotto-open-decks/2026-08-28-01.mp4", "assets/stories/2026-08-28-sotto-open-decks/2026-08-28-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-12-13", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
     { date: "2026-12-03", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
     { date: "2026-11-21", name: "UKG 2",                            type: "club", venue: "Ruby",     city: "Madison, WI" },
     { date: "2026-11-20", name: "Open Decks 2",                     type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-2.jpg", "assets/shows/open-decks-2-story.jpg"] },
-    { date: "2026-11-14", name: "GTA Rave 2",                       type: "club", city: "Madison, WI", with: "Teryx" },
-    { date: "2026-11-13", name: "GTA Rave",                         type: "club", city: "Madison, WI", with: "Teryx" },
-    { date: "2026-11-08", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
-    { date: "2026-11-07", name: "UKG",                              type: "club", venue: "Ruby",     city: "Madison, WI" },
-    { date: "2026-11-07", name: "Nostalgia Night: 2010s",           type: "club", venue: "Liquid",   city: "Madison, WI" },
-    { date: "2026-11-06", name: "Open Decks",                       type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-1.jpg"] },
-    { date: "2026-10-30", name: "Thrillaween",                      type: "club", venue: "Liquid",   city: "Madison, WI" },
-    { date: "2026-10-24", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-10-24.jpg"], stories: ["assets/shows/nattspil-2026-10-24.jpg"] },
-    { date: "2026-10-23", name: "Nostalgia Night: Halloween Edition", type: "club", venue: "Liquid", city: "Madison, WI", with: "Biabebo" },
-    { date: "2026-10-10", name: "Local Motive",                     type: "club", city: "Madison, WI", with: "EJKT" },
-    { date: "2026-09-27", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-09-27.jpg"], stories: ["assets/shows/nattspil-2026-09-27.jpg"] },
-    { date: "2026-09-18", name: "Local Motive",                     type: "club", city: "Madison, WI", with: "DIExRICH" },
-    { date: "2026-09-12", name: "Liquid: 2016 vs 2026",             type: "club", venue: "Liquid",   city: "Madison, WI" },
-    { date: "2026-09-04", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-09-04.jpg"], stories: ["assets/stories/nattspil-2026-09-04-story.jpg"] },
-    { date: "2026-04-29", name: "HÖR Maximum Heat — DJ Contest",    type: "competition", venue: "HÖR", city: "Online", note: "50-minute contest set", gallery: ["assets/shows/hor-max-heat-entry.jpg", "assets/sets/hor-max-heat.jpg"] },
-    { date: "2026-04-24", name: "Phase I — Sequence 004",           type: "popup", venue: "Secret location · Phase 1 collective afters", city: "Downtown LA, CA", note: "Recorded as “Phase I — Sequence 004” in Archive Tapes" },
-    { date: "2026-01-24", name: "Tech Social Hour: Burgers, Beats & Builders", type: "popup", venue: "Mission Dolores Manor (tech founders' co-living), Van Ness Ave", city: "San Francisco, CA", gallery: ["assets/shows/mdm-tech-social-hour.jpg"] },
+    { date: "2026-11-14", name: "GTA Rave 2",                       type: "club", venue: "Liquid", city: "Madison, WI", with: "Teryx", stories: ["assets/stories/2026-11-14-gta-rave-2/2026-11-15-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-11-13", name: "GTA Rave",                         type: "club", venue: "Liquid", city: "Madison, WI", with: "Teryx", stories: ["assets/stories/2026-11-13-gta-rave/2026-11-13-01.mp4", "assets/stories/2026-11-13-gta-rave/2026-11-14-02.mp4", "assets/stories/2026-11-13-gta-rave/2026-11-15-03.mp4", "assets/stories/2026-11-13-gta-rave/2026-11-15-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-11-08", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", stories: ["assets/stories/2026-11-08-nattspil/2026-11-04-01.mp4", "assets/stories/2026-11-08-nattspil/2026-11-08-02.mp4", "assets/stories/2026-11-08-nattspil/2026-11-09-03.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-11-07", name: "UKG",                              type: "club", venue: "Ruby",     city: "Madison, WI", stories: ["assets/stories/2026-11-07-ruby-ukg/2026-11-08-01.webp"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-11-07", name: "Nostalgia Night: 2010s",           type: "club", venue: "Liquid",   city: "Madison, WI", stories: ["assets/stories/2026-11-07-liquid-2010s/2026-11-06-01.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-07-02.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-08-03.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-08-04.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-08-05.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-11-06", name: "Open Decks",                       type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-1.jpg"], stories: ["assets/stories/2026-11-06-ruby-open-decks/2026-11-06-01.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-02.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-03.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-04.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-05.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-10-30", name: "Thrillaween",                      type: "club", venue: "Liquid",   city: "Madison, WI", stories: ["assets/stories/2026-10-30-liquid-thrillaween/2026-10-30-01.mp4", "assets/stories/2026-10-30-liquid-thrillaween/2026-10-31-02.mp4", "assets/stories/2026-10-30-liquid-thrillaween/2026-10-31-03.mp4", "assets/stories/2026-10-30-liquid-thrillaween/2026-10-31-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-10-24", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-10-24.jpg"], stories: ["assets/stories/2026-10-24-nattspil/2026-10-24-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-10-23", name: "Nostalgia Night: Halloween Edition", type: "club", venue: "Liquid", city: "Madison, WI", with: "Biabebo", stories: ["assets/stories/2026-10-23-liquid-halloween/2026-10-23-01.mp4", "assets/stories/2026-10-23-liquid-halloween/2026-10-24-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-10-10", name: "Local Motive",                     type: "club", city: "Madison, WI", with: "EJKT", stories: ["assets/stories/2026-10-10-local-motive/2026-10-10-01.mp4", "assets/stories/2026-10-10-local-motive/2026-10-10-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-09-27", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-09-27.jpg"], stories: ["assets/stories/2026-09-27-nattspil/2026-09-26-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-09-18", name: "Local Motive",                     type: "club", city: "Madison, WI", with: "DIExRICH", stories: ["assets/stories/2026-09-18-local-motive/2026-09-18-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-09-12", name: "Liquid: 2016 vs 2026",             type: "club", venue: "Liquid",   city: "Madison, WI", stories: ["assets/stories/2026-09-12-liquid-2016-vs-2026/2026-09-11-01.mp4", "assets/stories/2026-09-12-liquid-2016-vs-2026/2026-09-13-02.mp4", "assets/stories/2026-09-12-liquid-2016-vs-2026/2026-09-13-03.mp4", "assets/stories/2026-09-12-liquid-2016-vs-2026/2026-09-13-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-09-04", name: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", gallery: ["assets/shows/nattspil-2026-09-04.jpg"], stories: ["assets/stories/2026-09-04-nattspil/2026-09-04-01.mp4", "assets/stories/2026-09-04-nattspil/2026-09-05-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-04-29", name: "HÖR Maximum Heat — DJ Contest",    type: "competition", venue: "HÖR", city: "Online", note: "50-minute contest set", gallery: ["assets/shows/hor-max-heat-entry.jpg", "assets/sets/hor-max-heat.jpg"], stories: ["assets/stories/2026-04-29-hor-maximum-heat/2026-04-29-01.mp4", "assets/stories/2026-04-29-hor-maximum-heat/2026-04-29-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18101711863814170/" },
+    { date: "2026-04-24", name: "Phase I — Sequence 004",           type: "popup", venue: "Secret location · Phase 1 collective afters", city: "Downtown LA, CA", note: "Recorded as “Phase I — Sequence 004” in Archive Tapes", stories: ["assets/stories/2026-04-24-phase-1-dtla/2026-04-09-01.mp4", "assets/stories/2026-04-24-phase-1-dtla/2026-04-24-02.mp4", "assets/stories/2026-04-24-phase-1-dtla/2026-04-27-03.mp4", "assets/stories/2026-04-24-phase-1-dtla/2026-04-27-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/18593894071029781/" },
+    { date: "2026-01-24", name: "Tech Social Hour: Burgers, Beats & Builders", type: "popup", venue: "Mission Dolores Manor (tech founders' co-living), Van Ness Ave", city: "San Francisco, CA", gallery: ["assets/shows/mdm-tech-social-hour.jpg"], stories: ["assets/stories/2026-01-24-sf-tech-social-hour/2026-01-07-01.mp4", "assets/stories/2026-01-24-sf-tech-social-hour/2026-01-11-02.mp4", "assets/stories/2026-01-24-sf-tech-social-hour/2026-01-11-03.mp4", "assets/stories/2026-01-24-sf-tech-social-hour/2026-01-24-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/17869308117516839/" },
     { date: "2025-10-11", name: "Twitch EDM Train",                 type: "stream", venue: "TMA Network (Twitch)", city: "Online", note: "Set recorded as “Blackout Protocol” in Archive Tapes", gallery: ["assets/shows/twitch-edm-train.jpg"] },
-    { date: "2025-11-21", name: "Birdcage Radio Set",               type: "radio",  venue: "Birdcage Radio", city: "Utrecht, Netherlands" },
-    { date: "2025-10-31", name: "Viajero Hostel Pool Party #2",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL" },
-    { date: "2025-10-30", name: "Topanga Viewpoint Pop-Up",         type: "popup",  city: "Topanga, Los Angeles, CA", stories: [] },
-    { date: "2025-10-30", name: "South Beach Pop-Up",               type: "popup",  city: "South Beach, Miami, FL", note: "With a fitness influencer" },
-    { date: "2025-10-26", name: "Malibu Beach Pop-Up",              type: "popup",  city: "Malibu, CA", stories: [] },
-    { date: "2025-10-24", name: "Viajero Hostel Pool Party #1",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL" },
-    { date: "2025-09-13", name: "YOUR SHOT 2025 — DJ Competition",  type: "competition", city: "Downtown LA, CA", stories: [] },
-    { date: "2025-08-10", name: "Elements Festival — Camp Pop-Up",  type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA" },
-    { date: "2025-08-09", name: "Elements Festival — Broccoli Bar Pop-Up", type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA" },
+    { date: "2025-11-21", name: "Birdcage Radio Set",               type: "radio",  venue: "Birdcage Radio", city: "Utrecht, Netherlands", stories: ["assets/stories/2025-11-21-birdcage-radio/2025-11-17-01.mp4", "assets/stories/2025-11-21-birdcage-radio/2025-11-18-02.mp4", "assets/stories/2025-11-21-birdcage-radio/2025-11-22-03.mp4", "assets/stories/2025-11-21-birdcage-radio/2026-01-06-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/17928418812117513/" },
+    { date: "2025-10-31", name: "Viajero Hostel Pool Party #2",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL", instagram: "https://www.instagram.com/stories/highlights/18159291598389073/" },
+    { date: "2025-10-30", name: "Topanga Viewpoint Pop-Up",         type: "popup",  city: "Topanga, Los Angeles, CA", instagram: "https://www.instagram.com/stories/highlights/18120834010605759/" },
+    { date: "2025-10-30", name: "South Beach Pop-Up",               type: "popup",  city: "South Beach, Miami, FL", note: "With a fitness influencer", instagram: "https://www.instagram.com/stories/highlights/18159291598389073/" },
+    { date: "2025-10-26", name: "Malibu Beach Pop-Up",              type: "popup",  city: "Malibu, CA", stories: ["assets/stories/2025-10-26-malibu-pop-up/2025-09-26-01.mp4", "assets/stories/2025-10-26-malibu-pop-up/2025-09-26-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18291536485269886/" },
+    { date: "2025-10-24", name: "Viajero Hostel Pool Party #1",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL", instagram: "https://www.instagram.com/stories/highlights/18159291598389073/" },
+    { date: "2025-09-13", name: "YOUR SHOT 2025 — DJ Competition",  type: "competition", city: "Downtown LA, CA", stories: ["assets/stories/2025-09-13-your-shot/2025-09-14-01.mp4", "assets/stories/2025-09-13-your-shot/2025-09-14-02.mp4", "assets/stories/2025-09-13-your-shot/2025-09-16-03.mp4", "assets/stories/2025-09-13-your-shot/2025-10-02-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/17921620545139966/" },
+    { date: "2025-08-10", name: "Elements Festival — Camp Pop-Up",  type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA", stories: ["assets/stories/2025-08-elements-festival/2025-08-13-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/17913701808193796/" },
+    { date: "2025-08-09", name: "Elements Festival — Broccoli Bar Pop-Up", type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA", stories: ["assets/stories/2025-08-elements-festival/2025-08-13-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/17913701808193796/" },
   ],
 
   /* ---------- from the floor: shows you've been to ----------

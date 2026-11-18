@@ -283,6 +283,15 @@ textarea{min-height:110px;resize:vertical;}
 .st-tap{position:absolute;top:70px;bottom:50px;width:40%;z-index:2;}
 .st-tap.l{left:0;} .st-tap.r{right:0;width:60%;}
 .st-ig{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;font-size:10px;letter-spacing:.14em;color:var(--acid);background:rgba(5,5,5,.6);padding:7px 12px;border:1px solid var(--acid-dim);white-space:nowrap;}
+.circles{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.sc{width:40px;height:40px;border-radius:50%;padding:2px;background:conic-gradient(var(--acid),var(--acid-dim),var(--acid));flex-shrink:0;transition:transform .15s;position:relative;z-index:2;}
+.sc:hover{transform:scale(1.14);}
+.card .sc img{position:static;inset:auto;width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid var(--ink);display:block;transform:none;}
+.sc.more{display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--ink);}
+.card.type .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(.3);transition:filter .3s;}
+.card.type:hover .bg{filter:grayscale(.2) brightness(.42);transform:none;}
+.card.type > div{position:relative;z-index:1;}
+.card[data-poster]{cursor:pointer;}
 .card .story{position:absolute;top:10px;left:10px;width:34px;height:34px;border-radius:50%;border:2px solid var(--acid);display:grid;place-items:center;background:rgba(5,5,5,.6);color:var(--acid);font-size:11px;z-index:2;}
 
 /* ---------- dock ---------- */
@@ -385,7 +394,6 @@ footer .flogo{width:min(220px,60vw);}
 <section id="been">
   <h2 class="title" id="beenTitle"></h2>
   <p class="cap" id="beenCap" hidden></p>
-  <div class="hl-wrap" id="hlWrap"><span class="hl-lbl">HIGHLIGHTS</span><div class="hl" id="hl" aria-label="Instagram highlights. Tap one to watch."></div></div>
   <div class="tabs" id="cityTabs" role="tablist"></div>
   <div class="cards" id="cards" role="tabpanel"></div>
 </section>
@@ -983,24 +991,36 @@ const cityKey = s => {
 };
 const groups = (() => { const m = new Map(); past.forEach(s => { const k = cityKey(s); if (!m.has(k)) m.set(k, []); m.get(k).push(s); }); return [...m.entries()].sort((a,b) => b[1].length - a[1].length); })();
 const TYPES = {club:'CLUB', popup:'POP-UP', radio:'RADIO', stream:'STREAM', festival:'FESTIVAL', competition:'COMPETITION'};
+/* story circles live inside each show's card; tap one to watch from there */
+const thumbOf = u => u.replace(/\.[^.\/]+$/, '.thumb.jpg');
+const circlesHTML = (s, st) => {
+  if (!st.length) return '';
+  const max = 4;
+  return '<div class="circles">' + st.slice(0, max).map((u,k) => '<button class="sc" data-show="' + s.i + '" data-k="' + k + '" aria-label="Watch story ' + (k+1) + ' from ' + esc(s.name) + '"><img src="' + esc(thumbOf(u)) + '" alt="" loading="lazy"></button>').join('') +
+    (st.length > max ? '<button class="sc more" data-show="' + s.i + '" data-k="' + max + '" aria-label="More stories from ' + esc(s.name) + '">+' + (st.length - max) + '</button>' : '') + '</div>';
+};
 const cardHTML = (s, n) => {
-  const g = s.gallery || [], date = String(s.d.getDate()).padStart(2,'0') + ' ' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear();
+  const g = s.gallery || [], st = (s.stories || []).filter(Boolean), date = String(s.d.getDate()).padStart(2,'0') + ' ' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear();
   const meta = [s.venue && s.venue !== s.name ? s.venue : '', s.with ? 'b2b ' + s.with : ''].filter(Boolean).map(esc).join(' · ');
   const delay = ' style="animation-delay:' + Math.min(n, 12)*45 + 'ms"';
-  const st = (s.stories || []).filter(Boolean), cover = g[0] || st.find(x => !isVid(x));
-  if (cover) return '<button class="card" data-show="' + s.i + '"' + delay + ' aria-label="' + esc(s.name) + (st.length ? ', watch story' : ', view poster') + '"><img src="' + esc(cover) + '" alt="" loading="lazy">' + (st.length ? '<span class="story">▶</span>' : '') + '<span class="zoom">' + (st.length ? 'STORY' : 'VIEW') + '</span><div class="ov"><span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></button>';
-  return '<' + (st.length ? 'button data-show="' + s.i + '"' : 'div') + ' class="card type"' + delay + '>' + (st.length ? '<span class="story">▶</span>' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + ' · ' + (TYPES[s.type] || '') + '</div></div><div><b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></' + (st.length ? 'button' : 'div') + '>';
+  if (g.length) return '<div class="card" role="button" tabindex="0" data-poster="' + s.i + '"' + delay + ' aria-label="' + esc(s.name) + ', view poster"><img src="' + esc(g[0]) + '" alt="" loading="lazy"><span class="zoom">VIEW</span><div class="ov">' + circlesHTML(s, st) + '<span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
+  return '<div class="card type"' + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + ' · ' + (TYPES[s.type] || '') + '</div></div><div>' + circlesHTML(s, st) + '<b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
 };
 const tabs = $('#cityTabs'), cards = $('#cards');
 tabs.innerHTML = groups.map(([c,l],k) => '<button role="tab" aria-selected="' + (k===0) + '"' + (k===0 ? ' class="on"' : '') + ' data-k="' + k + '">' + esc(c.split(',')[0].toUpperCase()) + '<sup>' + l.length + '</sup></button>').join('');
 const showCity = k => { $$('button', tabs).forEach((b,j) => { b.classList.toggle('on', j === k); b.setAttribute('aria-selected', j === k); }); cards.innerHTML = groups[k] ? groups[k][1].map(cardHTML).join('') : ''; };
 tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCity(+b.dataset.k); });
 cards.addEventListener('click', e => {
-  const c = e.target.closest('.card[data-show]'); if (!c) return;
-  const s = shows[+c.dataset.show], st = (s.stories || []).filter(Boolean);
-  if (st.length) openStory([{title: s.name, cover: (s.gallery || [])[0] || st.find(x => !isVid(x)) || '', items: st, instagram: s.instagram || ''}], 0);
-  else openLB(s.gallery, 0);
+  const sc = e.target.closest('.sc');
+  if (sc) {
+    const s = shows[+sc.dataset.show], st = (s.stories || []).filter(Boolean);
+    openStory([{title: s.name, cover: thumbOf(st[0]), items: st, instagram: s.instagram || ''}], 0, Math.min(+sc.dataset.k, st.length - 1));
+    return;
+  }
+  const c = e.target.closest('.card[data-poster]');
+  if (c) openLB(shows[+c.dataset.poster].gallery, 0);
 });
+cards.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-poster]')) { e.preventDefault(); e.target.click(); } });
 cards.addEventListener('pointermove', e => {
   const c = e.target.closest('.card'); if (!c || REDUCE || e.pointerType !== 'mouse') return;
   const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
@@ -1030,13 +1050,9 @@ gal.addEventListener('click', e => { if (gd && gd.moved) return; const b = e.tar
    HIGHLIGHTS + STORY VIEWER (Instagram-style: tap right = next,
    tap left = back, hold = pause)
    ===================================================================== */
-const HL = (S.highlights || []).map(h => ({...h, items: (h.items || []).filter(Boolean)})).filter(h => h.items.length);
-if (!HL.length) $('#hlWrap').hidden = true;
-$('#hl').innerHTML = HL.map((h,k) => { const cov = h.cover || h.items.find(x => !isVid(x)) || ''; return '<button data-k="' + k + '" aria-label="Watch ' + esc(h.title) + '"><span class="ring">' + (cov ? '<img src="' + esc(cov) + '" alt="" loading="lazy">' : '') + '</span><span>' + esc(h.title) + '</span></button>'; }).join('');
-$('#hl').addEventListener('click', e => { const b = e.target.closest('button'); if (b) openStory(HL, +b.dataset.k); });
 const story = $('#story'), stBars = $('#stBars'), stMedia = $('#stMedia');
 let SQ = [], sg = 0, si = 0, stDur = 5000, stRaf = 0, stPaused = false, stElapsed = 0, stLast = 0, stMuted = true;
-function openStory(groups, g) { SQ = groups; sg = g; si = 0; story.classList.add('on'); showItem(); }
+function openStory(groups, g, start) { SQ = groups; sg = g; si = start || 0; story.classList.add('on'); showItem(); }
 function closeStory() { story.classList.remove('on'); cancelAnimationFrame(stRaf); stMedia.innerHTML = ''; }
 function showItem() {
   const grp = SQ[sg], src = grp.items[si];

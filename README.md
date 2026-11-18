@@ -37,13 +37,10 @@ site/
 **Add a poster:** put the image in `assets/shows/` (JPG under about 500KB), then add it to the show:
 `gallery: ["assets/shows/2026-12-20-nattspil.jpg"]`. The show's card then shows the poster.
 
-**Link Instagram stories to a show:** save the stories from Instagram (open the highlight or story → **⋯ → Save**). Put them in `assets/stories/`, then add them to the show:
-`stories: ["assets/stories/2025-10-26-malibu-1.mp4", "assets/stories/2025-10-26-malibu-2.jpg"]`
-The card gets a ▶ badge and plays them in the story viewer.
+**Link Instagram stories to a show:** save the stories from Instagram (open the highlight → **⋯ → Save**) and drop them into `assets/stories/`, in a folder named after the event. Then ask Claude to "wire in the new stories". Claude matches each file to its show, converts any video phones can't play, makes the little circle thumbnails, and pushes. The stories appear as circles inside that show's card under "Been There, Rinsed That"; tapping one plays it.
+Each show can also have `instagram: "https://www.instagram.com/stories/highlights/…"`, which powers the "View on Instagram" button in the story viewer.
 
-**Highlights row** (the circles under "Been There, Rinsed That"): in `highlights:`, list story files under `items`. A highlight with no items stays hidden.
-
-**Name files by date and event**, for example `2025-10-30-topanga-1.mp4`, so you can always tell what goes where.
+**Folder layout:** each show's stories live in `assets/stories/<date>-<event>/`, for example `assets/stories/2026-11-13-gta-rave/`. Every story has a matching `.thumb.jpg` used for its circle.
 
 **Gallery:** add or remove image paths in `gallery:`.
 **Titles / captions / buttons:** `sections:`, `captions:`, `buttons:`.
