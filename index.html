@@ -43,7 +43,7 @@ img{display:block;max-width:100%;}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-2%)}75%{transform:translate(-1%,2%)}100%{transform:translate(2%,1%)}}
 
 /* ---------- cursor ---------- */
-.cursor{position:fixed;width:24px;height:24px;z-index:9500;pointer-events:none;border:1px solid var(--acid);transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s;mix-blend-mode:difference;left:-100px;top:-100px;}
+.cursor{position:fixed;width:24px;height:24px;z-index:99999;pointer-events:none;border:1px solid var(--acid);transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s;mix-blend-mode:difference;left:-100px;top:-100px;}
 .cursor::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;background:var(--acid);transform:translate(-50%,-50%);}
 .cursor.hot{width:46px;height:46px;background:rgba(209,250,29,.15);}
 .cursor.grab{width:64px;height:64px;border-radius:50%;}
@@ -283,6 +283,26 @@ textarea{min-height:110px;resize:vertical;}
 .st-tap{position:absolute;top:70px;bottom:50px;width:40%;z-index:2;}
 .st-tap.l{left:0;} .st-tap.r{right:0;width:60%;}
 .st-ig{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;font-size:10px;letter-spacing:.14em;color:var(--acid);background:rgba(5,5,5,.6);padding:7px 12px;border:1px solid var(--acid-dim);white-space:nowrap;}
+/* viewer v2: true 9:16 frame, controls outside the video, big arrows */
+#story{gap:18px;padding:16px;}
+.st-col{display:flex;flex-direction:column;gap:10px;}
+.st-top{display:flex;flex-direction:column;gap:10px;}
+.st-bars,.st-head{position:static;}
+.st-frame{width:auto;height:min(76vh,calc((100vw - 170px) * 16 / 9));aspect-ratio:9/16;border-radius:12px;}
+.st-tap{top:0;bottom:0;}
+.st-ig{position:static;transform:none;align-self:center;}
+.st-arrow{width:56px;height:56px;border-radius:50%;border:1px solid var(--acid);color:var(--acid);background:var(--ink);font-size:22px;flex-shrink:0;transition:background .15s,color .15s,opacity .2s;}
+.st-arrow:hover{background:var(--acid);color:var(--ink);}
+.st-arrow[disabled]{opacity:.2;pointer-events:none;}
+@media(max-width:600px){#story{gap:0;padding:10px;}.st-frame{height:min(70vh,calc((100vw - 20px) * 16 / 9));}.st-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:46px;height:46px;background:rgba(5,5,5,.75);}.st-arrow.l{left:6px;}.st-arrow.r{right:6px;}}
+
+/* one Highlights button per show card */
+.hlb{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;padding:3px 12px 3px 3px;border-radius:999px;background:rgba(5,5,5,.65);border:1px solid var(--acid-dim);transition:border-color .2s,background .2s;}
+.card:hover .hlb{border-color:var(--acid);background:rgba(209,250,29,.14);}
+.hlb .sc{width:34px;height:34px;}
+.hlt{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--acid);}
+.hlt i{font-style:normal;margin-left:6px;color:var(--paper);opacity:.75;}
+.card[data-show]{cursor:pointer;}
 .circles{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
 .sc{width:40px;height:40px;border-radius:50%;padding:2px;background:conic-gradient(var(--acid),var(--acid-dim),var(--acid));flex-shrink:0;transition:transform .15s;position:relative;z-index:2;}
 .sc:hover{transform:scale(1.14);}
@@ -487,14 +507,20 @@ footer .flogo{width:min(220px,60vw);}
   <button id="lbN" aria-label="Next">→</button>
 </div>
 
-<div id="story" role="dialog" aria-modal="true" aria-label="Story viewer">
-  <div class="st-frame">
-    <div class="st-bars" id="stBars"></div>
-    <div class="st-head"><img id="stAv" alt=""><b id="stTitle"></b><span class="sp"></span><button id="stMute" aria-label="Sound on or off">🔇</button><button id="stX" aria-label="Close">✕</button></div>
-    <div class="st-media" id="stMedia"></div>
-    <button class="st-tap l" id="stPrev" aria-label="Previous"></button><button class="st-tap r" id="stNext" aria-label="Next"></button>
+<div id="story" role="dialog" aria-modal="true" aria-label="Highlights viewer">
+  <button class="st-arrow l" id="stPrevBtn" aria-label="Previous story">←</button>
+  <div class="st-col">
+    <div class="st-top">
+      <div class="st-bars" id="stBars"></div>
+      <div class="st-head"><img id="stAv" alt=""><b id="stTitle"></b><span class="sp"></span><button id="stMute" aria-label="Sound on or off">🔇</button><button id="stX" aria-label="Close">✕</button></div>
+    </div>
+    <div class="st-frame">
+      <div class="st-media" id="stMedia"></div>
+      <button class="st-tap l" id="stPrev" aria-label="Previous"></button><button class="st-tap r" id="stNext" aria-label="Next"></button>
+    </div>
     <a class="st-ig" id="stIg" target="_blank" rel="noopener">VIEW ON INSTAGRAM ↗</a>
   </div>
+  <button class="st-arrow r" id="stNextBtn" aria-label="Next story">→</button>
 </div>
 
 <div id="pad" role="dialog" aria-modal="true" aria-label="Hidden drum machine">
@@ -991,36 +1017,28 @@ const cityKey = s => {
 };
 const groups = (() => { const m = new Map(); past.forEach(s => { const k = cityKey(s); if (!m.has(k)) m.set(k, []); m.get(k).push(s); }); return [...m.entries()].sort((a,b) => b[1].length - a[1].length); })();
 const TYPES = {club:'CLUB', popup:'POP-UP', radio:'RADIO', stream:'STREAM', festival:'FESTIVAL', competition:'COMPETITION'};
-/* story circles live inside each show's card; tap one to watch from there */
+/* each show card: tap the card (or its Highlights button) to watch that show's highlights */
 const thumbOf = u => u.replace(/\.[^.\/]+$/, '.thumb.jpg');
-const circlesHTML = (s, st) => {
-  if (!st.length) return '';
-  const max = 4;
-  return '<div class="circles">' + st.slice(0, max).map((u,k) => '<button class="sc" data-show="' + s.i + '" data-k="' + k + '" aria-label="Watch story ' + (k+1) + ' from ' + esc(s.name) + '"><img src="' + esc(thumbOf(u)) + '" alt="" loading="lazy"></button>').join('') +
-    (st.length > max ? '<button class="sc more" data-show="' + s.i + '" data-k="' + max + '" aria-label="More stories from ' + esc(s.name) + '">+' + (st.length - max) + '</button>' : '') + '</div>';
-};
+const hlBtn = st => st.length ? '<span class="hlb" aria-hidden="true"><span class="sc"><img src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy"></span><span class="hlt">HIGHLIGHTS<i>' + st.length + '</i></span></span>' : '';
 const cardHTML = (s, n) => {
   const g = s.gallery || [], st = (s.stories || []).filter(Boolean), date = String(s.d.getDate()).padStart(2,'0') + ' ' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear();
   const meta = [s.venue && s.venue !== s.name ? s.venue : '', s.with ? 'b2b ' + s.with : ''].filter(Boolean).map(esc).join(' · ');
   const delay = ' style="animation-delay:' + Math.min(n, 12)*45 + 'ms"';
-  if (g.length) return '<div class="card" role="button" tabindex="0" data-poster="' + s.i + '"' + delay + ' aria-label="' + esc(s.name) + ', view poster"><img src="' + esc(g[0]) + '" alt="" loading="lazy"><span class="zoom">VIEW</span><div class="ov">' + circlesHTML(s, st) + '<span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
-  return '<div class="card type"' + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + ' · ' + (TYPES[s.type] || '') + '</div></div><div>' + circlesHTML(s, st) + '<b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
+  const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(s.name) + (st.length ? ', watch highlights' : ', view poster') + '"' : '';
+  if (g.length) return '<div class="card"' + act + delay + '><img src="' + esc(g[0]) + '" alt="" loading="lazy">' + (st.length ? '' : '<span class="zoom">VIEW</span>') + '<div class="ov">' + hlBtn(st) + '<span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
+  return '<div class="card type"' + act + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + ' · ' + (TYPES[s.type] || '') + '</div></div><div>' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div></div>';
 };
 const tabs = $('#cityTabs'), cards = $('#cards');
 tabs.innerHTML = groups.map(([c,l],k) => '<button role="tab" aria-selected="' + (k===0) + '"' + (k===0 ? ' class="on"' : '') + ' data-k="' + k + '">' + esc(c.split(',')[0].toUpperCase()) + '<sup>' + l.length + '</sup></button>').join('');
 const showCity = k => { $$('button', tabs).forEach((b,j) => { b.classList.toggle('on', j === k); b.setAttribute('aria-selected', j === k); }); cards.innerHTML = groups[k] ? groups[k][1].map(cardHTML).join('') : ''; };
 tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCity(+b.dataset.k); });
-cards.addEventListener('click', e => {
-  const sc = e.target.closest('.sc');
-  if (sc) {
-    const s = shows[+sc.dataset.show], st = (s.stories || []).filter(Boolean);
-    openStory([{title: s.name, cover: thumbOf(st[0]), items: st, instagram: s.instagram || ''}], 0, Math.min(+sc.dataset.k, st.length - 1));
-    return;
-  }
-  const c = e.target.closest('.card[data-poster]');
-  if (c) openLB(shows[+c.dataset.poster].gallery, 0);
-});
-cards.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-poster]')) { e.preventDefault(); e.target.click(); } });
+const openShow = s => {
+  const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
+  if (st.length) openStory([{title: s.name, cover: thumbOf(st[0]), items: [...g.slice(0, 1), ...st], instagram: s.instagram || ''}], 0);
+  else if (g.length) openLB(g, 0);
+};
+cards.addEventListener('click', e => { const c = e.target.closest('.card[data-show]'); if (c) openShow(shows[+c.dataset.show]); });
+cards.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-show]')) { e.preventDefault(); openShow(shows[+e.target.dataset.show]); } });
 cards.addEventListener('pointermove', e => {
   const c = e.target.closest('.card'); if (!c || REDUCE || e.pointerType !== 'mouse') return;
   const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
@@ -1060,6 +1078,7 @@ function showItem() {
   $('#stAv').src = grp.cover || grp.items.find(x => !isVid(x)) || 'assets/brand/shrn-icon.svg';
   const ig = $('#stIg'); ig.hidden = !grp.instagram; if (grp.instagram) ig.href = grp.instagram;
   stBars.innerHTML = grp.items.map((_,k) => '<i><b style="width:' + (k < si ? 100 : 0) + '%"></b></i>').join('');
+  $('#stPrevBtn').disabled = sg === 0 && si === 0;
   cancelAnimationFrame(stRaf); stElapsed = 0; stPaused = false; stLast = performance.now();
   if (isVid(src)) {
     stMedia.innerHTML = '<video src="' + esc(src) + '" playsinline autoplay' + (stMuted ? ' muted' : '') + '></video>';
@@ -1091,6 +1110,8 @@ function holdStory(on) { stPaused = on; const v = $('video', stMedia); if (v) on
   b.addEventListener('pointerleave', () => { if (stPaused) holdStory(false); });
 });
 $('#stX').addEventListener('click', closeStory);
+$('#stPrevBtn').addEventListener('click', prevStory);
+$('#stNextBtn').addEventListener('click', nextStory);
 $('#stMute').addEventListener('click', () => { stMuted = !stMuted; const v = $('video', stMedia); if (v) v.muted = stMuted; $('#stMute').textContent = stMuted ? '🔇' : '🔊'; });
 story.addEventListener('click', e => { if (e.target === story) closeStory(); });
 
