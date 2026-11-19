@@ -380,6 +380,40 @@ footer .flogo{width:min(170px,45vw);}
 #pad .pads button.hit{background:var(--acid);color:var(--ink);box-shadow:0 0 24px rgba(209,250,29,.8);}
 #pad .hint{font-size:10px;color:var(--muted);letter-spacing:.16em;text-align:center;line-height:2;}
 
+/* ---------- unified show tiles: same date, Highlights, name and location positions on every tile ---------- */
+.card > div.pd{position:absolute;top:16px;left:16px;z-index:2;}
+.card > div.ov{position:absolute;left:0;right:0;bottom:0;z-index:2;height:158px;padding:0 14px 14px;display:flex;flex-direction:column;background:linear-gradient(0deg,rgba(5,5,5,.96) 35%,rgba(5,5,5,0));}
+.card.type{padding:0;}
+.card.type > svg{position:absolute;right:-30px;top:-30px;z-index:0;}
+.hlslot{flex:none;height:40px;margin-bottom:auto;}
+.hlslot .hlb{margin-bottom:0;}
+.card > .ov b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:24px;line-height:1.05;margin-top:0;}
+.card > .ov .tg{margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--acid-mid);font-size:11px;letter-spacing:.1em;text-transform:uppercase;}
+.card.pic.sb > img{filter:grayscale(1) contrast(1.1) brightness(.4) blur(1px);}
+.card.pic.sb:hover > img{filter:grayscale(.2) brightness(.55);}
+
+/* ---------- Madison sub-groups ---------- */
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .35s ease,margin .35s ease;}
+.subtabs.on{max-height:200px;opacity:1;margin-top:14px;}
+.subtabs button{font-size:10px;font-weight:700;letter-spacing:.14em;padding:8px 13px;border:1px dashed var(--acid-dim);border-radius:999px;color:var(--muted);transition:all .15s;}
+.subtabs button sup{font-size:9px;color:var(--acid-dim);margin-left:2px;}
+.subtabs button:hover{color:var(--paper);border-color:var(--acid);}
+.subtabs button.on{background:var(--paper);border:1px solid var(--paper);color:var(--ink);}
+.subtabs button.on sup{color:var(--ink);}
+.subsum{font-size:10px;letter-spacing:.18em;color:var(--acid-dim);margin-top:12px;min-height:14px;}
+
+/* ---------- story viewer: video, header and arrows locked to one centered width ---------- */
+#story{--fh:min(76vh,calc((100vw - 260px) * 16 / 9));}
+.st-col{width:calc(var(--fh) * 9 / 16);}
+.st-frame{height:var(--fh);}
+.st-stage{width:100%;}
+.st-head b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+@media(max-width:600px){#story{--fh:min(70vh,calc((100vw - 112px) * 16 / 9));}}
+/* inside overlays use the normal pointer, not the custom cursor square */
+body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:none;}
+#story,#story *,#lb,#lb *,#pad,#pad *{cursor:auto;}
+#story button,#story a,#lb button,#pad button{cursor:pointer;}
+
 @media (prefers-reduced-motion:reduce){
   .grain,.strip-bar .inner,.deck.playing .reel,.card{animation:none;}
   .reveal,.stagger > *{opacity:1;transform:none;}
@@ -442,6 +476,8 @@ footer .flogo{width:min(170px,45vw);}
   <h2 class="title" id="beenTitle"></h2>
   <p class="cap" id="beenCap" hidden></p>
   <div class="tabs" id="cityTabs" role="tablist"></div>
+  <div class="subtabs" id="subTabs" role="tablist" aria-label="Series"></div>
+  <div class="subsum" id="subSum" aria-live="polite"></div>
   <div class="cards" id="cards" role="tabpanel"></div>
 </section>
 
@@ -1047,24 +1083,56 @@ const cityKey = s => {
 };
 const groups = (() => { const m = new Map(); past.forEach(s => { const k = cityKey(s); if (!m.has(k)) m.set(k, []); m.get(k).push(s); }); return [...m.entries()].sort((a,b) => b[1].length - a[1].length); })();
 const TYPES = {club:'CLUB', popup:'POP-UP', radio:'RADIO', stream:'STREAM', festival:'FESTIVAL', competition:'COMPETITION'};
-/* each show card: title + one tagline (always present, so every card lines up).
-   Tap the card (or its Highlights button) to watch that show's highlights. */
+/* =====================================================================
+   BEEN THERE — city tabs, Madison sub-groups, show tiles.
+   Every tile has the same layout: big date top-left, a fixed Highlights
+   slot, the event name, and the location under it. Tap a tile to watch.
+   ===================================================================== */
 const thumbOf = u => u.replace(/\.[^.\/]+$/, '.thumb.jpg');
-const hlBtn = st => st.length ? '<span class="hlb" aria-hidden="true"><span class="sc"><img src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy"></span><span class="hlt">HIGHLIGHTS<i>' + st.length + '</i></span></span>' : '';
-const showLabel = s => s.tag ? s.name + ' — ' + s.tag : s.name;
+const hlBtn = st => '<span class="hlslot">' + (st.length ? '<span class="hlb" aria-hidden="true"><span class="sc"><img src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy"></span><span class="hlt">HIGHLIGHTS<i>' + st.length + '</i></span></span>' : '') + '</span>';
+const placeOf = s => s.loc || s.venue || s.city || '';
+const showLabel = s => (s.tag || s.name) + (placeOf(s) ? ' — ' + placeOf(s) : '');
 const cardHTML = (s, n) => {
   const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
-  const date = String(s.d.getDate()).padStart(2,'0') + ' ' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear();
-  const tag = '<small class="tg">' + (s.tag ? esc(s.tag) : '&nbsp;') + '</small>';
+  const cover = g[0] || (st.length ? thumbOf(st[0]) : '');
   const delay = ' style="animation-delay:' + Math.min(n, 12)*45 + 'ms"';
   const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(showLabel(s)) + (st.length ? ', watch highlights' : ', view poster') + '"' : '';
-  if (g.length) return '<div class="card pic"' + act + delay + '><img src="' + esc(g[0]) + '" alt="" loading="lazy">' + (st.length ? '' : '<span class="zoom">VIEW</span>') + '<div class="pd"><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div><div class="ov">' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + tag + '</div></div>';
-  return '<div class="card type' + (st.length ? ' pic' : '') + '"' + act + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div><div>' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + tag + '</div></div>';
+  return '<div class="card ' + (cover ? 'pic' + (g[0] ? '' : ' sb') : 'type') + '"' + act + delay + '>' +
+    (cover ? '<img src="' + esc(cover) + '" alt="" loading="lazy">' : SPARK) +
+    (!st.length && g.length ? '<span class="zoom">VIEW</span>' : '') +
+    '<div class="pd"><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div>' +
+    '<div class="ov">' + hlBtn(st) + '<b>' + esc(s.tag || s.name) + '</b><small class="tg">' + esc(placeOf(s)) + '</small></div></div>';
 };
-const tabs = $('#cityTabs'), cards = $('#cards');
+const tabs = $('#cityTabs'), subTabs = $('#subTabs'), subSum = $('#subSum'), cards = $('#cards');
 tabs.innerHTML = groups.map(([c,l],k) => '<button role="tab" aria-selected="' + (k===0) + '"' + (k===0 ? ' class="on"' : '') + ' data-k="' + k + '">' + esc(c.split(',')[0].toUpperCase()) + '<sup>' + l.length + '</sup></button>').join('');
-const showCity = k => { $$('button', tabs).forEach((b,j) => { b.classList.toggle('on', j === k); b.setAttribute('aria-selected', j === k); }); cards.innerHTML = groups[k] ? groups[k][1].map(cardHTML).join('') : ''; };
+let cityList = [];
+function renderCards(list) { cards.innerHTML = list.map(cardHTML).join(''); }
+function summary(list, label) {
+  if (!list.length) return '';
+  const ds = list.map(s => s.d).sort((a,b) => a - b), a = ds[0], b = ds[ds.length - 1];
+  const span = a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear() ? MON[a.getMonth()] + ' ' + a.getFullYear() : MON[a.getMonth()] + (a.getFullYear() !== b.getFullYear() ? ' ' + a.getFullYear() : '') + ' – ' + MON[b.getMonth()] + ' ' + b.getFullYear();
+  return label.toUpperCase() + ' · ' + list.length + (list.length === 1 ? ' NIGHT' : ' NIGHTS') + ' · ' + span;
+}
+function showSub(key) {
+  $$('button', subTabs).forEach(b => { const on = b.dataset.key === key; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  const list = key === '*' ? cityList : cityList.filter(s => placeOf(s) === key);
+  subSum.textContent = summary(list, key === '*' ? 'All' : key);
+  renderCards(list);
+}
+function showCity(k) {
+  $$('button', tabs).forEach((b,j) => { b.classList.toggle('on', j === k); b.setAttribute('aria-selected', j === k); });
+  cityList = groups[k] ? groups[k][1] : [];
+  const counts = new Map(); cityList.forEach(s => { const p = placeOf(s); if (p) counts.set(p, (counts.get(p) || 0) + 1); });
+  const series = [...counts.entries()].filter(([,n]) => n > 1).sort((a,b) => b[1] - a[1]);
+  if (series.length >= 2) {
+    subTabs.innerHTML = '<button role="tab" data-key="*" class="on" aria-selected="true">ALL<sup>' + cityList.length + '</sup></button>' + series.map(([p,n]) => '<button role="tab" aria-selected="false" data-key="' + esc(p) + '">' + esc(p.toUpperCase()) + '<sup>' + n + '</sup></button>').join('');
+    subTabs.classList.add('on'); showSub('*');
+  } else {
+    subTabs.classList.remove('on'); subTabs.innerHTML = ''; subSum.textContent = ''; renderCards(cityList);
+  }
+}
 tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCity(+b.dataset.k); });
+subTabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showSub(b.dataset.key); });
 const openShow = s => {
   const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
   if (st.length) openStory([{title: showLabel(s), cover: thumbOf(st[0]), items: st, instagram: s.instagram || ''}], 0);
@@ -1102,23 +1170,43 @@ gal.addEventListener('click', e => { if (gd && gd.moved) return; const b = e.tar
    tap left = back, hold = pause)
    ===================================================================== */
 const story = $('#story'), stBars = $('#stBars'), stMedia = $('#stMedia');
-let SQ = [], sg = 0, si = 0, stDur = 5000, stRaf = 0, stPaused = false, stElapsed = 0, stLast = 0, stMuted = true;
-function openStory(groups, g, start) { SQ = groups; sg = g; si = start || 0; story.classList.add('on'); showItem(); }
-function closeStory() { story.classList.remove('on'); cancelAnimationFrame(stRaf); stMedia.innerHTML = ''; }
+let SQ = [], sg = 0, si = 0, stDur = 5000, stRaf = 0, stPaused = false, stElapsed = 0, stLast = 0, stMuted = false, stToken = 0;
+function openStory(groups, g, start) {
+  SQ = groups; sg = g; si = start || 0;
+  if (widget) widget.pause();
+  story.classList.add('on'); document.body.classList.add('modal');
+  showItem();
+}
+function stopVideo() {
+  const v = $('video', stMedia);
+  if (v) { v.pause(); v.src = ''; }
+}
+function closeStory() {
+  story.classList.remove('on'); document.body.classList.remove('modal');
+  cancelAnimationFrame(stRaf); stToken++;
+  stopVideo(); stMedia.innerHTML = '';
+}
 function showItem() {
-  const grp = SQ[sg], src = grp.items[si];
+  const grp = SQ[sg], src = grp.items[si], token = ++stToken;
   $('#stTitle').textContent = grp.title;
   $('#stAv').src = grp.cover || grp.items.find(x => !isVid(x)) || 'assets/brand/shrn-icon.svg';
   const ig = $('#stIg'); ig.hidden = !grp.instagram; if (grp.instagram) ig.href = grp.instagram;
   stBars.innerHTML = grp.items.map((_,k) => '<i><b style="width:' + (k < si ? 100 : 0) + '%"></b></i>').join('');
   $('#stPrevBtn').disabled = sg === 0 && si === 0;
   cancelAnimationFrame(stRaf); stElapsed = 0; stPaused = false; stLast = performance.now();
+  stopVideo(); stMedia.innerHTML = '';
   if (isVid(src)) {
-    stMedia.innerHTML = '<video src="' + esc(src) + '" playsinline autoplay' + (stMuted ? ' muted' : '') + '></video>';
-    const v = $('video', stMedia); v.addEventListener('ended', nextStory);
+    const v = document.createElement('video');
+    v.src = src; v.playsInline = true; v.preload = 'auto'; v.muted = stMuted;
+    v.addEventListener('ended', () => { if (token === stToken) nextStory(); });
+    v.addEventListener('error', () => { if (token === stToken) setTimeout(() => { if (token === stToken) nextStory(); }, 600); });
+    stMedia.appendChild(v);
+    const p = v.play();
+    if (p && p.catch) p.catch(() => { if (token !== stToken) return; v.muted = true; $('#stMute').textContent = '🔇'; v.play().catch(() => {}); });
     $('#stMute').hidden = false; $('#stMute').textContent = stMuted ? '🔇' : '🔊';
   } else {
-    stMedia.innerHTML = '<img src="' + esc(src) + '" alt="">'; stDur = 5000; $('#stMute').hidden = true;
+    const im = document.createElement('img'); im.src = src; im.alt = '';
+    stMedia.appendChild(im); stDur = 5000; $('#stMute').hidden = true;
   }
   stRaf = requestAnimationFrame(stTick);
 }
@@ -1145,7 +1233,7 @@ function holdStory(on) { stPaused = on; const v = $('video', stMedia); if (v) on
 $('#stX').addEventListener('click', closeStory);
 $('#stPrevBtn').addEventListener('click', prevStory);
 $('#stNextBtn').addEventListener('click', nextStory);
-$('#stMute').addEventListener('click', () => { stMuted = !stMuted; const v = $('video', stMedia); if (v) v.muted = stMuted; $('#stMute').textContent = stMuted ? '🔇' : '🔊'; });
+$('#stMute').addEventListener('click', () => { const v = $('video', stMedia); stMuted = v ? !v.muted : !stMuted; if (v) { v.muted = stMuted; if (v.paused) v.play().catch(() => {}); } $('#stMute').textContent = stMuted ? '🔇' : '🔊'; });
 story.addEventListener('click', e => { if (e.target === story) closeStory(); });
 
 /* ---------- booking ---------- */
