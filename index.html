@@ -188,12 +188,15 @@ section{padding:110px var(--gut);position:relative;border-top:1px solid var(--li
 .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s;}
 .card:hover img{transform:scale(1.05);}
 .card .ov{position:absolute;left:0;right:0;bottom:0;padding:44px 14px 14px;background:linear-gradient(0deg,rgba(5,5,5,.95),rgba(5,5,5,0));}
-.card .cd{font-size:10px;letter-spacing:.16em;color:var(--acid);}
+.card .cd{font-size:10px;letter-spacing:.16em;color:var(--paper);}
 .card b{display:block;font-family:var(--goth);font-weight:900;font-size:26px;line-height:1;color:var(--paper);margin-top:4px;}
 .card small{display:block;font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.06em;}
 .card.type{display:flex;flex-direction:column;justify-content:space-between;padding:16px;}
-.card.type .big{font-family:var(--goth);font-weight:900;font-size:76px;line-height:.8;color:var(--acid);}
-.card.type .mo{font-size:10px;letter-spacing:.18em;color:var(--acid-mid);margin-top:6px;}
+.card.type .big,.card .pd .big{font-family:var(--goth);font-weight:900;font-size:76px;line-height:.8;color:var(--paper);}
+.card.type .mo,.card .pd .mo{font-size:10px;letter-spacing:.18em;color:var(--muted);margin-top:6px;}
+.card .pd{position:absolute;top:16px;left:16px;z-index:2;}
+.card .pd .big{text-shadow:0 2px 14px rgba(5,5,5,.7);}
+.card .pd .mo{color:var(--paper);text-shadow:0 1px 8px rgba(5,5,5,.8);}
 .card.type svg{position:absolute;right:-30px;top:-30px;width:150px;height:150px;fill:var(--line);transition:transform .6s;}
 .card.type:hover svg{transform:rotate(90deg);fill:var(--line2);}
 .card .zoom{position:absolute;top:10px;right:10px;font-size:9px;letter-spacing:.14em;background:var(--acid);color:var(--ink);padding:3px 7px;}
@@ -292,28 +295,25 @@ textarea{min-height:110px;resize:vertical;}
 .st-frame{width:auto;height:min(76vh,calc((100vw - 170px) * 16 / 9));aspect-ratio:9/16;border-radius:12px;}
 .st-tap{top:0;bottom:0;}
 .st-ig{position:static;transform:none;align-self:center;}
-/* comic arrows: chunky sticker arrows poking out of the story's edges */
-#story{gap:0;padding:16px 100px;}
-.st-stage{position:relative;}
-.st-arrow{position:absolute;top:50%;width:118px;height:80px;margin-top:-40px;z-index:4;padding:0;background:none;border:0;transition:opacity .2s;}
-.st-arrow.l{left:-80px;} .st-arrow.r{right:-80px;}
-.st-arrow svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(5px 6px 0 #5f7210);transition:transform .18s cubic-bezier(.3,1.8,.5,1);}
-.st-arrow path{fill:var(--acid);stroke:var(--ink);stroke-width:5;stroke-linejoin:round;}
-.st-arrow .shine{fill:none;stroke:#f4ffc4;stroke-width:4;stroke-linecap:round;}
-.st-arrow.r svg{animation:nudgeR 1.4s ease-in-out infinite;}
-.st-arrow.l svg{transform:scaleX(-1);animation:nudgeL 1.4s ease-in-out infinite;}
-.st-arrow.r:hover svg{animation:none;transform:translateX(12px) rotate(-7deg) scale(1.14);}
-.st-arrow.l:hover svg{animation:none;transform:scaleX(-1) translateX(12px) rotate(-7deg) scale(1.14);}
-.st-arrow.r:active svg{transform:translateX(20px) scale(.9);}
-.st-arrow.l:active svg{transform:scaleX(-1) translateX(20px) scale(.9);}
-@keyframes nudgeR{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(8px) rotate(-4deg)}}
-@keyframes nudgeL{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}50%{transform:scaleX(-1) translateX(8px) rotate(-4deg)}}
+/* arrows in the logo's style: spiky flame arrow, chartreuse fill, black band, thin chartreuse outline.
+   They sit beside the story (not over it) and don't animate. */
+#story{gap:0;padding:16px 110px;}
+.st-stage{position:relative;align-self:center;width:fit-content;}
+.st-arrow{position:absolute;top:50%;width:96px;height:66px;margin-top:-33px;z-index:4;padding:0;background:none;border:0;transition:opacity .2s;}
+.st-arrow.l{left:-112px;} .st-arrow.r{right:-112px;}
+.st-arrow svg{width:100%;height:100%;overflow:visible;}
+.st-arrow.l svg{transform:scaleX(-1);}
+.st-arrow .o{fill:none;stroke:var(--acid);stroke-width:15;stroke-linejoin:round;}
+.st-arrow .k{fill:none;stroke:var(--ink);stroke-width:9;stroke-linejoin:round;}
+.st-arrow .f{fill:var(--acid);stroke:none;}
+.st-arrow:hover .o{stroke:var(--paper);}
+.st-arrow:hover .f{fill:#e4ff6a;}
 .st-arrow[disabled]{opacity:.15;pointer-events:none;}
-@media(max-width:600px){#story{padding:10px 36px;}.st-frame{height:min(70vh,calc((100vw - 72px) * 16 / 9));}.st-arrow{width:78px;height:54px;margin-top:-27px;}.st-arrow.l{left:-50px;}.st-arrow.r{right:-50px;}}
+@media(max-width:600px){#story{padding:10px 56px;}.st-frame{height:min(70vh,calc((100vw - 112px) * 16 / 9));}.st-arrow{width:50px;height:36px;margin-top:-18px;}.st-arrow.l{left:-54px;}.st-arrow.r{right:-54px;}}
 
 /* matte finish: posters and story frames sit in the site's black + chartreuse duotone; full color on hover */
-.card.pic > img{filter:grayscale(1) contrast(1.15) brightness(.62);transition:filter .35s,transform .4s;}
-.card.pic::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:var(--acid);mix-blend-mode:multiply;opacity:.5;transition:opacity .35s;}
+.card.pic > img{filter:grayscale(1) contrast(1.1) brightness(.58);transition:filter .35s,transform .4s;}
+.card.pic::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:var(--acid);mix-blend-mode:multiply;opacity:.2;transition:opacity .35s;}
 .card.pic:hover > img{filter:none;}
 .card.pic:hover::before{opacity:0;}
 .card.type.pic > img.bg{filter:grayscale(1) contrast(1.1) brightness(.4);}
@@ -534,6 +534,7 @@ footer .flogo{width:min(170px,45vw);}
   <button id="lbN" aria-label="Next">→</button>
 </div>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="arw" d="M2 24 Q14 30 18 33 Q22 24 28 18 Q28 28 32 31 Q38 22 46 14 Q44 26 48 30 L60 30 Q56 18 54 4 Q86 22 118 42 Q86 62 54 80 Q56 66 60 54 L48 54 Q44 58 46 70 Q38 62 32 53 Q28 56 28 66 Q22 60 18 51 Q14 54 2 60 Q10 50 12 42 Q10 34 2 24 Z"/></defs></svg>
 <div id="story" role="dialog" aria-modal="true" aria-label="Highlights viewer">
   <div class="st-col">
     <div class="st-top">
@@ -545,8 +546,8 @@ footer .flogo{width:min(170px,45vw);}
         <div class="st-media" id="stMedia"></div>
         <button class="st-tap l" id="stPrev" aria-label="Previous"></button><button class="st-tap r" id="stNext" aria-label="Next"></button>
       </div>
-      <button class="st-arrow l" id="stPrevBtn" aria-label="Previous story"><svg viewBox="0 0 120 80" aria-hidden="true"><path d="M10 25 Q5 25 5 30 L5 50 Q5 55 10 55 L60 55 L60 71 Q60 79 67 75 L112 45 Q118 40 112 35 L67 5 Q60 1 60 9 L60 25 Z"/><path class="shine" d="M14 33 L48 33 M70 18 L96 36"/></svg></button>
-      <button class="st-arrow r" id="stNextBtn" aria-label="Next story"><svg viewBox="0 0 120 80" aria-hidden="true"><path d="M10 25 Q5 25 5 30 L5 50 Q5 55 10 55 L60 55 L60 71 Q60 79 67 75 L112 45 Q118 40 112 35 L67 5 Q60 1 60 9 L60 25 Z"/><path class="shine" d="M14 33 L48 33 M70 18 L96 36"/></svg></button>
+      <button class="st-arrow l" id="stPrevBtn" aria-label="Previous story"><svg viewBox="-8 -6 136 96" aria-hidden="true"><use class="o" href="#arw"/><use class="k" href="#arw"/><use class="f" href="#arw"/></svg></button>
+      <button class="st-arrow r" id="stNextBtn" aria-label="Next story"><svg viewBox="-8 -6 136 96" aria-hidden="true"><use class="o" href="#arw"/><use class="k" href="#arw"/><use class="f" href="#arw"/></svg></button>
     </div>
     <a class="st-ig" id="stIg" target="_blank" rel="noopener">VIEW ON INSTAGRAM ↗</a>
   </div>
@@ -1057,7 +1058,7 @@ const cardHTML = (s, n) => {
   const tag = '<small class="tg">' + (s.tag ? esc(s.tag) : '&nbsp;') + '</small>';
   const delay = ' style="animation-delay:' + Math.min(n, 12)*45 + 'ms"';
   const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(showLabel(s)) + (st.length ? ', watch highlights' : ', view poster') + '"' : '';
-  if (g.length) return '<div class="card pic"' + act + delay + '><img src="' + esc(g[0]) + '" alt="" loading="lazy">' + (st.length ? '' : '<span class="zoom">VIEW</span>') + '<div class="ov">' + hlBtn(st) + '<span class="cd">' + date + '</span><b>' + esc(s.name) + '</b>' + tag + '</div></div>';
+  if (g.length) return '<div class="card pic"' + act + delay + '><img src="' + esc(g[0]) + '" alt="" loading="lazy">' + (st.length ? '' : '<span class="zoom">VIEW</span>') + '<div class="pd"><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div><div class="ov">' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + tag + '</div></div>';
   return '<div class="card type' + (st.length ? ' pic' : '') + '"' + act + delay + '>' + (st.length ? '<img class="bg" src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy">' : '') + SPARK + '<div><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div><div>' + hlBtn(st) + '<b>' + esc(s.name) + '</b>' + tag + '</div></div>';
 };
 const tabs = $('#cityTabs'), cards = $('#cards');
@@ -1066,7 +1067,7 @@ const showCity = k => { $$('button', tabs).forEach((b,j) => { b.classList.toggle
 tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCity(+b.dataset.k); });
 const openShow = s => {
   const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
-  if (st.length) openStory([{title: showLabel(s), cover: thumbOf(st[0]), items: [...g.slice(0, 1), ...st], instagram: s.instagram || ''}], 0);
+  if (st.length) openStory([{title: showLabel(s), cover: thumbOf(st[0]), items: st, instagram: s.instagram || ''}], 0);
   else if (g.length) openLB(g, 0);
 };
 cards.addEventListener('click', e => { const c = e.target.closest('.card[data-show]'); if (c) openShow(shows[+c.dataset.show]); });
