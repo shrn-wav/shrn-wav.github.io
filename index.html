@@ -538,6 +538,7 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
     <h3 id="listTitle"></h3>
     <div>
       <form id="listForm">
+        <p class="sr"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
         <label>NAME<input name="name" autocomplete="name"></label>
         <label>EMAIL<input name="email" type="email" required autocomplete="email"></label>
         <label>INSTAGRAM / SOCIALS<input name="socials" autocomplete="off" autocapitalize="none" placeholder="@handle"></label>
@@ -1240,14 +1241,20 @@ story.addEventListener('click', e => { if (e.target === story) closeStory(); });
 const mailLink
  = $('#mailLink'); mailLink.textContent = S.email; mailLink.href = 'mailto:' + S.email;
 $('#sendBtn').textContent = BTN.send || 'SEND IT →';
+/* Forms post to the Google Sheet script (S.formsUrl); returns false when it isn't set. */
+async function postForm(kind, fd) {
+  if (!S.formsUrl) return false;
+  const p = new URLSearchParams(fd); p.set('kind', kind); p.set('page', location.pathname);
+  await fetch(S.formsUrl, {method:'POST', mode:'no-cors', body:p});
+  return true;
+}
 const form = $('#bookForm'), fStatus = $('#formStatus');
 form.addEventListener('submit', async e => {
   e.preventDefault();
   const fd = new FormData(form);
   fStatus.textContent = 'sending…';
   try {
-    const r = await fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(fd).toString()});
-    if (!r.ok) throw new Error(r.status);
+    if (!(await postForm('booking', fd))) throw 0;
     form.reset(); fStatus.textContent = CAP.formSent || 'Received!';
   } catch (_) {
     const body = 'Name: ' + fd.get('name') + '\nEmail: ' + fd.get('email') + '\nEvent: ' + fd.get('event') + '\nType: ' + fd.get('type') + '\nDate: ' + fd.get('date') + '\nLocation: ' + fd.get('location') + '\n\n' + fd.get('message');
@@ -1265,7 +1272,13 @@ const listForm = $('#listForm'), listStatus = $('#listStatus');
 listForm.addEventListener('submit', async e => {
   e.preventDefault();
   const fd = new FormData(listForm), name = fd.get('name') || '', email = fd.get('email'), soc = fd.get('socials') || '';
-  if (LIST.kitFormId) {
+  if (S.formsUrl) {
+    listStatus.textContent = 'adding you…';
+    try {
+      await postForm('list', fd);
+      listForm.reset(); listStatus.textContent = CAP.listJoined || "you're on the list.";
+    } catch (_) { listStatus.textContent = "that didn't go through. try again?"; }
+  } else if (LIST.kitFormId) {
     listStatus.textContent = 'adding you…';
     try {
       await fetch('https://app.kit.com/forms/' + encodeURIComponent(LIST.kitFormId) + '/subscriptions', {method:'POST', mode:'no-cors', body:new URLSearchParams({email_address: email, first_name: name, 'fields[socials]': soc})});

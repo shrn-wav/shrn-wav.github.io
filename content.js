@@ -68,6 +68,12 @@ window.SITE = {
      form ID here (the number in the form's share link). Until then, sign-ups
      are sent to your email so nobody gets lost. */
   list: { kitFormId: "" },
+
+  /* ---------- where the forms go ----------
+     The "Web app URL" of your Google Sheet script (tools/forms-apps-script.gs).
+     When set, bookings + list sign-ups save to the Sheet and email you instantly.
+     Leave "" and forms fall back to opening the visitor's email app. */
+  formsUrl: "",
   email: "artist.shrn@gmail.com",
   bpm: 126,                                   // default pulse speed when a set plays
 

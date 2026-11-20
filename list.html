@@ -39,6 +39,7 @@ button{margin-top:6px;font-family:inherit;font-size:14px;font-weight:700;letter-
   <h1 id="t">Join my announcement list</h1>
   <p class="cap" id="c"></p>
   <form id="f">
+    <p style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
     <label>NAME<input name="name" autocomplete="name"></label>
     <label>EMAIL<input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@email.com"></label>
     <label>INSTAGRAM / SOCIALS<input name="socials" autocomplete="off" autocapitalize="none" placeholder="@handle"></label>
@@ -65,7 +66,14 @@ const f = $('f'), st = $('status');
 f.addEventListener('submit', async e => {
   e.preventDefault();
   const fd = new FormData(f), name = fd.get('name') || '', email = fd.get('email'), soc = fd.get('socials') || '';
-  if (L.kitFormId) {
+  if (S.formsUrl) {
+    st.textContent = 'adding you…';
+    try {
+      const p = new URLSearchParams(fd); p.set('kind', 'list'); p.set('page', location.pathname);
+      await fetch(S.formsUrl, {method:'POST', mode:'no-cors', body:p});
+      f.reset(); st.textContent = CAP.listJoined || "you're on the list."; $('m').classList.add('done');
+    } catch (_) { st.textContent = "that didn't go through. try again?"; }
+  } else if (L.kitFormId) {
     st.textContent = 'adding you…';
     try {
       await fetch('https://app.kit.com/forms/' + encodeURIComponent(L.kitFormId) + '/subscriptions', {method:'POST', mode:'no-cors', body:new URLSearchParams({email_address: email, first_name: name, 'fields[socials]': soc})});
