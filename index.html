@@ -218,6 +218,8 @@ section{padding:110px var(--gut);position:relative;border-top:1px solid var(--li
 .about .long{display:none;margin-top:18px;}
 .about .long.on{display:block;}
 .about .long p{color:var(--muted);margin-bottom:14px;}
+.about .long{margin-top:0;}
+.about .long p:first-child{font-size:clamp(15px,1.5vw,18px);line-height:1.85;color:var(--paper);margin-bottom:18px;}
 .about .acts{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
 @media(max-width:860px){.about{grid-template-columns:1fr;}}
 
@@ -1888,7 +1890,8 @@ showCity(0);
 $('#bioShort').textContent = S.bioShort;
 $('#bioLong').innerHTML = S.bioLong.map(p => '<p>' + esc(p) + '</p>').join('');
 const bioToggle = $('#bioToggle');
-bioToggle.addEventListener('click', () => { const o = $('#bioLong').classList.toggle('on'); bioToggle.textContent = o ? 'SHORT BIO −' : 'FULL BIO +'; bioToggle.setAttribute('aria-expanded', o); });
+/* full bio replaces the short one (no repeated paragraph); short bio comes back when closed */
+bioToggle.addEventListener('click', () => { const o = $('#bioLong').classList.toggle('on'); $('#bioShort').hidden = o; bioToggle.textContent = o ? 'SHORT BIO −' : 'FULL BIO +'; bioToggle.setAttribute('aria-expanded', o); });
 $('#pressKit').href = S.pressKitUrl || 'epk.html';
 
 /* ---------- gallery: drag sideways ---------- */
