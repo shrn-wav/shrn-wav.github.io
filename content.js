@@ -27,7 +27,7 @@ window.SITE = {
   strip: ["HOSTING OPEN DECKS @ RUBY"],
   /* addresses for the Upcoming map + directions, by venue name (a show's own address: wins) */
   venues: {
-    "Ruby":     { place: "Ruby at Liquid", address: "624 University Ave, Madison, WI 53715" },
+    "Ruby":     { place: "Ruby", address: "624 University Ave, Madison, WI 53715" },
     "Liquid":   { place: "Liquid",         address: "624 University Ave, Madison, WI 53715" },
     "Nattspil": { place: "Nattspil",       address: "211 King St, Madison, WI 53703" },
   },

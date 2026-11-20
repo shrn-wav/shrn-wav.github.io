@@ -7,11 +7,11 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://w.soundcloud.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; frame-src https://w.soundcloud.com https://maps.google.com https://www.google.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://app.kit.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="copyright" content="© $H₹N. All rights reserved.">
-<title>$H₹N — DJ</title>
+<title>$H₹N · shrn.wav</title>
 <meta name="description" content="$H₹N — Madison, WI DJ. High-energy tech house, bass and UK garage with desi roots. Archive Tapes, upcoming shows and bookings.">
 <meta name="theme-color" content="#050505">
 <meta property="og:type" content="website">
-<meta property="og:title" content="$H₹N — DJ">
+<meta property="og:title" content="$H₹N · shrn.wav">
 <meta property="og:description" content="Archive Tapes, upcoming shows and bookings.">
 <meta property="og:image" content="assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -827,6 +827,34 @@ body.arcade-on #dock{opacity:.15;pointer-events:none;}
 .deck .brand .pw i{background:#ff3b2b;box-shadow:0 0 8px #ff3b2b;transition:background .3s,box-shadow .3s;}
 .deck.playing .brand .pw i{background:#3dff6e;box-shadow:0 0 10px #3dff6e;}
 
+/* ---------- v2.1 ---------- */
+.bi{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-left:4px;}
+/* section index (desktop) + back to top */
+.secnav{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:7000;display:flex;flex-direction:column;gap:12px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.secnav.on{opacity:1;pointer-events:auto;}
+.secnav a{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-direction:row-reverse;color:var(--muted);}
+.secnav a i{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--acid-dim);transition:all .2s;flex:none;}
+.secnav a span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap;background:rgba(5,5,5,.8);padding:3px 7px;}
+.secnav:hover a span,.secnav a.on span{opacity:1;transform:none;}
+.secnav a:hover{color:var(--acid);} .secnav a:hover i{border-color:var(--acid);}
+.secnav a.on{color:var(--acid);} .secnav a.on i{background:var(--acid);border-color:var(--acid);box-shadow:0 0 10px rgba(209,250,29,.6);}
+.totop{position:fixed;right:18px;bottom:24px;z-index:8400;display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;border:1px solid var(--acid);background:rgba(5,5,5,.85);color:var(--acid);font-size:18px;line-height:1;opacity:0;transform:translateY(12px);pointer-events:none;transition:all .3s;}
+.totop span{font-size:7px;letter-spacing:.2em;margin-top:2px;}
+.totop.on{opacity:1;transform:none;pointer-events:auto;}
+.totop:hover{background:var(--acid);color:var(--ink);}
+@media(max-width:1100px){.secnav{display:none;}}
+@media(max-width:600px){.totop{right:12px;bottom:84px;width:46px;height:46px;}}
+body.modal .secnav,body.modal .totop,body.arcade-on .secnav,body.arcade-on .totop{opacity:0;pointer-events:none;}
+/* cassettes get real thickness so the crate reads as 3D */
+.crate .cas{box-shadow:0 1px 0 #2c3020,0 2px 0 #23261a,0 3px 0 #1d2015,0 4px 0 #171a10,0 5px 0 #11130c,0 18px 34px -14px #000;}
+.crate{transition:perspective-origin .15s linear;}
+/* game panel: swipe anywhere; clear back button on phones */
+#arcade{touch-action:none;}
+.ar-back{display:none;font-size:12px;font-weight:700;letter-spacing:.14em;padding:10px 14px;border:1px solid var(--acid);border-radius:8px;color:var(--acid);flex:none;}
+.ar-back:hover{background:var(--acid);color:var(--ink);}
+.ar-ttl{flex:1;min-width:0;}
+@media(max-width:700px),(hover:none){.ar-back{display:block;}.ar-head{align-items:center;}}
+
 /* Crate Chase marquee badge (top right of Archive Tapes) */
 .arc-badge{position:absolute;top:118px;right:var(--gut);z-index:3;display:flex;align-items:center;gap:14px;padding:10px 16px 10px 12px;border:2px solid var(--acid);border-radius:10px;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px),linear-gradient(180deg,#151a07,#0a0c05);
@@ -872,6 +900,8 @@ body.arcade-on .arc-badge{opacity:0;pointer-events:none;}
   <symbol id="i-pin" viewBox="0 0 24 32"><path d="M12 1C6 1 1.5 5.5 1.5 11.3 1.5 19 12 31 12 31s10.5-12 10.5-19.7C22.5 5.5 18 1 12 1z" fill="#D1FA1D" stroke="#050505" stroke-width="1.5"/><circle cx="12" cy="11.5" r="4" fill="#050505"/></symbol>
 </svg>
 <div class="rail" id="rail" aria-label="Follow $H₹N"></div>
+<nav class="secnav" id="secnav" aria-label="Jump to a section"></nav>
+<button class="totop" id="toTop" type="button" aria-label="Back to the top">↑<span>TOP</span></button>
 
 <header class="hero" id="top">
   <canvas id="eye" aria-hidden="true"></canvas>
@@ -1001,7 +1031,7 @@ body.arcade-on .arc-badge{opacity:0;pointer-events:none;}
         <p class="sr"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
         <label>NAME<input name="name" autocomplete="name"></label>
         <label>EMAIL<input name="email" type="email" required autocomplete="email"></label>
-        <label class="plat">SOCIAL<select name="platform" data-plat aria-label="Which social"><option>Instagram</option><option>TikTok</option><option>X</option><option>SoundCloud</option><option>Snapchat</option><option>Other</option></select></label>
+        <label class="plat">SOCIAL<select name="platform" data-plat aria-label="Which social"><option>Instagram</option><option>TikTok</option><option>X</option><option>SoundCloud</option><option>Snapchat</option><option>RA</option><option>Partiful</option><option>Posh</option><option>Pie</option><option>Other</option></select></label>
         <label class="hdl"><span data-hlabel>INSTAGRAM HANDLE</span><input name="socials" autocomplete="off" autocapitalize="none" placeholder="@yourhandle"></label>
         <button class="btn p" type="submit" id="joinBtn"></button>
       </form>
@@ -1145,7 +1175,8 @@ function drawTiles(src, list) {
 }
 function drawRest(src) { clr(); if (src) cx.drawImage(src.c, 0, 0, W, H); }
 async function prepare() {
-  const r = stage.getBoundingClientRect(); W = r.width; H = r.height; DPR = Math.min(2, devicePixelRatio || 1);
+  W = stage.offsetWidth; H = stage.offsetHeight;   /* layout size, not the scroll-shrunk size */
+  if (!W || !H) return;                              /* not laid out yet */ DPR = Math.min(2, devicePixelRatio || 1);
   T = W < 500 ? 5 : 6;
   PX0 = Math.round(W * .12); PY0 = Math.round(H * .9);
   Object.assign(cv.style, {inset: 'auto', left: -PX0 + 'px', top: -PY0 + 'px', width: W + 2*PX0 + 'px', height: H + 2*PY0 + 'px'});
@@ -1343,14 +1374,14 @@ const placeName = s => venueOf(s).place || s.venue || s.name;
 const addrOf = s => s.address || venueOf(s).address || '';
 const mapQ = s => encodeURIComponent(addrOf(s) ? placeName(s) + ', ' + addrOf(s) : placeName(s) + ', ' + (s.city || ''));
 const longDate = d => DAY[d.getDay()] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear();
-const atOf = s => { const p = placeName(s), t = (s.tag || s.name).toLowerCase(); return t.includes(String(p).toLowerCase()) ? (s.city || '').split(',')[0] : p; };
+const atOf = s => placeName(s);
 const detailHTML = (s, k) =>
   '<dl>' +
     '<dt>WHEN</dt><dd>' + (s.d ? longDate(s.d) : 'Every ' + esc(s.day || 'week')) + (s.time ? ' · ' + esc(s.time) : '') + '</dd>' +
     '<dt>WHERE</dt><dd>' + esc(placeName(s)) + (s.with ? ' · b2b ' + esc(s.with) : '') + '</dd>' +
     (addrOf(s) ? '<dt>ADDRESS</dt><dd>' + esc(addrOf(s)) + '</dd>' : '<dt>CITY</dt><dd>' + esc(s.city || '') + '</dd>') +
   '</dl><div class="mr"><div class="map" data-q="' + mapQ(s) + '"><a href="https://www.google.com/maps/search/?api=1&query=' + mapQ(s) + '" target="_blank" rel="noopener" aria-label="Directions to ' + esc(placeName(s)) + '"></a><svg class="pin" viewBox="0 0 24 32"><use href="#i-pin"/></svg><small>DIRECTIONS ↗</small></div>' +
-  '<div class="bt"><button class="p" data-act="share" data-k="' + k + '">SHARE ↗</button><button data-act="remind" data-k="' + k + '">REMIND ME ⏰</button></div></div>' +
+  '<div class="bt"><button class="p" data-act="share" data-k="' + k + '">SHARE ↗</button><button data-act="remind" data-k="' + k + '">REMIND ME <svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg></button></div></div>' +
   '<div class="gstat" role="status"></div>';
 $('#gigs').innerHTML = upcoming.length ? upcoming.slice(0, 8).map((s, k) => {
   const date = s.d ? '<b>' + String(s.d.getDate()).padStart(2,'0') + '</b><span>' + MON[s.d.getMonth()] + ' · ' + DAY[s.d.getDay()] + '</span>' : '<b>' + esc(s.day || '∞') + '</b><span>EVERY WEEK</span>';
@@ -1697,11 +1728,12 @@ function deckSfx(kind) {
 /* Crate Chase: button on the deck + a pop-up the first times a tape starts */
 $('#arcBadge').addEventListener('click', () => window.CrateChase && CrateChase.open());
 const nudge = document.createElement('div'); nudge.className = 'arc-nudge'; nudge.setAttribute('role', 'status');
-nudge.innerHTML = '<div><b>🕹 Crate Chase</b><small>play while this tape runs. music keeps going.</small></div><button class="go" type="button">PLAY</button><button class="x" type="button" aria-label="Dismiss">✕</button>';
+nudge.innerHTML = '<div><b>🕹 Crate Chase</b><small>the tape keeps rolling. you dodge the glitches.</small></div><button class="go" type="button">PLAY</button><button class="x" type="button" aria-label="Dismiss">✕</button>';
 document.body.appendChild(nudge);
 let nudgeT = 0, nudges = 0;
 function arcadeNudge() {
-  if (nudges >= 2 || (window.CrateChase && CrateChase.isOpen)) return;
+  if (nudges >= 1 || (window.CrateChase && CrateChase.isOpen)) return;
+  const dr = deck.getBoundingClientRect(); if (dr.bottom < 0 || dr.top > innerHeight) return;   /* only when the deck is in view */
   nudges++; clearTimeout(nudgeT); nudge.classList.add('on'); nudgeT = setTimeout(() => nudge.classList.remove('on'), 9000);
 }
 nudge.querySelector('.go').addEventListener('click', () => { nudge.classList.remove('on'); window.CrateChase && CrateChase.open(); });
@@ -2066,6 +2098,36 @@ document.querySelectorAll('[data-plat]').forEach(sel => {
   };
   sel.addEventListener('change', sync); sync();
 });
+
+/* ---------- one-click navigation: section index on the right + back to top ---------- */
+(() => {
+  const SECS = [['top', 'Start'], ['board', 'Upcoming'], ['tapes', 'Archive Tapes'], ['been', 'Been There'], ['about', 'About'], ['booking', 'Booking'], ['socials', 'Socials']];
+  const sn = $('#secnav');
+  sn.innerHTML = SECS.map(([id, l]) => '<a href="#' + id + '" data-sec="' + id + '"><i></i><span>' + l + '</span></a>').join('');
+  const toTop = $('#toTop');
+  toTop.addEventListener('click', () => scrollTo({top: 0, behavior: REDUCE ? 'auto' : 'smooth'}));
+  const mark = () => {
+    const y = scrollY + innerHeight * .4; let cur = 'top';
+    SECS.forEach(([id]) => { const el = document.getElementById(id); if (el && el.offsetTop <= y) cur = id; });
+    $$('a', sn).forEach(a => a.classList.toggle('on', a.dataset.sec === cur));
+    const show = scrollY > innerHeight * .8; toTop.classList.toggle('on', show); sn.classList.toggle('on', show);
+  };
+  addEventListener('scroll', mark, {passive: true}); addEventListener('resize', mark); mark();
+})();
+
+/* ---------- crate depth: the viewing angle shifts as you scroll past (and follows the mouse) ---------- */
+(() => {
+  const cr = $('#crate'), sec = $('#tapes'); if (!cr || REDUCE) return;
+  let mx = 50;
+  const upd = () => {
+    const r = sec.getBoundingClientRect(), p = Math.max(0, Math.min(1, (innerHeight - r.top) / (innerHeight + r.height)));
+    cr.style.perspectiveOrigin = mx.toFixed(1) + '% ' + (-35 + p * 95).toFixed(1) + '%';
+  };
+  addEventListener('scroll', upd, {passive: true});
+  sec.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; const r = cr.getBoundingClientRect(); mx = 50 + Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / r.width)) * 22; upd(); });
+  sec.addEventListener('pointerleave', () => { mx = 50; upd(); });
+  upd();
+})();
 
 /* ---------- lightbox ---------- */
 const lb = $('#lb'), lbImg = $('#lbImg');

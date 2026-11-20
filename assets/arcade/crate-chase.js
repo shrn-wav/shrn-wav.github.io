@@ -49,7 +49,7 @@
   const panel = document.createElement('aside');
   panel.id = 'arcade'; panel.setAttribute('aria-label', 'Crate Chase game'); panel.setAttribute('aria-hidden', 'true');
   panel.innerHTML =
-    '<div class="ar-head"><div><b>Crate Chase</b><span id="arNow">— no tape playing —</span></div><button class="ar-x" id="arX" aria-label="Close game">✕</button></div>' +
+    '<div class="ar-head"><button class="ar-back" id="arBack" type="button" aria-label="Back to the site">← BACK</button><div class="ar-ttl"><b>Crate Chase</b><span id="arNow">— no tape playing —</span></div><button class="ar-x" id="arX" aria-label="Close game">✕</button></div>' +
     '<div class="ar-hud"><span>SCORE <b id="arScore">0</b></span><span>BEST <b id="arBest">0</b></span><span>LVL <b id="arLvl">1</b></span><span id="arLives"></span></div>' +
     '<div class="ar-stage"><canvas id="arCv" aria-label="Game board"></canvas><div class="ar-msg" id="arMsg"></div></div>' +
     '<div class="ar-pad" aria-label="Controls"><button data-d="up" aria-label="Up">▲</button><button data-d="left" aria-label="Left">◀</button><button data-d="down" aria-label="Down">▼</button><button data-d="right" aria-label="Right">▶</button></div>' +
@@ -245,12 +245,31 @@
     if (state !== 'play' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); go(); }
   });
   panel.querySelector('.ar-pad').addEventListener('pointerdown', e => { const b = e.target.closest('[data-d]'); if (b) { e.preventDefault(); steer(b.dataset.d); } });
+  /* touch: swipe ANYWHERE on the game panel to steer (not just the board). A tap only starts or resumes. */
   let sw = null;
-  cv.addEventListener('pointerdown', e => { sw = {x: e.clientX, y: e.clientY}; if (state !== 'play' && state !== 'paused') go(); else if (state === 'paused') { state = 'play'; msg.hidden = true; } });
-  cv.addEventListener('pointermove', e => { if (!sw) return; const dx = e.clientX - sw.x, dy = e.clientY - sw.y; if (Math.max(Math.abs(dx), Math.abs(dy)) > 18) { steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up')); sw = {x: e.clientX, y: e.clientY}; } });
-  addEventListener('pointerup', () => { sw = null; });
-  msg.addEventListener('pointerdown', () => { if (state === 'paused') { state = 'play'; msg.hidden = true; } else go(); });
+  const SWIPE = 22;
+  panel.addEventListener('pointerdown', e => {
+    if (e.target.closest('button,a')) return;
+    sw = {x: e.clientX, y: e.clientY, moved: false, id: e.pointerId};
+    try { panel.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  panel.addEventListener('pointermove', e => {
+    if (!sw || e.pointerId !== sw.id) return;
+    const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE) return;
+    sw.moved = true;
+    steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+    sw.x = e.clientX; sw.y = e.clientY;
+  });
+  const endSwipe = e => {
+    if (!sw || (e && e.pointerId !== sw.id)) return;
+    const tapped = !sw.moved; sw = null;
+    if (tapped && state !== 'play') { if (state === 'paused') { state = 'play'; msg.hidden = true; } else go(); }
+  };
+  panel.addEventListener('pointerup', endSwipe);
+  panel.addEventListener('pointercancel', () => { sw = null; });
   panel.querySelector('#arX').addEventListener('click', () => close());
+  panel.querySelector('#arBack').addEventListener('click', () => close());
   addEventListener('resize', () => { if (open) size(); });
 
   function openGame() {
