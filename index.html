@@ -733,6 +733,48 @@ footer .flogo{width:min(240px,60vw);}
 .jack i{display:block;width:22px;height:22px;margin:9px 0;border-radius:50%;background:radial-gradient(circle,#000 35%,#2c301f 38%,#1a1c13 70%);border:1px solid #3a3f2c;}
 @media(max-width:600px){.deck .brand .model{display:none;}.deck .brand .dk-logo{height:26px;}}
 
+/* knobs: all turnable */
+.knob{cursor:ns-resize;touch-action:none;user-select:none;-webkit-user-select:none;}
+.knob:focus-visible i{outline:2px solid var(--acid);outline-offset:3px;}
+.knob.sm i{width:30px;height:30px;}
+.knob.sm i::after{height:8px;top:3px;}
+.knob .jk{display:block;width:12px;height:12px;border-radius:50%;margin-top:2px;background:radial-gradient(circle,#000 40%,#2c301f 45%);border:1px solid #3a3f2c;text-decoration:none;}
+.knob:active i{box-shadow:0 0 0 2px rgba(209,250,29,.35),0 3px 6px rgba(0,0,0,.6);}
+/* game button + pop-up */
+.arc-btn{font-size:11px;font-weight:700;letter-spacing:.14em;padding:8px 12px;border:1px solid var(--acid);color:var(--acid);border-radius:4px;transition:all .15s;}
+.arc-btn:hover{background:var(--acid);color:var(--ink);}
+.deck .row{gap:12px;flex-wrap:wrap;}
+.arc-nudge{position:fixed;right:20px;bottom:96px;z-index:8600;display:flex;align-items:center;gap:12px;padding:12px 14px;max-width:340px;background:var(--ink2);border:1px solid var(--acid);border-radius:10px;box-shadow:0 20px 40px -20px rgba(209,250,29,.5);transform:translateY(20px);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.2,.8,.2,1);}
+.arc-nudge.on{transform:none;opacity:1;pointer-events:auto;}
+.arc-nudge b{display:block;font-family:var(--goth);font-weight:900;font-size:22px;line-height:1;color:var(--acid);}
+.arc-nudge small{display:block;font-size:11px;color:var(--muted);margin-top:3px;}
+.arc-nudge .go{font-size:11px;font-weight:700;letter-spacing:.14em;padding:9px 12px;background:var(--acid);color:var(--ink);border-radius:4px;white-space:nowrap;}
+.arc-nudge .x{color:var(--muted);font-size:16px;padding:4px;}
+/* the game panel (opens beside the page; music keeps playing) */
+#arcade{position:fixed;top:0;right:0;bottom:0;z-index:9500;width:min(460px,100vw);display:flex;flex-direction:column;gap:10px;padding:16px 16px 12px;background:#080906;border-left:2px solid var(--acid);box-shadow:-30px 0 60px -30px rgba(209,250,29,.35);transform:translateX(105%);transition:transform .45s cubic-bezier(.2,.8,.2,1);}
+#arcade.on{transform:none;}
+.ar-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.ar-head b{display:block;font-family:var(--goth);font-weight:900;font-size:34px;line-height:1;color:var(--acid);}
+.ar-head span{display:block;font-size:11px;letter-spacing:.08em;color:var(--muted);margin-top:4px;max-width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ar-x{width:40px;height:40px;border:1px solid var(--line2);border-radius:50%;color:var(--paper);font-size:16px;flex:none;}
+.ar-x:hover{border-color:var(--acid);color:var(--acid);}
+.ar-hud{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;letter-spacing:.14em;color:var(--muted);}
+.ar-hud b{color:var(--acid);font-size:14px;}
+#arLives{color:#ff7a3b;letter-spacing:.2em;margin-left:auto;}
+.ar-stage{position:relative;flex:1;min-height:0;display:grid;place-items:center;}
+.ar-stage canvas{display:block;border:1px solid var(--line2);border-radius:6px;touch-action:none;}
+.ar-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:20px;background:rgba(5,5,5,.72);cursor:pointer;}
+.ar-msg[hidden]{display:none;}
+.ar-msg b{font-family:var(--goth);font-weight:900;font-size:40px;line-height:1;color:var(--acid);}
+.ar-msg span{font-size:12px;color:var(--paper);max-width:300px;line-height:1.6;}
+.ar-pad{display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,48px);gap:6px;justify-content:center;}
+.ar-pad button{border:1px solid var(--acid-dim);border-radius:8px;color:var(--acid);font-size:18px;background:#0f100b;touch-action:none;}
+.ar-pad [data-d=up]{grid-column:2;grid-row:1;} .ar-pad [data-d=left]{grid-column:1;grid-row:2;} .ar-pad [data-d=down]{grid-column:2;grid-row:2;} .ar-pad [data-d=right]{grid-column:3;grid-row:2;}
+.ar-help{font-size:10px;letter-spacing:.08em;color:var(--acid-dim);text-align:center;}
+@media (hover:none),(max-width:700px){.ar-pad{display:grid;}}
+body.arcade-on .rail{opacity:0;pointer-events:none;}
+body.arcade-on #dock{opacity:.15;pointer-events:none;}
+
 @media (prefers-reduced-motion:reduce){
   .grain,.strip-bar .inner,.deck.playing .reel,.card,.show,.bay.clunk{animation:none;}
   .reveal,.stagger > *{opacity:1;transform:none;}
@@ -801,12 +843,12 @@ footer .flogo{width:min(240px,60vw);}
           <div class="np" id="np" aria-live="polite">— NO TAPE —</div>
           <div class="meter" aria-hidden="true"><span>L</span><div class="vu" id="vu"></div><span>R</span></div>
           <div class="sw" aria-hidden="true"><span><i class="on"></i>NR B</span><span><i></i>MPX FILTER</span><span><i class="on"></i>AUTO REV</span></div>
-          <div class="knobs"><div class="knob" aria-hidden="true" style="--rot:-40deg"><i></i><span>REC LEVEL</span></div><div class="knob" id="outKnob" role="slider" tabindex="0" aria-label="Output volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" style="--rot:135deg"><i></i><span>OUTPUT</span></div><div class="jack" aria-hidden="true"><i></i><span>PHONES</span></div></div>
+          <div class="knobs"><div class="knob" id="recKnob" role="slider" tabindex="0" aria-label="Rec level (meter sensitivity)" aria-valuemin="0" aria-valuemax="100" data-v="70"><i></i><span>REC LEVEL</span></div><div class="knob" id="outKnob" role="slider" tabindex="0" aria-label="Output volume" aria-valuemin="0" aria-valuemax="100" data-v="100"><i></i><span>OUTPUT</span></div><div class="knob sm" id="phKnob" role="slider" tabindex="0" aria-label="Phones level (EQ bars)" aria-valuemin="0" aria-valuemax="100" data-v="60"><i></i><span>PHONES</span><u class="jk"></u></div></div>
         </div>
       </div>
       <div class="seek"><span id="tCur">00:00</span><input type="range" id="seek" min="0" max="1000" step="1" value="0" aria-label="Scrub through the set"><span id="tDur">--:--</span></div>
       <div class="keys"><button id="kPrev" aria-label="Previous tape">◀◀<small>REW</small></button><button id="kPlay" aria-label="Play">▶<small>PLAY</small></button><button id="kPause" aria-label="Pause">❚❚<small>PAUSE</small></button><button id="kNext" aria-label="Next tape">▶▶<small>FF</small></button><button id="kEject" aria-label="Eject">⏏<small>STOP/EJ</small></button></div>
-      <div class="row"><span class="mk">$H₹N AUDIO · MADISON, WI · MODEL 303</span><a class="src" id="scLink" target="_blank" rel="noopener">OPEN ON SOUNDCLOUD ↗</a></div>
+      <div class="row"><span class="mk">$H₹N AUDIO · MADISON, WI · MODEL 303</span><button class="arc-btn" id="arcBtn" type="button">🕹 PLAY CRATE CHASE</button><a class="src" id="scLink" target="_blank" rel="noopener">OPEN ON SOUNDCLOUD ↗</a></div>
       <p class="tapnote" id="tapNote">your browser blocked the sound. tap ▶ on the player below once and it's on.</p>
       <div class="scwrap"><iframe id="sc" title="$H₹N on SoundCloud" allow="autoplay"></iframe></div>
     </div>
@@ -1314,7 +1356,7 @@ gigsEl.addEventListener('keydown', e => { const g = e.target.closest('.gig[data-
 
 /* shared 'is a tape playing' state for the waves, EQ bars and tab icon */
 const MUSIC = {on: false, bpm: 126, t0: 0};
-let OUTV = 100;   /* deck OUTPUT knob, 0–100 */
+let OUTV = 100, RECV = 70, PHV = 60;   /* deck knobs, 0–100 */
 const beatAt = now => MUSIC.on ? Math.exp(-(((now - MUSIC.t0) / 1000 * MUSIC.bpm / 60) % 1) * 7) : 0;
 /* =====================================================================
    02 ARCHIVE TAPES — drag through the crate, play on the deck
@@ -1469,10 +1511,10 @@ function scPlay(k) {
     else window.open(S.soundcloudProfile, '_blank', 'noopener');
   });
 }
-function load(k) {
+function load(k, quiet) {
   if (!tapes[k]) return;
   if (loaded === k) { if (widget && scReady) { armWatch(); widget.play(); } else scPlay(k); return; }
-  tapeSfx(); scPlay(k);   /* start the sound inside the tap itself: phones only allow audio that starts from a tap */
+  if (!quiet) tapeSfx(); scPlay(k);   /* start the sound inside the tap itself: phones only allow audio that starts from a tap */
   const src = tapeEls[k].querySelector('.cas'), a = src.getBoundingClientRect();
   loaded = k; layCrate();
   const b = bay.getBoundingClientRect();
@@ -1497,22 +1539,102 @@ function eject() {
   if (widget) widget.pause();
   loaded = -1; emptyBay(); npEl.textContent = '— NO TAPE —'; tCur.textContent = '00:00'; tDur.textContent = '--:--'; seek.value = 0; seek.style.setProperty('--p', '0%'); layCrate();
 }
-$('#kPlay').addEventListener('click', () => loaded >= 0 ? ((widget && scReady) ? (armWatch(), widget.play()) : scPlay(loaded)) : load(Math.round(target)));
-$('#kPause').addEventListener('click', () => widget && widget.pause());
-$('#kNext').addEventListener('click', () => load(loaded >= 0 ? (loaded + 1) % tapes.length : Math.round(target)));
-$('#kEject').addEventListener('click', eject);
-/* OUTPUT knob: drag up/down, scroll, or arrow keys to set the volume */
+$('#kPlay').addEventListener('click', () => (deckSfx('play'), loaded >= 0) ? ((widget && scReady) ? (armWatch(), widget.play()) : scPlay(loaded)) : load(Math.round(target)));
+$('#kPause').addEventListener('click', () => { deckSfx('pause'); if (widget) widget.pause(); });
+$('#kNext').addEventListener('click', () => { deckSfx('ff'); load(loaded >= 0 ? (loaded + 1) % tapes.length : Math.round(target), true); });
+$('#kEject').addEventListener('click', () => { deckSfx(loaded >= 0 ? 'eject' : 'stop'); eject(); });
+/* ---------- deck key sounds: each key sounds like the real mechanism (made in code, no files) ---------- */
+function deckSfx(kind) {
+  try {
+    TAC = TAC || new (window.AudioContext || window.webkitAudioContext)();
+    if (TAC.state === 'suspended') TAC.resume();
+    const A = TAC, t0 = A.currentTime, out = A.createGain(); out.gain.value = .9; out.connect(A.destination);
+    const noise = dur => { const n = A.createBufferSource(), b = A.createBuffer(1, Math.ceil(A.sampleRate * dur), A.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = b; return n; };
+    /* a latch click: bright tick + low body thud */
+    const click = (t, tone = 1, vol = .5) => {
+      const n = noise(.03), hp = A.createBiquadFilter(), g = A.createGain();
+      hp.type = 'bandpass'; hp.frequency.value = 3200 * tone; hp.Q.value = 2;
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + .03);
+      n.connect(hp); hp.connect(g); g.connect(out); n.start(t); n.stop(t + .04);
+      const o = A.createOscillator(), og = A.createGain(); o.type = 'sine';
+      o.frequency.setValueAtTime(170 * tone, t); o.frequency.exponentialRampToValueAtTime(60, t + .06);
+      og.gain.setValueAtTime(vol * .9, t); og.gain.exponentialRampToValueAtTime(.001, t + .08);
+      o.connect(og); og.connect(out); o.start(t); o.stop(t + .1);
+    };
+    /* the tape spooling fast: filtered noise whir with flutter */
+    const whir = (t, dur, f1, f2, vol = .16) => {
+      const n = noise(dur), bp = A.createBiquadFilter(), g = A.createGain(), l = A.createOscillator(), lg = A.createGain();
+      bp.type = 'bandpass'; bp.Q.value = 4; bp.frequency.setValueAtTime(f1, t); bp.frequency.exponentialRampToValueAtTime(f2, t + dur * .8);
+      l.frequency.value = 26; lg.gain.value = f1 * .25; l.connect(lg); lg.connect(bp.frequency);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .05); g.gain.setValueAtTime(vol, t + dur * .75); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+      n.connect(bp); bp.connect(g); g.connect(out); n.start(t); n.stop(t + dur); l.start(t); l.stop(t + dur);
+    };
+    /* motor spinning up / down */
+    const motor = (t, dur, f1, f2, vol = .05) => {
+      const o = A.createOscillator(), lp = A.createBiquadFilter(), g = A.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(f1, t); o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+      lp.type = 'lowpass'; lp.frequency.value = 600;
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+      o.connect(lp); lp.connect(g); g.connect(out); o.start(t); o.stop(t + dur + .02);
+    };
+    if (kind === 'play')  { click(t0, 1, .55); click(t0 + .07, .6, .45); motor(t0 + .05, .35, 40, 95); }           /* ka-chunk + capstan spinning up */
+    if (kind === 'pause') { click(t0, 1.3, .4); motor(t0, .18, 95, 45, .04); }                                       /* light latch + quick stop */
+    if (kind === 'rew')   { click(t0, .9, .5); whir(t0 + .04, .7, 1800, 900); }                                      /* clunk + spooling backwards (falling) */
+    if (kind === 'ff')    { click(t0, .9, .5); whir(t0 + .04, .7, 900, 2600); }                                      /* clunk + spooling forwards (rising) */
+    if (kind === 'stop')  { click(t0, .8, .6); motor(t0, .25, 95, 30, .05); }                                        /* heavy stop latch, motor winds down */
+    if (kind === 'eject') {                                                                                         /* stop latch, then the door springs open and rattles */
+      click(t0, .8, .6); motor(t0, .22, 95, 30, .05);
+      const t = t0 + .16, o = A.createOscillator(), g = A.createGain(), v = A.createOscillator(), vg = A.createGain();
+      o.type = 'triangle'; o.frequency.setValueAtTime(240, t); v.frequency.value = 38; vg.gain.value = 40; v.connect(vg); vg.connect(o.frequency);
+      g.gain.setValueAtTime(.22, t); g.gain.exponentialRampToValueAtTime(.001, t + .35);
+      o.connect(g); g.connect(out); o.start(t); o.stop(t + .38); v.start(t); v.stop(t + .38);
+      click(t + .02, 1.6, .25);
+    }
+    if (kind === 'tick') { click(t0, 2.2, .12); }
+  } catch (_) {}
+}
+/* knobs: drag up/down, scroll, or arrow keys. OUTPUT = volume, REC LEVEL = meter sensitivity, PHONES = EQ bars */
 (() => {
-  const k = $('#outKnob');
-  const set = v => { OUTV = Math.round(Math.max(0, Math.min(100, v))); k.style.setProperty('--rot', (-135 + OUTV * 2.7) + 'deg'); k.setAttribute('aria-valuenow', OUTV); if (widget && scReady) widget.setVolume(OUTV); };
-  let d = null;
-  k.addEventListener('pointerdown', e => { d = {y: e.clientY, v: OUTV}; try { k.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault(); });
-  k.addEventListener('pointermove', e => { if (d) set(d.v + (d.y - e.clientY) * .6); });
-  k.addEventListener('pointerup', () => { d = null; });
-  k.addEventListener('wheel', e => { e.preventDefault(); set(OUTV - Math.sign(e.deltaY) * 5); }, {passive: false});
-  k.addEventListener('keydown', e => { if (/Arrow(Up|Right)/.test(e.key)) { e.preventDefault(); set(OUTV + 5); } if (/Arrow(Down|Left)/.test(e.key)) { e.preventDefault(); set(OUTV - 5); } });
+  const KN = {
+    outKnob: v => { OUTV = v; if (widget && scReady) widget.setVolume(v); },
+    recKnob: v => { RECV = v; },
+    phKnob:  v => { PHV = v; },
+  };
+  $$('.knob').forEach(k => {
+    const fn = KN[k.id] || (() => {});
+    let val = +k.dataset.v || 50, lastTick = Math.round(val / 10);
+    const set = v => {
+      val = Math.round(Math.max(0, Math.min(100, v)));
+      k.querySelector('i').style.transform = 'rotate(' + (-135 + val * 2.7) + 'deg)';
+      k.setAttribute('aria-valuenow', val);
+      const tk = Math.round(val / 10); if (tk !== lastTick) { lastTick = tk; deckSfx('tick'); }
+      fn(val);
+    };
+    set(val);
+    let d = null;
+    k.addEventListener('pointerdown', e => { d = {y: e.clientY, x: e.clientX, v: val}; try { k.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault(); });
+    k.addEventListener('pointermove', e => { if (d) set(d.v + ((d.y - e.clientY) + (e.clientX - d.x)) * .6); });
+    k.addEventListener('pointerup', () => { d = null; });
+    k.addEventListener('pointercancel', () => { d = null; });
+    k.addEventListener('wheel', e => { e.preventDefault(); set(val - Math.sign(e.deltaY) * 5); }, {passive: false});
+    k.addEventListener('keydown', e => { if (/Arrow(Up|Right)/.test(e.key)) { e.preventDefault(); set(val + 5); } if (/Arrow(Down|Left)/.test(e.key)) { e.preventDefault(); set(val - 5); } });
+  });
 })();
-$('#kPrev').addEventListener('click', () => load(loaded > 0 ? loaded - 1 : (loaded === 0 ? tapes.length - 1 : Math.max(0, Math.round(target) - 1))));
+/* Crate Chase: button on the deck + a pop-up the first times a tape starts */
+const arcBtn = $('#arcBtn');
+arcBtn.addEventListener('click', () => window.CrateChase && CrateChase.open());
+const nudge = document.createElement('div'); nudge.className = 'arc-nudge'; nudge.setAttribute('role', 'status');
+nudge.innerHTML = '<div><b>🕹 Crate Chase</b><small>play while this tape runs. music keeps going.</small></div><button class="go" type="button">PLAY</button><button class="x" type="button" aria-label="Dismiss">✕</button>';
+document.body.appendChild(nudge);
+let nudgeT = 0, nudges = 0;
+function arcadeNudge() {
+  if (nudges >= 2 || (window.CrateChase && CrateChase.isOpen)) return;
+  nudges++; clearTimeout(nudgeT); nudge.classList.add('on'); nudgeT = setTimeout(() => nudge.classList.remove('on'), 9000);
+}
+nudge.querySelector('.go').addEventListener('click', () => { nudge.classList.remove('on'); window.CrateChase && CrateChase.open(); });
+nudge.querySelector('.x').addEventListener('click', () => { nudge.classList.remove('on'); nudges = 9; });
+
+$('#kPrev').addEventListener('click', () => { deckSfx('rew'); load(loaded > 0 ? loaded - 1 : (loaded === 0 ? tapes.length - 1 : Math.max(0, Math.round(target) - 1)), true); });
 /* deck display: time remaining on the tape (tap it to switch to elapsed), in step with the play bar */
 const lcdT = $('#lcdT'), lcdK = $('#lcdK'); let lcdMode = 'remain';
 const toSec = t => /\d/.test(t || '') ? t.split(':').map(Number).reduce((a, b) => a * 60 + (b || 0), 0) : NaN;
@@ -1527,6 +1649,7 @@ $('#lcd').addEventListener('click', () => { lcdMode = lcdMode === 'remain' ? 'el
 paintLcd();
 const dockEl = $('#dock'), npBtn = $('#npBtn'), npTitle = $('#npTitle');
 function onPlay() {
+  arcadeNudge();
   clearTimeout(playWatch); deck.classList.remove('needtap'); MUSIC.on = true; MUSIC.t0 = performance.now();
   if (fadeIn) { fadeIn = false; let v = 0; const up = setInterval(() => { v = Math.min(OUTV, v + 8); widget.setVolume(v); if (v >= OUTV) clearInterval(up); }, 90); }
   deck.classList.add('playing'); dockEl.classList.add('playing'); npBtn.textContent = '❚❚';
@@ -1539,7 +1662,7 @@ function onPlay() {
   clearInterval(pulseTimer); clearInterval(vuTimer);
   if (!REDUCE) {
     pulseTimer = setInterval(() => { document.body.classList.add('pulse'); setTimeout(() => document.body.classList.remove('pulse'), 90); }, 60000 / bpm);
-    vuTimer = setInterval(() => $$('i', vu).forEach(b => b.style.height = (4 + Math.random()*16) + 'px'), 120);
+    vuTimer = setInterval(() => $$('i', vu).forEach(b => b.style.height = Math.min(22, 3 + Math.random()*16 * (.3 + RECV / 70)) + 'px'), 120);
   }
 }
 function onStop() {
@@ -1989,7 +2112,7 @@ if (!REDUCE) (() => {
     const {w, h, ctx} = C, t = now / 1000, b = beatAt(now), br = box.getBoundingClientRect(), sr = $('#tapes').getBoundingClientRect();
     const px = P.x - (br.left - sr.left), py = P.y - (br.top - sr.top);
     ctx.clearRect(0, 0, w, h); P.energy *= .96;
-    const gap = 4, bw = (w - gap * (N - 1)) / N, maxH = (h - 10) * .62;
+    const gap = 4, bw = (w - gap * (N - 1)) / N, maxH = (h - 10) * (.25 + PHV / 100 * .62);
     for (let i = 0; i < N; i++) {
       const x = i * (bw + gap), dx = (x + bw / 2 - px) / 60;
       const near = P.in ? Math.exp(-dx * dx) * Math.max(0, 1 - Math.abs(py - h) / 420) * (.3 + P.energy * .7) : 0;
@@ -2093,5 +2216,6 @@ if (!REDUCE) (() => {
 console.log('%c$H₹N', 'font:900 48px serif;color:#D1FA1D;background:#050505;padding:6px 18px');
 console.log('%cdigging through the code? respect. copying it? nah.\nthis site, its design and its logos are © $H₹N. all rights reserved.\nwant your own? book me instead → ' + (S.email || 'artist.shrn@gmail.com'), 'font:13px monospace;color:#9cbb15');
 </script>
+<script src="assets/arcade/crate-chase.js"></script>
 </body>
 </html>
