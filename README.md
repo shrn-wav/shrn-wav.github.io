@@ -1,67 +1,62 @@
 # $H₹N — website
 
-The live site for $H₹N (shrn.wav). Everything you'll ever change lives in **one file, `content.js`**, plus the image and video files in `assets/`.
+The live site for $H₹N (shrn.wav): **https://shrn-wav.github.io**. Everything you'll normally change lives in **one file, `content.js`**, plus the image and video files in `assets/`.
 
 ## How it's organized
 
 ```
 site/
-├── content.js          ← ALL text, shows, sets, socials, stories, gallery (edit this)
-├── index.html          ← the main page (design + animations, rarely touched)
-├── list.html           ← announcement-list sign-up page (for gigs / QR codes)
+├── content.js          ← ALL text, bios, shows, sets, socials, stories, venues (edit this)
+├── index.html          ← the main page (design, animations, tape deck)
+├── epk.html            ← press kit page (fills itself from content.js)
 ├── links.html          ← link-in-bio page
-├── epk.html            ← built-in press kit
+├── list.html           ← announcement-list sign-up page (for gigs / QR codes)
+├── 404.html            ← "page not found" page
+├── robots.txt          ← lets search engines in, keeps AI-training bots out
 └── assets/
-    ├── brand/          ← logos (+ logo-pixels.js, the hero animation data)
+    ├── brand/          ← logos, tab icons, logo-pixels.js (hero animation data)
+    ├── arcade/         ← crate-chase.js, the Crate Chase game
+    ├── press/          ← press photos + shrn-press-kit.pdf
+    ├── sets/           ← fallback tape art (live art comes from SoundCloud)
     ├── shows/          ← posters and photos for shows
-    ├── stories/        ← Instagram story files (photos .jpg / videos .mp4)
-    ├── press/          ← press photos
-    └── sets/           ← fallback cover art (live art comes from SoundCloud)
+    └── stories/        ← Instagram stories, one folder per night: <date>-<event>/
 ```
 
 ## What updates by itself
-- **Upcoming → past:** shows move from Upcoming to "Been There, Rinsed That" automatically the day after their date.
-- **New sets:** any new SoundCloud upload appears in the Archive Tapes crate with its SoundCloud artwork and length.
-- **Next show:** the scrolling strip, the link-in-bio page and the announcement page always show your next date.
+- **Upcoming → past:** shows move from Upcoming to "Been There, Rinsed That" the day after their date.
+- **New SoundCloud sets** appear in the Archive Tapes crate with their artwork and length.
+- **Next show** on the ticker, link-in-bio, sign-up page and press kit page.
+- **Press kit page** counts (shows, Madison nights, residencies) from the show list.
+  The downloadable **PDF** is a snapshot: ask Claude to rebuild it after big changes.
 
 ## Common updates (in `content.js`)
 
-**Add an upcoming show:** copy a line in `shows:` and change it:
+**Add an upcoming show** — copy a line in `shows:` and change it:
 ```js
-{ date: "2026-12-20", name: "Nattspil", type: "club", venue: "Nattspil", city: "Madison, WI" },
+{ date: "2026-12-20", time: "10PM – 2AM", name: "Nattspil", tag: "Nattspil: E007", loc: "Nattspil", type: "club", venue: "Nattspil", city: "Madison, WI" },
 ```
-- `type`: `club`, `popup`, `radio`, `stream`, `festival` or `competition`
+- `tag` = the event name shown big; `loc` = the location line (Madison series group by it)
+- `time` shows on Upcoming and goes into "Remind me" calendar alerts
+- addresses for the map come from `venues:` (add a venue once, every show there gets the map)
 - b2b: `with: "Teryx"`
-- weekly residency: `recurring: "Every Thursday", day: "THU"` (and `date: ""`)
 
-**Add a poster:** put the image in `assets/shows/` (JPG under about 500KB), then add it to the show:
-`gallery: ["assets/shows/2026-12-20-nattspil.jpg"]`. The show's card then shows the poster.
+**Posters:** put the image in `assets/shows/` (JPG under ~500KB) and add `gallery: ["assets/shows/…jpg"]`.
 
-**Link Instagram stories to a show:** save the stories from Instagram (open the highlight → **⋯ → Save**) and drop them into `assets/stories/`, in a folder named after the event. Then ask Claude to "wire in the new stories". Claude matches each file to its show, converts any video phones can't play, makes the little circle thumbnails, and pushes. The stories appear as circles inside that show's card under "Been There, Rinsed That"; tapping one plays it.
-Each show can also have `instagram: "https://www.instagram.com/stories/highlights/…"`, which powers the "View on Instagram" button in the story viewer.
+**Instagram stories:** drop the saved files into `assets/stories/<date>-<event>/` and ask Claude to "wire in the new stories" (it converts videos for iPhone, makes the circle thumbnails, and pushes). Optional per story: a tappable link sticker `{src:"…mp4", link:"https://…", label:"@venue"}` or music for silent clips `{src:"…", music:"assets/music/track.mp3"}`.
 
-**Folder layout:** each show's stories live in `assets/stories/<date>-<event>/`, for example `assets/stories/2026-11-13-gta-rave/`. Every story has a matching `.thumb.jpg` used for its circle.
+**Other:** bios → `bioShort` / `bioLong`; ticker extras → `strip`; socials → `active: true/false`; collective text → `collective`; other press kit link → `pressKitExternal`.
 
-**Gallery:** add or remove image paths in `gallery:`.
-**Titles / captions / buttons:** `sections:`, `captions:`, `buttons:`.
-**Socials:** set `active: true` or `false`.
-**Press kit:** paste your own link into `pressKitUrl` (empty = built-in page).
-**Announcement list:** after setting up a free form at kit.com, paste its number into `list: { kitFormId: "…" }`. Until then, sign-ups arrive as an email to you.
+## Forms (bookings + announcement list)
+Both forms post to a Google Sheet ("SHRN website forms", tabs **Bookings** and **List**) through a Google Apps Script web app (`formsUrl` in content.js). Each submission emails artist.shrn@gmail.com: **🔥 BOOKING —** or **+1 LIST —**. The script has spam traps, formula-injection protection and a flood limit. If `formsUrl` is ever empty, forms fall back to opening the visitor's email app.
 
-## Three ways to update the live site
+## Updating the live site
+1. **Ask Claude (easiest):** send the details and files; Claude edits, tests and pushes. Live in about a minute.
+2. **github.com:** open a file → ✏️ → edit → **Commit changes** (images: folder → **Add file → Upload files**).
+3. **On your computer:** edit `C:\DJ WEBSITE\site`, then `git push`.
 
-1. **Ask Claude (easiest).** Send the details and files, for example "add Dec 20 Nattspil, poster attached". Claude edits `content.js`, adds the files, and pushes; the site updates in about a minute.
-2. **On github.com, from your phone or laptop.**
-   - Text: open `content.js` → ✏️ → edit → **Commit changes**.
-   - Images: open the folder (for example `assets/shows`) → **Add file → Upload files** → **Commit changes**.
-3. **On your computer:** edit the files in `C:\DJ WEBSITE\site`, then push (GitHub Desktop or `git push`).
-
-Every change is saved in GitHub's history, so any mistake can be undone.
-
-**File sizes:** keep each video under about 50MB (GitHub refuses files over 100MB). Instagram story videos are usually 5–15MB.
+Every change is kept in GitHub's history, so anything can be undone. Keep each video under ~50MB (GitHub refuses files over 100MB).
 
 ## Hosting
+Free on **GitHub Pages** (every push to `main` republishes). A custom domain can be added under **Settings → Pages → Custom domain**, with free HTTPS.
 
-The site is hosted for free on **GitHub Pages**: every push to the `main` branch republishes it automatically. A custom domain (for example `shrnwav.com`) can be added under **Settings → Pages → Custom domain**, and HTTPS is free.
-
-On GitHub Pages the booking form opens the visitor's email app with the request filled in, addressed to artist.shrn@gmail.com.
+© $H₹N. All rights reserved. Design, code, logos, photos and videos may not be reused.
