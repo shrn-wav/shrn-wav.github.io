@@ -667,6 +667,55 @@ footer .flogo{width:min(240px,60vw);}
 @media(min-width:1750px){#tapes{--cz:1.75;}#tapes .dig,#tapes .eq{max-width:1760px;}.deck{--bayk:1.45;}.deck .bay{height:340px;}}
 @media(max-width:900px){#tapes .dig{grid-template-columns:minmax(0,1fr);max-width:520px;}.deck{--bayk:1;}.deck .bay{height:220px;}}
 
+/* ---------- tape deck: a real cassette deck ---------- */
+.deck{--bayk:1;position:relative;padding:18px 22px 16px;border-radius:14px;border:1px solid #2a2e1c;
+  background:linear-gradient(180deg,#1a1c14 0%,#0f100b 55%,#0b0c08 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.6),0 30px 60px -30px #000;}
+.deck::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:.35;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);}
+.deck .brand{display:flex;align-items:baseline;gap:12px;font-size:11px;letter-spacing:.2em;color:var(--muted);}
+.deck .brand b{font-family:var(--goth);font-weight:900;font-size:24px;letter-spacing:.02em;color:var(--paper);}
+.deck .brand .pw{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:9px;}
+.deck .brand .pw i{width:7px;height:7px;border-radius:50%;background:#4a1b12;box-shadow:inset 0 0 2px #000;}
+.deck.playing .brand .pw i,.deck .brand .pw i{background:#ff5a2b;box-shadow:0 0 8px #ff5a2b;}
+.dk-main{display:flex;gap:18px;align-items:stretch;margin:14px 0 12px;}
+.door{position:relative;flex:none;padding:12px;border-radius:10px;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,0) 38%),#060605;
+  border:1px solid #2c3020;box-shadow:inset 0 0 0 3px #0d0e09,inset 0 10px 30px rgba(0,0,0,.8);}
+.door::after{content:'';position:absolute;left:10%;right:10%;bottom:6px;height:3px;border-radius:3px;background:#1d2014;}
+.door-lbl{position:absolute;right:14px;top:-9px;font-size:8px;letter-spacing:.18em;color:var(--acid-dim);background:#0f100b;padding:0 6px;}
+.deck .bay{width:calc(300px * var(--bayk));height:calc(190px * var(--bayk));margin:0;border:0;border-radius:6px;background:repeating-linear-gradient(0deg,#0a0b07 0 3px,#080906 3px 6px);display:grid;place-items:center;overflow:visible;}
+.deck .bay .cas{transform:scale(var(--bayk));flex:none;}
+.deck .empty{font-size:calc(19px * var(--bayk));}
+.dk-side{flex:1;min-width:180px;display:flex;flex-direction:column;gap:12px;justify-content:space-between;}
+.lcd{position:relative;padding:10px 12px 8px;border-radius:6px;background:#0d1406;border:1px solid #233010;box-shadow:inset 0 0 18px rgba(0,0,0,.8);}
+.lcd .k,.lcd .k2{display:block;font-size:8px;letter-spacing:.2em;color:#5c7a1c;}
+.lcd .k2{position:absolute;right:10px;top:10px;}
+.lcd b{display:block;font-family:var(--mono);font-weight:700;font-size:38px;line-height:1.05;letter-spacing:.12em;color:var(--acid);text-shadow:0 0 12px rgba(209,250,29,.55);}
+.deck .np{font-size:13px;letter-spacing:.06em;color:var(--acid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:20px;}
+.meter{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--muted);}
+.meter .vu{flex:1;display:flex;gap:3px;align-items:flex-end;height:30px;padding:4px 6px;background:#070806;border:1px solid #20241a;border-radius:4px;}
+.meter .vu i{flex:1;width:auto;height:4px;background:#2c3518;border-radius:1px;}
+.meter .vu i:nth-child(n+11){background:#3a2212;}
+.deck.playing .meter .vu i{background:var(--acid);}
+.deck.playing .meter .vu i:nth-child(n+11){background:#ff7a3b;}
+.sw{display:flex;gap:12px;flex-wrap:wrap;font-size:8px;letter-spacing:.14em;color:var(--muted);}
+.sw span{display:flex;align-items:center;gap:5px;}
+.sw i{width:6px;height:6px;border-radius:50%;background:#2a2f1c;}
+.sw i.on{background:var(--acid);box-shadow:0 0 6px rgba(209,250,29,.7);}
+.deck .seek{font-size:12px;}
+.deck .keys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px;padding:6px;border-radius:8px;background:#060705;border:1px solid #1d2014;}
+.deck .keys button{height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:15px;color:var(--paper);
+  background:linear-gradient(180deg,#24271c,#16180f);border:1px solid #33382a;border-bottom:3px solid #0a0b07;border-radius:4px;transition:transform .08s,background .15s,color .15s;}
+.deck .keys button small{font-size:8px;letter-spacing:.16em;color:var(--muted);}
+.deck .keys button:hover{color:var(--acid);border-color:var(--acid-dim);}
+.deck .keys button:active{transform:translateY(2px);border-bottom-width:1px;}
+.deck.playing #kPlay{background:linear-gradient(180deg,#3b4a12,#24300a);color:var(--acid);}
+.deck .row{margin-top:10px;}
+.deck .row .mk{font-size:9px;letter-spacing:.2em;color:#3d4429;}
+@media(max-width:900px){.dk-main{flex-direction:column;}.door{align-self:center;}.dk-side{min-width:0;}}
+@media(max-width:600px){.deck .brand > span:not(.pw){display:none;}.deck .brand b{font-size:22px;}.deck .keys button{height:48px;}.deck .keys button small{font-size:7px;letter-spacing:.1em;}}
+
 @media (prefers-reduced-motion:reduce){
   .grain,.strip-bar .inner,.deck.playing .reel,.card,.show,.bay.clunk{animation:none;}
   .reveal,.stagger > *{opacity:1;transform:none;}
@@ -727,12 +776,19 @@ footer .flogo{width:min(240px,60vw);}
       <div class="dig-ctl"><button id="digPrev" aria-label="Previous tape">←</button><span id="digInfo" aria-live="polite"></span><button id="digNext" aria-label="Next tape">→</button></div>
     </div>
     <div class="deck" id="deck">
-      <div class="brand"><span>SHRN-303 · TAPE DECK</span><span id="deckN"></span></div>
-      <div class="bay" id="bay"></div>
-      <div class="np" id="np" aria-live="polite">— NO TAPE —</div>
+      <div class="brand"><b>SHRN-303</b><span>STEREO CASSETTE DECK</span><span class="pw"><i></i>POWER</span></div>
+      <div class="dk-main">
+        <div class="door" aria-label="Cassette door"><div class="bay" id="bay"></div><span class="door-lbl">TYPE II · CrO₂ · 70µs</span></div>
+        <div class="dk-side">
+          <div class="lcd" aria-hidden="true"><span class="k">TAPE COUNTER</span><b id="lcdT">000</b><span class="k2" id="deckN">A·SIDE</span></div>
+          <div class="np" id="np" aria-live="polite">— NO TAPE —</div>
+          <div class="meter" aria-hidden="true"><span>L</span><div class="vu" id="vu"></div><span>R</span></div>
+          <div class="sw" aria-hidden="true"><span><i class="on"></i>DOLBY B</span><span><i></i>MPX</span><span><i class="on"></i>AUTO REV</span></div>
+        </div>
+      </div>
       <div class="seek"><span id="tCur">00:00</span><input type="range" id="seek" min="0" max="1000" step="1" value="0" aria-label="Scrub through the set"><span id="tDur">--:--</span></div>
-      <div class="keys"><button id="kPlay" aria-label="Play">▶</button><button id="kPause" aria-label="Pause">❚❚</button><button id="kNext" aria-label="Next tape">▶▶</button><button id="kEject" aria-label="Eject">⏏</button></div>
-      <div class="row"><div class="vu" id="vu"></div><a class="src" id="scLink" target="_blank" rel="noopener">OPEN ON SOUNDCLOUD ↗</a></div>
+      <div class="keys"><button id="kPrev" aria-label="Previous tape">◀◀<small>REW</small></button><button id="kPlay" aria-label="Play">▶<small>PLAY</small></button><button id="kPause" aria-label="Pause">❚❚<small>PAUSE</small></button><button id="kNext" aria-label="Next tape">▶▶<small>FF</small></button><button id="kEject" aria-label="Eject">⏏<small>STOP/EJ</small></button></div>
+      <div class="row"><span class="mk">SHRN AUDIO · MADISON WI</span><a class="src" id="scLink" target="_blank" rel="noopener">OPEN ON SOUNDCLOUD ↗</a></div>
       <p class="tapnote" id="tapNote">your browser blocked the sound. tap ▶ on the player below once and it's on.</p>
       <div class="scwrap"><iframe id="sc" title="$H₹N on SoundCloud" allow="autoplay"></iframe></div>
     </div>
@@ -1426,6 +1482,8 @@ $('#kPlay').addEventListener('click', () => loaded >= 0 ? ((widget && scReady) ?
 $('#kPause').addEventListener('click', () => widget && widget.pause());
 $('#kNext').addEventListener('click', () => load(loaded >= 0 ? (loaded + 1) % tapes.length : Math.round(target)));
 $('#kEject').addEventListener('click', eject);
+$('#kPrev').addEventListener('click', () => load(loaded > 0 ? loaded - 1 : (loaded === 0 ? tapes.length - 1 : Math.max(0, Math.round(target) - 1))));
+const lcdT = $('#lcdT'); new MutationObserver(() => { const m = (tCur.textContent || '0:0').split(':').map(Number); const secs = m.reduce((a, b) => a * 60 + (b || 0), 0); lcdT.textContent = String(Math.floor(secs / 2) % 1000).padStart(3, '0'); }).observe(tCur, {childList: true, characterData: true, subtree: true});
 const dockEl = $('#dock'), npBtn = $('#npBtn'), npTitle = $('#npTitle');
 function onPlay() {
   clearTimeout(playWatch); deck.classList.remove('needtap'); MUSIC.on = true; MUSIC.t0 = performance.now();
@@ -1455,7 +1513,7 @@ buildCrate();
    between the title and the bottom dock — as big as the screen allows, never hidden behind the dock */
 function fitTapes() {
   const sec = $('#tapes'), bayEl = $('.bay', deck);
-  if (innerWidth < 900) { sec.style.removeProperty('--cz'); deck.style.removeProperty('--bayk'); bayEl.style.removeProperty('height'); placeThumb(); return; }
+  if (innerWidth < 900) { sec.style.removeProperty('--cz'); deck.style.setProperty('--bayk', Math.min(1, (deck.clientWidth - 70) / 300).toFixed(3)); bayEl.style.removeProperty('height'); placeThumb(); return; }
   const dockH = 112, titleH = $('#tapesTitle').offsetHeight + 34, eqH = $('#eq').offsetHeight + 30;
   const avail = innerHeight - dockH - titleH - eqH - 16;
   const wz = innerWidth >= 1750 ? 1.75 : innerWidth >= 1400 ? 1.5 : innerWidth >= 1100 ? 1.3 : 1;
@@ -1463,11 +1521,11 @@ function fitTapes() {
   sec.style.setProperty('--cz', cz.toFixed(3));
   const left = $('.dig > div', sec), lh = left.offsetHeight;          /* measure, then shrink to fit exactly */
   if (lh > avail) { cz = Math.max(.8, cz * avail / lh); sec.style.setProperty('--cz', cz.toFixed(3)); }
-  let bayH = 340; bayEl.style.height = bayH + 'px';
+  bayEl.style.removeProperty('height');
+  let k = Math.min(cz, (deck.clientWidth - 48 - 230) / 300);              /* same size as the crate cassettes, leave room for the side panel */
+  deck.style.setProperty('--bayk', k.toFixed(3));
   const over = deck.offsetHeight - avail;
-  if (over > 0) { bayH = Math.max(150, bayH - over); bayEl.style.height = bayH + 'px'; }
-  const innerW = deck.clientWidth - 48;
-  deck.style.setProperty('--bayk', Math.max(.6, Math.min(1.45, (bayH - 26) / 190, innerW * .8 / 300)).toFixed(3));
+  if (over > 0) { k = Math.max(.6, k - over / 190); deck.style.setProperty('--bayk', k.toFixed(3)); }
   placeThumb();
 }
 fitTapes(); addEventListener('resize', fitTapes); addEventListener('load', fitTapes);
@@ -1890,17 +1948,17 @@ if (!REDUCE) (() => {
     const {w, h, ctx} = C, t = now / 1000, b = beatAt(now), br = box.getBoundingClientRect(), sr = $('#tapes').getBoundingClientRect();
     const px = P.x - (br.left - sr.left), py = P.y - (br.top - sr.top);
     ctx.clearRect(0, 0, w, h); P.energy *= .96;
-    const gap = 3, bw = (w - gap * (N - 1)) / N, maxH = h - 10;
+    const gap = 4, bw = (w - gap * (N - 1)) / N, maxH = (h - 10) * .62;
     for (let i = 0; i < N; i++) {
       const x = i * (bw + gap), dx = (x + bw / 2 - px) / 60;
       const near = P.in ? Math.exp(-dx * dx) * Math.max(0, 1 - Math.abs(py - h) / 420) * (.3 + P.energy * .7) : 0;
-      let target = .05 + .03 * Math.sin(t * 2 + i * .5) + near * .9;
-      if (MUSIC.on) { const fq = i / N; target = Math.max(target, (1 - fq) * .7 * (.35 + .65 * b) + .2 * Math.abs(Math.sin(t * (3 + fq * 9) + i)) * (1 - fq * .5) + near * .35); }
-      hgt[i] += (Math.min(1, target) - hgt[i]) * (target > hgt[i] ? .35 : .08);
+      let target = .04 + .02 * Math.sin(t * 1.4 + i * .5) + near * .5;
+      if (MUSIC.on) { const fq = i / N; target = Math.max(target, (1 - fq) * .42 * (.45 + .55 * b) + .1 * Math.abs(Math.sin(t * (2 + fq * 5) + i)) * (1 - fq * .5) + near * .25); }
+      hgt[i] += (Math.min(1, target) - hgt[i]) * (target > hgt[i] ? .18 : .05);
       peak[i] = Math.max(peak[i] - .006, hgt[i]);
       const bh = Math.max(2, hgt[i] * maxH), seg = 5;
-      for (let yy = 0; yy < bh; yy += seg) { ctx.fillStyle = 'rgba(' + ACID + ',' + (.22 + .78 * yy / maxH).toFixed(3) + ')'; ctx.fillRect(x, h - yy - seg + 1, bw, seg - 1.5); }
-      ctx.fillStyle = 'rgb(' + ACID + ')'; ctx.fillRect(x, h - peak[i] * maxH - 6, bw, 2);
+      for (let yy = 0; yy < bh; yy += seg) { ctx.fillStyle = 'rgba(' + ACID + ',' + (.14 + .5 * yy / maxH).toFixed(3) + ')'; ctx.fillRect(x, h - yy - seg + 1, bw, seg - 1.5); }
+      ctx.fillStyle = 'rgba(' + ACID + ',.55)'; ctx.fillRect(x, h - peak[i] * maxH - 6, bw, 1.5);
     }
   })(performance.now());
 })();
