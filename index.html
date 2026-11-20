@@ -804,6 +804,25 @@ body.arcade-on #dock{opacity:.15;pointer-events:none;}
 #tapes.narrow .knobs,#tapes.narrow .sw,#tapes.narrow .deck .brand .model{display:none;}
 #tapes.narrow .dk-side{min-width:150px;}
 
+/* deck fixes: cassette always centred in its door; door hugs the tape; knobs on one baseline */
+.door{align-self:flex-start;}
+.deck .bay{position:relative;display:block;overflow:hidden;}
+.deck .bay .cas{position:absolute;left:50%;top:50%;margin:0;transform:translate(-50%,-50%) scale(var(--bayk));transform-origin:50% 50%;}
+.deck .bay .empty{position:absolute;inset:0;display:grid;place-items:center;}
+.deck .bay.clunk{animation:clunk2 .38s cubic-bezier(.3,1.6,.5,1);}
+@keyframes clunk2{0%{transform:translateY(-6px)}45%{transform:translateY(3px)}100%{transform:none}}
+.knobs{align-items:flex-start;gap:14px;flex-wrap:nowrap;}
+.knob i,.knob.sm i{width:36px;height:36px;}
+.knob i::after{height:10px;top:3px;}
+.jack{gap:5px;}
+.jack i{width:20px;height:20px;margin:8px 0 8px;}
+#tapes.tight .knob i{width:30px;height:30px;}
+#tapes.tight .jack i{width:16px;height:16px;margin:7px 0 7px;}
+.deck .brand .model{white-space:nowrap;}
+/* power light: red when idle, green while a tape plays */
+.deck .brand .pw i{background:#ff3b2b;box-shadow:0 0 8px #ff3b2b;transition:background .3s,box-shadow .3s;}
+.deck.playing .brand .pw i{background:#3dff6e;box-shadow:0 0 10px #3dff6e;}
+
 /* Crate Chase marquee badge (top right of Archive Tapes) */
 .arc-badge{position:absolute;top:118px;right:var(--gut);z-index:3;display:flex;align-items:center;gap:14px;padding:10px 16px 10px 12px;border:2px solid var(--acid);border-radius:10px;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px),linear-gradient(180deg,#151a07,#0a0c05);
@@ -893,7 +912,7 @@ body.arcade-on .arc-badge{opacity:0;pointer-events:none;}
           <div class="np" id="np" aria-live="polite">— NO TAPE —</div>
           <div class="meter" aria-hidden="true"><span>L</span><div class="vu" id="vu"></div><span>R</span></div>
           <div class="sw" aria-hidden="true"><span><i class="on"></i>NR B</span><span><i></i>MPX FILTER</span><span><i class="on"></i>AUTO REV</span></div>
-          <div class="knobs"><div class="knob" id="recKnob" role="slider" tabindex="0" aria-label="Rec level (meter sensitivity)" aria-valuemin="0" aria-valuemax="100" data-v="70"><i></i><span>REC LEVEL</span></div><div class="knob" id="outKnob" role="slider" tabindex="0" aria-label="Output volume" aria-valuemin="0" aria-valuemax="100" data-v="100"><i></i><span>OUTPUT</span></div><div class="knob sm" id="phKnob" role="slider" tabindex="0" aria-label="Phones level (EQ bars)" aria-valuemin="0" aria-valuemax="100" data-v="60"><i></i><span>PHONES</span><u class="jk"></u></div></div>
+          <div class="knobs"><div class="knob" id="recKnob" role="slider" tabindex="0" aria-label="Rec level (meter sensitivity)" aria-valuemin="0" aria-valuemax="100" data-v="70"><i></i><span>REC LEVEL</span></div><div class="knob" id="outKnob" role="slider" tabindex="0" aria-label="Output volume" aria-valuemin="0" aria-valuemax="100" data-v="100"><i></i><span>OUTPUT</span></div><div class="knob" id="phKnob" role="slider" tabindex="0" aria-label="Phones level (EQ bars)" aria-valuemin="0" aria-valuemax="100" data-v="60"><i></i><span>PHONES</span></div><div class="jack" aria-hidden="true"><i></i><span>PHONES</span></div></div>
         </div>
       </div>
       <div class="seek"><span id="tCur">00:00</span><input type="range" id="seek" min="0" max="1000" step="1" value="0" aria-label="Scrub through the set"><span id="tDur">--:--</span></div>
@@ -2196,31 +2215,32 @@ if (!REDUCE) (() => {
   })(performance.now());
 })();
 
-/* ---------- EQ bars above the tape deck: jump near your pointer, become the music meter while a tape plays ---------- */
+/* ---------- EQ bars above the tape deck: appear while a tape plays (PHONES knob sets how tall) ---------- */
 if (!REDUCE) (() => {
   const box = $('#eq'), cv = $('canvas', box), C = fitCanvas(cv), P = trackPointer($('#tapes')), V = watchVisible(box);
-  const N = 48, hgt = new Float32Array(N), peak = new Float32Array(N);
+  const N = 40, hgt = new Float32Array(N); let fade = 0;
   (function f(now) {
     requestAnimationFrame(f); if (!V.v || document.hidden) return;
     const {w, h, ctx} = C, t = now / 1000, b = beatAt(now), br = box.getBoundingClientRect(), sr = $('#tapes').getBoundingClientRect();
-    const px = P.x - (br.left - sr.left), py = P.y - (br.top - sr.top);
+    const px = P.x - (br.left - sr.left);
+    fade += ((MUSIC.on ? 1 : 0) - fade) * .06;
     ctx.clearRect(0, 0, w, h); P.energy *= .96;
-    const gap = 4, bw = (w - gap * (N - 1)) / N, maxH = (h - 10) * (.25 + PHV / 100 * .62);
+    ctx.fillStyle = 'rgba(' + ACID + ',.12)'; ctx.fillRect(0, h - 1, w, 1);           /* a quiet baseline when nothing plays */
+    if (fade < .01) return;
+    const gap = Math.max(4, w / N * .35), bw = (w - gap * (N - 1)) / N, maxH = (h - 4) * (.3 + PHV / 100 * .6);
     for (let i = 0; i < N; i++) {
-      const x = i * (bw + gap), dx = (x + bw / 2 - px) / 60;
-      const near = P.in ? Math.exp(-dx * dx) * Math.max(0, 1 - Math.abs(py - h) / 420) * (.3 + P.energy * .7) : 0;
-      let target = .04 + .02 * Math.sin(t * 1.4 + i * .5) + near * .5;
-      if (MUSIC.on) { const fq = i / N; target = Math.max(target, (1 - fq) * .42 * (.45 + .55 * b) + .1 * Math.abs(Math.sin(t * (2 + fq * 5) + i)) * (1 - fq * .5) + near * .25); }
-      hgt[i] += (Math.min(1, target) - hgt[i]) * (target > hgt[i] ? .18 : .05);
-      peak[i] = Math.max(peak[i] - .006, hgt[i]);
-      const bh = Math.max(2, hgt[i] * maxH), seg = 5;
-      for (let yy = 0; yy < bh; yy += seg) { ctx.fillStyle = 'rgba(' + ACID + ',' + (.14 + .5 * yy / maxH).toFixed(3) + ')'; ctx.fillRect(x, h - yy - seg + 1, bw, seg - 1.5); }
-      ctx.fillStyle = 'rgba(' + ACID + ',.55)'; ctx.fillRect(x, h - peak[i] * maxH - 6, bw, 1.5);
+      const x = i * (bw + gap), fq = i / N, dx = (x + bw / 2 - px) / 70;
+      const near = P.in ? Math.exp(-dx * dx) * .2 : 0;
+      const target = (1 - fq * .7) * .55 * (.4 + .6 * b) + .15 * Math.abs(Math.sin(t * (1.6 + fq * 3) + i * 1.3)) + near;
+      hgt[i] += (Math.min(1, target) - hgt[i]) * (target > hgt[i] ? .2 : .06);
+      const bh = Math.max(2, hgt[i] * maxH * fade);
+      ctx.fillStyle = 'rgba(' + ACID + ',' + ((.25 + .55 * hgt[i]) * fade).toFixed(3) + ')';
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, h - bh, bw, bh, Math.min(bw / 2, 4)); else ctx.rect(x, h - bh, bw, bh); ctx.fill();
     }
   })(performance.now());
 })();
 
-/* ---------- plucky strings between sections: swipe across one and it twangs (pulses while a tape plays) ---------- */
+/* ---------- plucky strings between sections: swipe across one and it twangs ---------- */
 (() => {
   const list = $$('.string').map(el => {
     const cv = $('canvas', el), C = fitCanvas(cv), N = 120, S2 = {el, C, N, y: new Float32Array(N), v: new Float32Array(N), py: null, live: 0, vis: false};
@@ -2248,10 +2268,9 @@ if (!REDUCE) (() => {
     const b = beatAt(now);
     for (const s of list) {
       if (!s.vis) continue;
-      if (MUSIC.on && !REDUCE) { s.live = 30; for (let i = 1; i < s.N - 1; i++) s.v[i] += Math.sin(i / (s.N - 1) * Math.PI * 2) * b * .5 * Math.sin(tt * 3 + i * .05); }
       if (s.live <= 0) continue;
-      for (let k = 0; k < 4; k++) for (let i = 1; i < s.N - 1; i++) { s.v[i] += (s.y[i - 1] + s.y[i + 1] - 2 * s.y[i]) * .5; s.v[i] *= .99; }
-      let e = 0; const lim = s.C.h / 2 - 3;
+      for (let k = 0; k < 4; k++) for (let i = 1; i < s.N - 1; i++) { s.v[i] += (s.y[i - 1] + s.y[i + 1] - 2 * s.y[i]) * .5; s.v[i] *= .982; }
+      let e = 0; const lim = Math.min(14, s.C.h / 2 - 3);
       for (let i = 1; i < s.N - 1; i++) { s.y[i] = Math.max(-lim, Math.min(lim, s.y[i] + s.v[i] * .25)); e += Math.abs(s.y[i]) + Math.abs(s.v[i]); }
       draw(s); if (e < .5 && !MUSIC.on) s.live--;
     }
