@@ -252,7 +252,9 @@ textarea{min-height:110px;resize:vertical;}
 .soc span{font-size:13px;color:var(--muted);}
 .announce{margin-top:56px;padding:30px;border:1px solid var(--acid-dim);background:var(--ink2);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:30px;align-items:center;scroll-margin-top:90px;}
 .announce h3{font-family:var(--goth);font-weight:900;font-size:clamp(30px,3.4vw,46px);line-height:1;color:var(--acid);}
-.announce form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;}
+.announce form{display:grid;grid-template-columns:1fr 1.25fr minmax(150px,.85fr) 1.1fr auto;gap:8px;align-items:end;}
+.announce form label{white-space:nowrap;}
+@media(max-width:1300px){.announce{grid-template-columns:1fr;gap:20px;}}
 .announce .btn{height:46px;}
 @media(max-width:1000px){.announce{grid-template-columns:1fr;}.announce form{grid-template-columns:1fr 1fr;}.announce form .btn{grid-column:1/-1;}}
 @media(max-width:760px){.soc{grid-template-columns:1fr 1fr;}.announce{padding:20px;}.announce form{grid-template-columns:1fr;}}
@@ -999,7 +1001,8 @@ body.arcade-on .arc-badge{opacity:0;pointer-events:none;}
         <p class="sr"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
         <label>NAME<input name="name" autocomplete="name"></label>
         <label>EMAIL<input name="email" type="email" required autocomplete="email"></label>
-        <label>INSTAGRAM / SOCIALS<input name="socials" autocomplete="off" autocapitalize="none" placeholder="@handle"></label>
+        <label class="plat">SOCIAL<select name="platform" data-plat aria-label="Which social"><option>Instagram</option><option>TikTok</option><option>X</option><option>SoundCloud</option><option>Snapchat</option><option>Other</option></select></label>
+        <label class="hdl"><span data-hlabel>INSTAGRAM HANDLE</span><input name="socials" autocomplete="off" autocapitalize="none" placeholder="@yourhandle"></label>
         <button class="btn p" type="submit" id="joinBtn"></button>
       </form>
       <div class="status" id="listStatus" role="status"></div>
@@ -2035,7 +2038,7 @@ $('#joinBtn').textContent = BTN.join || "I'M IN →";
 const listForm = $('#listForm'), listStatus = $('#listStatus');
 listForm.addEventListener('submit', async e => {
   e.preventDefault();
-  const fd = new FormData(listForm), name = fd.get('name') || '', email = fd.get('email'), soc = fd.get('socials') || '';
+  const fd = new FormData(listForm), name = fd.get('name') || '', email = fd.get('email'), soc = fd.get('socials') ? (fd.get('platform') || 'Instagram') + ': ' + fd.get('socials') : '';
   if (S.formsUrl) {
     listStatus.textContent = 'adding you…';
     try {
@@ -2052,6 +2055,16 @@ listForm.addEventListener('submit', async e => {
     location.href = 'mailto:' + S.email + '?subject=' + encodeURIComponent('Add me to the announcement list') + '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\nSocials: ' + soc);
     listStatus.textContent = 'opening your email app…';
   }
+});
+
+/* announcement list: pick the platform, the handle box takes its name */
+document.querySelectorAll('[data-plat]').forEach(sel => {
+  const sync = () => {
+    const f = sel.closest('form'), v = sel.value, lab = f.querySelector('[data-hlabel]'), inp = f.querySelector('input[name=socials]');
+    lab.textContent = v === 'Other' ? 'PROFILE LINK / HANDLE' : v.toUpperCase() + ' HANDLE';
+    inp.placeholder = v === 'Other' ? 'link or @handle' : '@yourhandle';
+  };
+  sel.addEventListener('change', sync); sync();
 });
 
 /* ---------- lightbox ---------- */
