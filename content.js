@@ -17,7 +17,7 @@ window.SITE = {
      scale: shrink/grow one logo so all three feel the same size (1 = normal). */
   names: [
     { txt: "$H₹N", cls: "logo", lang: "en", img: "assets/brand/shrn-logo.svg",  scale: 1 },
-    { txt: "ஷரண்", cls: "taml", lang: "ta", img: "assets/brand/shrn-tamil.svg", scale: 1 },
+    { txt: "ஷரண்", cls: "taml", lang: "ta", img: "assets/brand/shrn-tamil-a4.png", scale: 1 },
     { txt: "शरन",  cls: "deva", lang: "hi", img: "assets/brand/shrn-hindi.svg", scale: 0.9 },
   ],
   logoHold: 6000,    // how long each logo stays on screen (milliseconds)
