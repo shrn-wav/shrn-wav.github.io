@@ -245,12 +245,14 @@
   function openGame() {
     if (open) return;
     open = true; panel.classList.add('on'); panel.setAttribute('aria-hidden', 'false'); document.body.classList.add('arcade-on');
+    dispatchEvent(new CustomEvent('arcade', {detail: {open: true}}));
     const np = document.getElementById('npTitle'); panel.querySelector('#arNow').textContent = (typeof MUSIC !== 'undefined' && MUSIC.on && np && np.textContent && np.textContent !== '—') ? '▶ ' + np.textContent : '— no tape playing · load one for the full vibe —';
     requestAnimationFrame(() => { size(); if (state === 'idle') { reset(true); hud(); showMsg('CRATE CHASE', 'collect every ✦ · grab a cassette to flip the chase · tap or press any arrow to start'); } last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); });
   }
   function close() {
     if (!open) return;
     open = false; panel.classList.remove('on'); panel.setAttribute('aria-hidden', 'true'); document.body.classList.remove('arcade-on');
+    dispatchEvent(new CustomEvent('arcade', {detail: {open: false}}));
     if (state === 'play') { state = 'paused'; showMsg('PAUSED', 'tap to resume'); }
     cancelAnimationFrame(raf);
   }
