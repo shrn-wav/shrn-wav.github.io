@@ -88,7 +88,7 @@ window.SITE = {
      The "Web app URL" of your Google Sheet script (tools/forms-apps-script.gs).
      When set, bookings + list sign-ups save to the Sheet and email you instantly.
      Leave "" and forms fall back to opening the visitor's email app. */
-  formsUrl: "",
+  formsUrl: "https://script.google.com/macros/s/AKfycbyIesmxB7ebI0mX4h6iJgFRTC_hGFywFmKO4RTAEuzkUqRVN5wWYR-20GhF1D3Fy9pb/exec",
   email: "artist.shrn@gmail.com",
   bpm: 126,                                   // default pulse speed when a set plays
 
