@@ -688,10 +688,10 @@ footer .flogo{width:min(240px,60vw);}
 .deck .bay .cas{transform:scale(var(--bayk));flex:none;}
 .deck .empty{font-size:calc(19px * var(--bayk));}
 .dk-side{flex:1;min-width:180px;display:flex;flex-direction:column;gap:12px;justify-content:space-between;}
-.lcd{position:relative;padding:10px 12px 8px;border-radius:6px;background:#0d1406;border:1px solid #233010;box-shadow:inset 0 0 18px rgba(0,0,0,.8);}
+.lcd{display:block;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;position:relative;padding:10px 12px 8px;border-radius:6px;background:#0d1406;border:1px solid #233010;box-shadow:inset 0 0 18px rgba(0,0,0,.8);}
 .lcd .k,.lcd .k2{display:block;font-size:8px;letter-spacing:.2em;color:#5c7a1c;}
 .lcd .k2{position:absolute;right:10px;top:10px;}
-.lcd b{display:block;font-family:var(--mono);font-weight:700;font-size:38px;line-height:1.05;letter-spacing:.12em;color:var(--acid);text-shadow:0 0 12px rgba(209,250,29,.55);}
+.lcd b{display:block;font-family:var(--mono);font-weight:700;font-size:34px;line-height:1.05;letter-spacing:.06em;color:var(--acid);text-shadow:0 0 12px rgba(209,250,29,.55);}
 .deck .np{font-size:13px;letter-spacing:.06em;color:var(--acid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:20px;}
 .meter{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--muted);}
 .meter .vu{flex:1;display:flex;gap:3px;align-items:flex-end;height:30px;padding:4px 6px;background:#070806;border:1px solid #20241a;border-radius:4px;}
@@ -780,7 +780,7 @@ footer .flogo{width:min(240px,60vw);}
       <div class="dk-main">
         <div class="door" aria-label="Cassette door"><div class="bay" id="bay"></div><span class="door-lbl">TYPE II · CrO₂ · 70µs</span></div>
         <div class="dk-side">
-          <div class="lcd" aria-hidden="true"><span class="k">TAPE COUNTER</span><b id="lcdT">000</b><span class="k2" id="deckN">A·SIDE</span></div>
+          <button class="lcd" id="lcd" type="button" title="Tap to switch remaining / elapsed"><span class="k" id="lcdK">REMAIN</span><b id="lcdT">--:--</b><span class="k2" id="deckN">A·SIDE</span></button>
           <div class="np" id="np" aria-live="polite">— NO TAPE —</div>
           <div class="meter" aria-hidden="true"><span>L</span><div class="vu" id="vu"></div><span>R</span></div>
           <div class="sw" aria-hidden="true"><span><i class="on"></i>DOLBY B</span><span><i></i>MPX</span><span><i class="on"></i>AUTO REV</span></div>
@@ -1483,7 +1483,18 @@ $('#kPause').addEventListener('click', () => widget && widget.pause());
 $('#kNext').addEventListener('click', () => load(loaded >= 0 ? (loaded + 1) % tapes.length : Math.round(target)));
 $('#kEject').addEventListener('click', eject);
 $('#kPrev').addEventListener('click', () => load(loaded > 0 ? loaded - 1 : (loaded === 0 ? tapes.length - 1 : Math.max(0, Math.round(target) - 1))));
-const lcdT = $('#lcdT'); new MutationObserver(() => { const m = (tCur.textContent || '0:0').split(':').map(Number); const secs = m.reduce((a, b) => a * 60 + (b || 0), 0); lcdT.textContent = String(Math.floor(secs / 2) % 1000).padStart(3, '0'); }).observe(tCur, {childList: true, characterData: true, subtree: true});
+/* deck display: time remaining on the tape (tap it to switch to elapsed), in step with the play bar */
+const lcdT = $('#lcdT'), lcdK = $('#lcdK'); let lcdMode = 'remain';
+const toSec = t => /\d/.test(t || '') ? t.split(':').map(Number).reduce((a, b) => a * 60 + (b || 0), 0) : NaN;
+const clock = n => { n = Math.max(0, Math.round(n)); const h = Math.floor(n / 3600), m = Math.floor(n % 3600 / 60), x = n % 60; return (h ? h + ':' + String(m).padStart(2, '0') : String(m).padStart(2, '0')) + ':' + String(x).padStart(2, '0'); };
+function paintLcd() {
+  const cur = toSec(tCur.textContent), dur = toSec(tDur.textContent);
+  if (lcdMode === 'remain') { lcdK.textContent = 'REMAIN'; lcdT.textContent = isNaN(dur) ? '--:--' : '-' + clock(dur - (cur || 0)); }
+  else { lcdK.textContent = 'ELAPSED'; lcdT.textContent = isNaN(cur) ? '00:00' : clock(cur); }
+}
+[tCur, tDur].forEach(el => new MutationObserver(paintLcd).observe(el, {childList: true, characterData: true, subtree: true}));
+$('#lcd').addEventListener('click', () => { lcdMode = lcdMode === 'remain' ? 'elapsed' : 'remain'; paintLcd(); });
+paintLcd();
 const dockEl = $('#dock'), npBtn = $('#npBtn'), npTitle = $('#npTitle');
 function onPlay() {
   clearTimeout(playWatch); deck.classList.remove('needtap'); MUSIC.on = true; MUSIC.t0 = performance.now();
