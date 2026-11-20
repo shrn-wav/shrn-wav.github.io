@@ -9,23 +9,23 @@
     '###################',
     '#........#........#',
     '#o##.###.#.###.##o#',
-    '#.................#',
+    'T.................T',
     '#.##.#.#####.#.##.#',
     '#....#...#...#....#',
     '####.### # ###.####',
     '   #.#   E   #.#   ',
     '####.# ##-## #.####',
-    '    .  #EEE#  .    ',
+    'T   .  #EEE#  .   T',
     '####.# ##### #.####',
     '   #.#       #.#   ',
     '####.# ##### #.####',
-    '#........#........#',
+    'T........#........T',
     '#.##.###.#.###.##.#',
     '#o.#.....P.....#.o#',
     '##.#.#.#####.#.#.##',
     '#....#...#...#....#',
     '#.######.#.######.#',
-    '#.................#',
+    'T.................T',
     '###################',
   ];
   const COLS = 19, ROWS = MAZE.length, ACID = '#D1FA1D', HOT = '#ff7a3b';
@@ -61,7 +61,7 @@
   let safeT = 0, T = 20, W = 0, H = 0, grid, dots, player, foes, score, lives, level, state = 'idle', frightT = 0, raf = 0, last = 0, startedAt = 0, open = false;
 
   const tileAt = (x, y) => { if (y < 0 || y >= ROWS) return '#'; x = (x + COLS) % COLS; return grid[y][x]; };
-  const walk = (x, y, foe) => { const c = tileAt(x, y); return c !== '#' && (foe || c !== '-'); };
+  const walk = (x, y, foe) => { if (foe && (x < 0 || x >= COLS)) return false; const c = tileAt(x, y); if (foe && c === 'T') return false; return c !== '#' && (foe || c !== '-'); };
 
   function reset(full) {
     if (full) { score = 0; lives = 5; level = 1; }
@@ -110,7 +110,7 @@
   function targetFor(f) {
     const p = player;
     if (f.dead) return [9, 7];
-    if (f.kind === 0) return [p.x, p.y];
+    if (f.kind === 0 && Math.hypot(f.x - p.x, f.y - p.y) < 7) return [p.x, p.y];
     return null;   /* the others wander */
   }
   function chooseFoeDir(f) {
@@ -148,7 +148,7 @@
     player.a += dt * (player.d[0] || player.d[1] ? 9 : 2);
     if (frightT > 0) frightT = Math.max(0, frightT - dt);
     if (safeT > 0) safeT = Math.max(0, safeT - dt);
-    const fs = Math.min(3.6, 2.5 + level * .2);
+    const fs = Math.min(3.1, 2.1 + level * .15);
     for (const f of foes) {
       if (f.mode === 'wait') { f.wait -= dt; if (f.wait <= 0) { f.mode = 'chase'; f.x = 9; f.y = 7; f.p = 0; f.d = [-1, 0]; } continue; }
       stepEntity(f, f.dead ? 8 : frightT > 0 ? 1.8 : fs, dt, true);
@@ -175,6 +175,13 @@
       if (open(1, 0)) { g.moveTo(X + T - 2, Y + 2); g.lineTo(X + T - 2, Y + T - 2); }
     }
     g.stroke();
+    /* escape tunnels (only you can go through) */
+    for (let y = 0; y < ROWS; y++) for (const x of [0, COLS - 1]) {
+      if (MAZE[y][x] !== 'T') continue;
+      const cx = x * T + T / 2, cy = y * T + T / 2, dir = x === 0 ? -1 : 1, s = T * .28;
+      g.strokeStyle = 'rgba(209,250,29,' + (.45 + .4 * Math.abs(Math.sin(now / 300))).toFixed(2) + ')'; g.lineWidth = Math.max(1.5, T * .1);
+      for (const o of [0, .45]) { g.beginPath(); g.moveTo(cx - dir * s + dir * o * T, cy - s); g.lineTo(cx + dir * o * T, cy); g.lineTo(cx - dir * s + dir * o * T, cy + s); g.stroke(); }
+    }
     /* door */
     g.fillStyle = HOT; g.fillRect(9 * T + 2, 8 * T + T / 2 - 1, T - 4, 2);
     /* sparks + cassettes */
@@ -251,7 +258,7 @@
     open = true; panel.classList.add('on'); panel.setAttribute('aria-hidden', 'false'); document.body.classList.add('arcade-on');
     dispatchEvent(new CustomEvent('arcade', {detail: {open: true}}));
     const np = document.getElementById('npTitle'); panel.querySelector('#arNow').textContent = (typeof MUSIC !== 'undefined' && MUSIC.on && np && np.textContent && np.textContent !== '—') ? '▶ ' + np.textContent : '— no tape playing · load one for the full vibe —';
-    requestAnimationFrame(() => { size(); if (state === 'idle') { reset(true); hud(); showMsg('CRATE CHASE', 'collect every ✦ · grab a cassette to flip the chase · 5 lives · tap or press any arrow to start'); } last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); });
+    requestAnimationFrame(() => { size(); if (state === 'idle') { reset(true); hud(); showMsg('CRATE CHASE', 'collect every ✦ · grab a cassette to flip the chase · escape through the side tunnels (glitches can\'t follow) · 5 lives · tap or press any arrow to start'); } last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); });
   }
   function close() {
     if (!open) return;
