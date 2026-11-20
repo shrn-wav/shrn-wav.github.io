@@ -23,6 +23,14 @@ window.SITE = {
   logoHold: 6000,    // how long each logo stays on screen (milliseconds)
   titleHold: 5000,   // how long each version of the "Upcoming" title stays
   location: "MADISON, WI",
+  /* extra lines for the ticker under the logo (between the upcoming dates) */
+  strip: ["HOSTING OPEN DECKS @ RUBY"],
+  /* addresses for the Upcoming map + directions, by venue name (a show's own address: wins) */
+  venues: {
+    "Ruby":     { place: "Ruby at Liquid", address: "624 University Ave, Madison, WI 53715" },
+    "Liquid":   { place: "Liquid",         address: "624 University Ave, Madison, WI 53715" },
+    "Nattspil": { place: "Nattspil",       address: "211 King St, Madison, WI 53703" },
+  },
 
   /* ---------- section titles ----------
      Only "board" switches languages (English → Tamil → Hindi).
@@ -47,6 +55,13 @@ window.SITE = {
   /* Press kit link. Leave "" to use the built-in press kit page (epk.html),
      or paste a link to your own (Google Drive / Dropbox PDF, Canva, etc.) */
   pressKitUrl: "",
+  pressKitPdf: "assets/press/shrn-press-kit.pdf",   // downloadable PDF version (rebuilt by Claude when info changes)
+  pressKitExternal: "",                              // your other press kit link (the one you mentioned), shown as a button
+  /* the collective (in the making) — shown in the press kit */
+  collective: {
+    name: "",
+    text: "A collective of DJs built around freestyle b2b sessions: no planned sets, just two (or more) selectors reading each other live. Sessions are filmed for YouTube and streamed, growing into an online radio that showcases Madison and desi underground talent.",
+  },
 
   /* ---------- gallery (photos + posters, shown in this order) ---------- */
   gallery: [
@@ -93,13 +108,11 @@ window.SITE = {
   ],
 
   /* ---------- bio ---------- */
-  bioShort: "$H₹N is an emerging electronic artist delivering high-energy, groove-driven sets rooted in tech house and underground culture. Blending global club sounds with subtle Indian/Tamil influences, his style balances precision and identity. His “Archive Tapes” series captures raw live performances across radio, collectives, and pop-ups. Based in the U.S., he is building momentum in the LA scene and beyond.",
+  bioShort: "$H₹N is a Madison, WI DJ playing high-energy, groove-heavy sets across tech house, bass house, UK garage and drum & bass, with desi roots running underneath. He's a regular across Madison's underground (Nattspil, Liquid, Ruby, Local Motive), hosts Open Decks at Ruby, and records his nights as the Archive Tapes series. Now building a collective around freestyle b2b sessions, livestreams and an online radio.",
   bioLong: [
-    "$H₹N is an emerging electronic artist shaping a distinct identity through high-energy, groove-driven DJ sets rooted in tech house and underground club culture. With a strong focus on precision, flow, and dancefloor awareness, his performances are built on tight transitions, rhythmic control, and an instinctive ability to guide energy in real time. His sound blends driving basslines and percussive elements with subtle influences drawn from his Indian/Tamil roots, adding texture, rhythm, and character without losing the core essence of underground electronic music.",
-    "Rather than approaching culture as a surface-level aesthetic, $H₹N incorporates it through rhythm, structure, and sonic detail, creating sets that feel globally relevant while carrying a unique identity. This balance allows his performances to resonate across diverse audiences, from intimate underground spaces to larger festival environments.",
-    "Central to his artistic vision is the “Archive Tapes” series, an evolving collection of live recordings from radio stations, collectives, and pop-up performances. Focused on capturing the raw, unfiltered reality of live DJing, the series documents his growth as a performer while preserving the authenticity of each moment. Each set reflects his technical discipline, experimentation, and deep connection to the dancefloor.",
-    "Currently based in the United States and actively engaging with the Los Angeles electronic music scene, $H₹N is focused on building a strong foundation through consistent live performances, collaborations, and immersion within the underground circuit. His journey includes performing at collectives, intimate venues, participating in DJ competitions, and continuously refining his sound through real-world experience.",
-    "With a long-term vision of performing on globally recognized platforms such as Boiler Room and ARC Music Festival, $H₹N represents a new wave of artists who merge cultural identity with modern club music. His approach is grounded in authenticity, discipline, and a commitment to pushing his sound forward while staying connected to the roots that shape it.",
+    "$H₹N plays club music with a desi heartbeat: the groove of tech house, the weight of bass music, and the swing of UK garage, mixed with an ear for the sounds he grew up on.",
+    "Madison is home base. He's played the Nattspil episode series, Liquid's themed nights (GTA Rave, Nostalgia Night, Thrillaween) and tech-house b2bs at Local Motive. He hosts Open Decks at Ruby and its London Underground UKG nights. Before Madison he built his name in LA: Phase 1 afters in DTLA, the YOUR SHOT 2025 DJ competition, and sunset pop-ups in Malibu and Topanga. He's also played pool parties at Viajero in South Beach, camp sets at Elements Festival, a live set on Birdcage Radio (Utrecht) and HÖR's Maximum Heat contest.",
+    "Every night goes into the Archive Tapes, his series of raw live recordings. Next up is a collective of DJs doing freestyle b2b sessions for YouTube and livestream, growing into an online radio. Plays clubs, warehouses and private celebrations.",
   ],
   genres: "Tech House · Bass House · UKG · DnB · Hip-Hop",
 
@@ -140,18 +153,20 @@ window.SITE = {
      stories: Instagram story files for this show (photos/videos). They show as small circles
               inside the show's card; tap one to watch. Thumbnails: run the story tool (ask Claude).
      instagram: link to the matching Instagram highlight ("View on Instagram" button)
+     time: set time / doors, e.g. "10PM – 2AM" (shown on Upcoming)
+     address: street address for the map + directions (Upcoming)
+     links: per-story link stickers, e.g. stories: [{src:"...mp4", link:"https://...", label:"@nattspil"}]
      recurring: for weekly residencies, e.g. recurring: "Every Thursday", day: "THU" */
   shows: [
-    { date: "", recurring: "Every Thursday", day: "THU", name: "Sotto", tag: "Open Decks", loc: "Sotto Nightclub", type: "club", venue: "Sotto Nightclub", city: "Madison, WI" },
     { date: "2026-08-28", name: "Sotto", tag: "Open Decks", loc: "Sotto Nightclub",                       type: "club", venue: "Sotto Nightclub", city: "Madison, WI", stories: ["assets/stories/2026-08-28-sotto-open-decks/2026-08-28-01.mp4", "assets/stories/2026-08-28-sotto-open-decks/2026-08-28-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-12-13", name: "Nattspil", tag: "Episode 006", loc: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
     { date: "2026-12-03", name: "Nattspil", tag: "Episode 005", loc: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI" },
-    { date: "2026-11-21", name: "Ruby", tag: "UKG #2", loc: "Ruby",                            type: "club", venue: "Ruby",     city: "Madison, WI" },
+    { date: "2026-11-21", name: "Ruby", tag: "London Underground #2", loc: "Ruby",                            type: "club", venue: "Ruby",     city: "Madison, WI" },
     { date: "2026-11-20", name: "Ruby", tag: "Open Decks #2", loc: "Ruby",                     type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-2.jpg", "assets/shows/open-decks-2-story.jpg"] },
     { date: "2026-11-14", name: "Liquid", tag: "GTA Rave 2", loc: "Liquid",                       type: "club", venue: "Liquid", city: "Madison, WI", with: "Teryx", stories: ["assets/stories/2026-11-14-gta-rave-2/2026-11-15-01.mp4", "assets/stories/2026-11-14-gta-rave-2/2026-11-18-02.mp4", "assets/stories/2026-11-14-gta-rave-2/2026-11-18-03.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-11-13", name: "Liquid", tag: "GTA Rave", loc: "Liquid",                         type: "club", venue: "Liquid", city: "Madison, WI", with: "Teryx", stories: ["assets/stories/2026-11-13-gta-rave/2026-11-13-01.mp4", "assets/stories/2026-11-13-gta-rave/2026-11-14-02.mp4", "assets/stories/2026-11-13-gta-rave/2026-11-15-03.mp4", "assets/stories/2026-11-13-gta-rave/2026-11-15-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-11-08", name: "Nattspil", tag: "Episode 004", loc: "Nattspil",                         type: "club", venue: "Nattspil", city: "Madison, WI", stories: ["assets/stories/2026-11-08-nattspil/2026-11-04-01.mp4", "assets/stories/2026-11-08-nattspil/2026-11-08-02.mp4", "assets/stories/2026-11-08-nattspil/2026-11-09-03.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
-    { date: "2026-11-07", name: "Ruby", tag: "UKG #1", loc: "Ruby",                              type: "club", venue: "Ruby",     city: "Madison, WI", stories: ["assets/stories/2026-11-07-ruby-ukg/2026-11-08-01.webp"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
+    { date: "2026-11-07", name: "Ruby", tag: "London Underground #1", loc: "Ruby",                              type: "club", venue: "Ruby",     city: "Madison, WI", stories: ["assets/stories/2026-11-07-ruby-ukg/2026-11-08-01.webp"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-11-07", name: "Liquid", tag: "Nostalgia Night: 2010s", loc: "Liquid",           type: "club", venue: "Liquid",   city: "Madison, WI", stories: ["assets/stories/2026-11-07-liquid-2010s/2026-11-06-01.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-07-02.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-08-03.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-08-04.mp4", "assets/stories/2026-11-07-liquid-2010s/2026-11-08-05.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-11-06", name: "Ruby", tag: "Open Decks #1", loc: "Ruby",                       type: "club", venue: "Ruby",     city: "Madison, WI", note: "Poster designed by $H₹N", gallery: ["assets/shows/open-decks-1.jpg"], stories: ["assets/stories/2026-11-06-ruby-open-decks/2026-11-06-01.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-02.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-03.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-04.mp4", "assets/stories/2026-11-06-ruby-open-decks/2026-11-07-05.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
     { date: "2026-10-30", name: "Liquid", tag: "Thrillaween", loc: "Liquid",                      type: "club", venue: "Liquid",   city: "Madison, WI", stories: ["assets/stories/2026-10-30-liquid-thrillaween/2026-10-30-01.mp4", "assets/stories/2026-10-30-liquid-thrillaween/2026-10-31-02.mp4", "assets/stories/2026-10-30-liquid-thrillaween/2026-10-31-03.mp4", "assets/stories/2026-10-30-liquid-thrillaween/2026-10-31-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/18187212193389125/" },
@@ -173,8 +188,7 @@ window.SITE = {
     { date: "2025-10-26", name: "Malibu", tag: "Beach Pop-Up", loc: "Malibu, CA",              type: "popup",  city: "Malibu, CA", stories: ["assets/stories/2025-10-26-malibu-pop-up/2025-09-26-01.mp4", "assets/stories/2025-10-26-malibu-pop-up/2025-09-26-02.mp4"], instagram: "https://www.instagram.com/stories/highlights/18291536485269886/" },
     { date: "2025-10-24", name: "Viajero", tag: "Pool Party #1", loc: "Viajero · South Beach",     type: "popup",  venue: "Viajero Miami, 1120 Collins Ave", city: "South Beach, Miami, FL", instagram: "https://www.instagram.com/stories/highlights/18159291598389073/" },
     { date: "2025-09-13", name: "YOUR SHOT 2025", tag: "YOUR SHOT 2025", loc: "DJ Competition · DTLA",  type: "competition", city: "Downtown LA, CA", stories: ["assets/stories/2025-09-13-your-shot/2025-09-14-01.mp4", "assets/stories/2025-09-13-your-shot/2025-09-14-02.mp4", "assets/stories/2025-09-13-your-shot/2025-09-16-03.mp4", "assets/stories/2025-09-13-your-shot/2025-10-02-04.mp4"], instagram: "https://www.instagram.com/stories/highlights/17921620545139966/" },
-    { date: "2025-08-10", name: "Elements Festival", tag: "Camp Pop-Up", loc: "Elements Festival · PA",  type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA", stories: ["assets/stories/2025-08-elements-festival/2025-08-13-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/17913701808193796/" },
-    { date: "2025-08-09", name: "Elements Festival", tag: "Broccoli Bar Pop-Up", loc: "Elements Festival · PA", type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA", stories: ["assets/stories/2025-08-elements-festival/2025-08-13-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/17913701808193796/" },
+    { date: "2025-08-09", name: "Elements Festival", end: "2025-08-10", tag: "Camp + Broccoli Bar Pop-Ups", loc: "Elements Festival · PA", type: "festival", venue: "Pocono Raceway", city: "Long Pond, PA", stories: ["assets/stories/2025-08-elements-festival/2025-08-13-01.mp4"], instagram: "https://www.instagram.com/stories/highlights/17913701808193796/" },
   ],
 
   /* ---------- from the floor: shows you've been to ----------

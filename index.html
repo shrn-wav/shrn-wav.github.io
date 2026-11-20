@@ -3,15 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- $H₹N · shrn.wav · site design, code, logos and media © $H₹N. All rights reserved. Not for reuse. [SHRN-WAV-7C41] -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://w.soundcloud.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; frame-src https://w.soundcloud.com https://maps.google.com https://www.google.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://app.kit.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="copyright" content="© $H₹N. All rights reserved.">
 <title>$H₹N — DJ</title>
-<meta name="description" content="$H₹N — high-energy tech house, bass and UKG with Indian/Tamil roots. Archive Tapes, upcoming shows and bookings.">
+<meta name="description" content="$H₹N — Madison, WI DJ. High-energy tech house, bass and UK garage with desi roots. Archive Tapes, upcoming shows and bookings.">
 <meta name="theme-color" content="#050505">
 <meta property="og:type" content="website">
 <meta property="og:title" content="$H₹N — DJ">
 <meta property="og:description" content="Archive Tapes, upcoming shows and bookings.">
 <meta property="og:image" content="assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="assets/brand/shrn-logo.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@800;900&family=Caveat+Brush&family=Space+Mono:wght@400;700&family=Noto+Sans+Devanagari:wdth,wght@62.5..100,900&family=Noto+Sans+Tamil:wdth,wght@62.5..100,900&display=swap" rel="stylesheet">
@@ -414,8 +419,143 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
 #story,#story *,#lb,#lb *,#pad,#pad *{cursor:auto;}
 #story button,#story a,#lb button,#pad button{cursor:pointer;}
 
+/* =====================================================================
+   v2.0
+   ===================================================================== */
+/* hero: wave layer behind the logo; logo canvas is sized from JS with room to spare */
+#wave{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+.hero-inner{position:relative;z-index:1;}
+.stage{overflow:visible;}
+.stage canvas{inset:auto;}
+
+/* socials: side rail on desktop, icon row on phones */
+.ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.rail{position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:7000;display:flex;flex-direction:column;align-items:center;gap:14px;color:var(--acid-mid);transition:opacity .3s;}
+.rail::before,.rail::after{content:'';width:1px;height:40px;background:var(--line2);}
+.rail a{display:grid;place-items:center;width:30px;height:30px;transition:color .2s,transform .2s;}
+.rail a:hover{color:var(--acid);transform:scale(1.15);}
+.rail span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:8px;letter-spacing:.3em;color:var(--acid-dim);}
+.hsoc{display:none;gap:22px;margin-top:16px;color:var(--acid-mid);}
+.hsoc a{display:grid;place-items:center;width:34px;height:34px;}
+.hsoc .ico{width:20px;height:20px;}
+body.modal .rail,body:has(#lb.on) .rail{opacity:0;pointer-events:none;}
+@media(max-width:1100px){.rail{display:none;}.hsoc{display:flex;}}
+
+/* plucky strings between sections (they replace the old divider lines) */
+.string{position:relative;height:56px;margin:0 var(--gut);touch-action:pan-y;}
+.string canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.string + section{border-top:0;}
+
+/* EQ bars above the tape deck */
+.eq{height:84px;max-width:804px;margin:26px auto 0;}
+.eq canvas{width:100%;height:100%;display:block;}
+@media(max-width:900px){.eq{max-width:380px;height:64px;}}
+
+/* tape deck: playback fallback + clunk when a tape lands */
+.tapnote{display:none;font-family:var(--cap);font-size:18px;line-height:1.25;color:var(--hand);margin-top:10px;}
+.deck.needtap .tapnote{display:block;}
+.deck.needtap .scwrap{height:120px;margin-top:8px;}
+.bay.clunk{animation:clunk .38s cubic-bezier(.3,1.6,.5,1);}
+@keyframes clunk{0%{transform:translateY(-6px)}45%{transform:translateY(3px)}100%{transform:none}}
+
+/* ---------- upcoming: drop-down details ---------- */
+.gig{cursor:pointer;grid-template-columns:150px minmax(0,1fr) minmax(0,260px) 34px;}
+.gig .g-x{font-size:28px;line-height:1;color:var(--acid);text-align:center;transition:transform .3s;}
+.gig.open{background:rgba(209,250,29,.06);}
+.gig.open .g-x{transform:rotate(45deg);}
+.g-time{display:inline-block;margin:8px 0 0 6px;font-size:11px;letter-spacing:.14em;color:var(--acid);border:1px solid var(--acid-dim);padding:2px 8px;}
+.gx{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1);}
+.gx.open{grid-template-rows:1fr;border-bottom:1px solid var(--line2);}
+.gx > div{overflow:hidden;}
+.gx .in{padding:4px 10px 26px 176px;display:grid;gap:16px;max-width:760px;}
+.gx dl{display:grid;grid-template-columns:84px 1fr;gap:8px 16px;font-size:13px;}
+.gx dt{font-size:10px;letter-spacing:.18em;color:var(--acid-dim);padding-top:3px;}
+.gx dd{color:var(--paper);}
+.gx .mr{display:grid;grid-template-columns:132px minmax(0,260px);gap:10px;height:132px;}
+.gx .map{position:relative;border:1px solid var(--acid-dim);overflow:hidden;background:var(--ink3);}
+.gx .map iframe{position:absolute;left:-90px;top:-90px;width:calc(100% + 180px);height:calc(100% + 180px);border:0;filter:grayscale(1) invert(.92) contrast(.95);pointer-events:none;}
+.gx .map::after{content:'';position:absolute;inset:0;z-index:1;background:var(--acid);mix-blend-mode:multiply;opacity:.55;pointer-events:none;}
+.gx .map a{position:absolute;inset:0;z-index:4;}
+.gx .map .pin{position:absolute;left:50%;top:50%;z-index:2;width:22px;transform:translate(-50%,-100%);filter:drop-shadow(0 3px 6px #000);pointer-events:none;}
+.gx .map small{position:absolute;left:0;right:0;bottom:0;z-index:3;font-size:8px;letter-spacing:.16em;background:rgba(5,5,5,.85);color:var(--acid);text-align:center;padding:4px 0;pointer-events:none;}
+.gx .map:hover{border-color:var(--acid);}
+.gx .bt{display:grid;grid-template-rows:1fr 1fr;gap:10px;}
+.gx .bt button{border:1px solid var(--acid);color:var(--acid);font-size:11px;font-weight:700;letter-spacing:.16em;transition:all .15s;}
+.gx .bt button:hover{background:rgba(209,250,29,.12);box-shadow:0 0 18px rgba(209,250,29,.3);}
+.gx .bt button.p{background:var(--acid);color:var(--ink);}
+.gx .bt button.p:hover{background:var(--ink);color:var(--acid);}
+.gstat{font-family:var(--cap);font-size:18px;color:var(--acid);min-height:22px;}
+@media(max-width:760px){
+  .gig{grid-template-columns:86px minmax(0,1fr) 28px;}
+  .g-loc{grid-column:2;grid-row:2;}
+  .gig .g-x{grid-column:3;grid-row:1 / span 2;align-self:center;}
+  .gx .in{padding:4px 4px 22px;}
+  .gx .mr{grid-template-columns:120px 1fr;height:120px;}
+}
+
+/* ---------- been there: rows on phone, square poster tiles on desktop ---------- */
+.shows{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.show{position:relative;aspect-ratio:1/1;border:1px solid var(--line2);background:var(--ink2);overflow:hidden;animation:cardIn .5s cubic-bezier(.2,.8,.2,1) both;transition:border-color .2s,box-shadow .2s;}
+.show[data-show]{cursor:pointer;}
+.show:hover{border-color:var(--acid);box-shadow:0 18px 36px -20px rgba(209,250,29,.4);}
+.show .th{position:absolute;inset:0;overflow:hidden;}
+.show .th img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(.55);transition:filter .35s,transform .4s;}
+.show .th::after{content:'';position:absolute;inset:0;background:var(--acid);mix-blend-mode:multiply;opacity:.2;transition:opacity .35s;pointer-events:none;}
+.show .th.sb img{filter:grayscale(1) contrast(1.1) brightness(.42) blur(1px);}
+.show:hover .th img{filter:none;transform:scale(1.04);}
+.show:hover .th::after{opacity:0;}
+.show .th.none{display:grid;place-items:center;background:var(--ink3);}
+.show .th.none::after{display:none;}
+.show .th.none svg{width:46%;fill:var(--line2);}
+.show .dt{position:absolute;top:12px;left:12px;z-index:2;line-height:1;pointer-events:none;}
+.show .dt b{display:block;font-family:var(--goth);font-weight:900;font-size:54px;line-height:.8;color:var(--paper);text-shadow:0 2px 14px rgba(5,5,5,.7);}
+.show .dt span{display:block;margin-top:6px;font-size:10px;letter-spacing:.18em;color:var(--paper);text-shadow:0 1px 8px #000;}
+.show .tx{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:44px 12px 12px;background:linear-gradient(0deg,rgba(5,5,5,.96) 32%,rgba(5,5,5,0));pointer-events:none;}
+.show .tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--goth);font-weight:900;font-size:22px;line-height:1.05;color:var(--paper);}
+.show .tx small{display:block;margin-top:5px;font-size:10px;letter-spacing:.12em;color:var(--acid-mid);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* Instagram-style highlight circle */
+.hlr{position:absolute;top:10px;right:10px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;}
+.hlr .ring{display:block;width:52px;height:52px;border-radius:50%;padding:2.5px;background:conic-gradient(from 210deg,var(--acid),#f2ffb4,var(--acid-mid),var(--acid));transition:transform .25s;}
+.hlr .ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2.5px solid var(--ink);display:block;}
+.hlr i{font-style:normal;font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--paper);text-shadow:0 1px 6px #000;}
+.show:hover .hlr .ring{transform:scale(1.08) rotate(8deg);}
+.show .vw{position:absolute;top:12px;right:12px;z-index:3;font-size:9px;letter-spacing:.14em;background:var(--acid);color:var(--ink);padding:3px 7px;pointer-events:none;}
+@media(max-width:760px){
+  .shows{grid-template-columns:1fr;gap:0;border-top:1px solid var(--line2);}
+  .show{aspect-ratio:auto;display:grid;grid-template-columns:64px minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:14px;align-items:center;padding:10px 2px;border:0;border-bottom:1px solid var(--line2);background:none;box-shadow:none;}
+  .show:hover{box-shadow:none;background:rgba(209,250,29,.04);}
+  .show .th{position:relative;inset:auto;grid-row:1 / span 2;width:64px;height:64px;border:1px solid var(--line2);}
+  .show .th.none svg{width:60%;}
+  .show .dt{position:static;grid-column:2;grid-row:1;align-self:end;}
+  .show .dt b,.show .dt span{display:inline;margin:0;font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.16em;color:var(--acid-mid);text-shadow:none;line-height:1.4;}
+  .show .dt b{margin-right:5px;}
+  .show .tx{position:static;grid-column:2;grid-row:2;align-self:start;padding:0;background:none;}
+  .show .tx b{font-size:21px;-webkit-line-clamp:1;}
+  .hlr{position:static;grid-column:3;grid-row:1 / span 2;}
+  .hlr .ring{width:48px;height:48px;}
+  .show .vw{position:static;grid-column:3;grid-row:1 / span 2;}
+}
+
+/* ---------- story viewer: logo under the story + link stickers ---------- */
+.st-logo{align-self:center;width:min(160px,42%);height:auto;margin-top:4px;pointer-events:none;}
+.st-ig{margin-top:-2px;}
+.st-link{position:absolute;left:50%;top:84%;z-index:5;transform:translate(-50%,-50%) rotate(-2deg);display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:10px;background:#f4f4ef;color:#111;font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:0 6px 20px rgba(0,0,0,.5);white-space:nowrap;}
+.st-link:hover{background:var(--acid);}
+.st-link[hidden]{display:none;}
+.st-link.over{background:transparent;box-shadow:none;color:transparent;transform:translate(-50%,-50%);padding:0;outline:2px dashed transparent;}
+.st-link.over:hover{outline-color:var(--acid);background:transparent;}
+
+/* ---------- bass dealer mode (type "shrn") ---------- */
+.bdm{position:fixed;inset:0;z-index:99990;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(5,5,5,.88);pointer-events:none;text-align:center;padding:20px;}
+.bdm b{font-family:var(--goth);font-weight:900;font-size:clamp(48px,10vw,140px);line-height:.9;color:var(--acid);}
+.bdm span{font-family:var(--cap);font-size:clamp(20px,3vw,34px);color:var(--hand);}
+.bdm.flash{animation:bdm .4s steps(2) 5;}
+@keyframes bdm{0%{background:rgba(5,5,5,.9)}50%{background:rgba(209,250,29,.88)}}
+.bdm.flash b{animation:bdmT .4s steps(2) 5;}
+@keyframes bdmT{0%{color:var(--acid)}50%{color:var(--ink)}}
+
 @media (prefers-reduced-motion:reduce){
-  .grain,.strip-bar .inner,.deck.playing .reel,.card{animation:none;}
+  .grain,.strip-bar .inner,.deck.playing .reel,.card,.show,.bay.clunk{animation:none;}
   .reveal,.stagger > *{opacity:1;transform:none;}
 }
 </style>
@@ -431,13 +571,24 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
   <div class="nav-r"><a class="btn sm p" href="#booking">BOOKING</a><a class="btn sm" href="#announce">JOIN THE LIST</a></div>
 </nav>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/></symbol>
+  <symbol id="i-soundcloud" viewBox="0 0 24 24"><path d="M9 17V10M6 17v-5M3 17v-3M12 17V8.5c1-.9 2.3-1.5 3.8-1.5 2.9 0 5.2 2.2 5.2 5 0 .2 0 .4-.1.6A2.7 2.7 0 0 1 21 17z"/></symbol>
+  <symbol id="i-youtube" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.3v5.4l4.8-2.7z" fill="currentColor"/></symbol>
+  <symbol id="i-twitch" viewBox="0 0 24 24"><path d="M4.5 3.5h16v10.5l-4.5 4.5h-3.5L9.5 21.5v-3H4.5z"/><path d="M11 8v4.5M15.5 8v4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 32"><path d="M12 1C6 1 1.5 5.5 1.5 11.3 1.5 19 12 31 12 31s10.5-12 10.5-19.7C22.5 5.5 18 1 12 1z" fill="#D1FA1D" stroke="#050505" stroke-width="1.5"/><circle cx="12" cy="11.5" r="4" fill="#050505"/></symbol>
+</svg>
+<div class="rail" id="rail" aria-label="Follow $H₹N"></div>
+
 <header class="hero" id="top">
   <canvas id="eye" aria-hidden="true"></canvas>
+  <canvas id="wave" aria-hidden="true"></canvas>
   <h1 class="sr">$H₹N</h1>
   <div class="hero-inner" id="heroInner">
     <div class="stage pulsable" id="stage" role="img" aria-label="$H₹N logo. Move over it to play with the pixels, tap to switch."></div>
     <div class="sparks" id="sparks" role="group" aria-label="Logo versions"></div>
     <div class="loc" id="loc"></div>
+    <div class="hsoc" id="hsoc" aria-label="Follow $H₹N"></div>
   </div>
 </header>
 
@@ -449,9 +600,11 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
   <div class="gigs stagger" id="gigs"></div>
 </section>
 
+<div class="string" aria-hidden="true"><canvas></canvas></div>
 <section id="tapes">
   <h2 class="title" id="tapesTitle"></h2>
   <p class="cap" id="tapesCap" hidden></p>
+  <div class="eq" id="eq" aria-hidden="true"><canvas></canvas></div>
   <div class="dig">
     <div>
       <div class="crate-wrap">
@@ -467,20 +620,23 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
       <div class="seek"><span id="tCur">00:00</span><input type="range" id="seek" min="0" max="1000" step="1" value="0" aria-label="Scrub through the set"><span id="tDur">--:--</span></div>
       <div class="keys"><button id="kPlay" aria-label="Play">▶</button><button id="kPause" aria-label="Pause">❚❚</button><button id="kNext" aria-label="Next tape">▶▶</button><button id="kEject" aria-label="Eject">⏏</button></div>
       <div class="row"><div class="vu" id="vu"></div><a class="src" id="scLink" target="_blank" rel="noopener">OPEN ON SOUNDCLOUD ↗</a></div>
+      <p class="tapnote" id="tapNote">your browser blocked the sound. tap ▶ on the player below once and it's on.</p>
       <div class="scwrap"><iframe id="sc" title="$H₹N on SoundCloud" allow="autoplay"></iframe></div>
     </div>
   </div>
 </section>
 
+<div class="string" aria-hidden="true"><canvas></canvas></div>
 <section id="been">
   <h2 class="title" id="beenTitle"></h2>
   <p class="cap" id="beenCap" hidden></p>
   <div class="tabs" id="cityTabs" role="tablist"></div>
   <div class="subtabs" id="subTabs" role="tablist" aria-label="Series"></div>
   <div class="subsum" id="subSum" aria-live="polite"></div>
-  <div class="cards" id="cards" role="tabpanel"></div>
+  <div class="shows" id="cards" role="tabpanel"></div>
 </section>
 
+<div class="string" aria-hidden="true"><canvas></canvas></div>
 <section id="about">
   <h2 class="title" id="aboutTitle"></h2>
   <p class="cap" id="aboutCap" hidden></p>
@@ -503,6 +659,7 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
   <div class="gal" id="gal" aria-label="Gallery. Drag sideways to browse."></div>
 </section>
 
+<div class="string" aria-hidden="true"><canvas></canvas></div>
 <section id="booking">
   <h2 class="title" id="bookingTitle"></h2>
   <p class="cap big" id="bookingCap"></p>
@@ -530,6 +687,7 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
   </div>
 </section>
 
+<div class="string" aria-hidden="true"><canvas></canvas></div>
 <section id="socials">
   <h2 class="title" id="socialsTitle"></h2>
   <p class="cap" id="socialsCap" hidden></p>
@@ -551,7 +709,7 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
 
 <footer>
   <img class="flogo" src="assets/brand/shrn-logo.svg" alt="$H₹N">
-  <div>© <span id="yr"></span> $H₹N <button id="egg" aria-label="Hidden drum machine">[ 303 ]</button></div>
+  <div>© <span id="yr"></span> $H₹N · all rights reserved <button id="egg" aria-label="Hidden drum machine">[ 303 ]</button></div>
 </footer>
 
 <div id="dock" role="navigation" aria-label="Quick links">
@@ -581,11 +739,13 @@ body.modal .cursor,body:has(#lb.on) .cursor,body:has(#pad.on) .cursor{display:no
     <div class="st-stage">
       <div class="st-frame">
         <div class="st-media" id="stMedia"></div>
+        <a class="st-link" id="stLink" target="_blank" rel="noopener" hidden></a>
         <button class="st-tap l" id="stPrev" aria-label="Previous"></button><button class="st-tap r" id="stNext" aria-label="Next"></button>
       </div>
       <button class="st-arrow l" id="stPrevBtn" aria-label="Previous story"><svg viewBox="-8 -6 136 96" aria-hidden="true"><use class="o" href="#arw"/><use class="k" href="#arw"/><use class="f" href="#arw"/></svg></button>
       <button class="st-arrow r" id="stNextBtn" aria-label="Next story"><svg viewBox="-8 -6 136 96" aria-hidden="true"><use class="o" href="#arw"/><use class="k" href="#arw"/><use class="f" href="#arw"/></svg></button>
     </div>
+    <img class="st-logo" src="assets/brand/shrn-logo.svg" alt="$H₹N">
     <a class="st-ig" id="stIg" target="_blank" rel="noopener">VIEW ON INSTAGRAM ↗</a>
   </div>
 </div>
@@ -642,7 +802,7 @@ const cv = document.createElement('canvas'); stage.appendChild(cv);
 const cx = cv.getContext('2d');
 sparks.innerHTML = S.names.map((n,i) => '<button aria-label="Show ' + esc(n.txt) + '"' + (i ? '' : ' class="on"') + '>' + SPARK + '</button>').join('');
 const logoImgs = S.names.map(n => n.img ? new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = n.img; }) : Promise.resolve(null));
-let W = 0, H = 0, DPR = 1, T = 6, mode = 'idle', tiles = [], raf = 0, settle = 0, ready = false, srcCache = {};
+let W = 0, H = 0, PX0 = 0, PY0 = 0, DPR = 1, T = 6, mode = 'idle', tiles = [], raf = 0, settle = 0, ready = false, srcCache = {};
 const ptr = {x:-9999, y:-9999, in:false, auto:false};
 const decoded = {};
 function decode(m) {
@@ -671,16 +831,21 @@ async function source(i) {
   return (srcCache[i] = {c, homes});
 }
 const mkTiles = src => src.homes.map(([hx, hy]) => ({hx, hy, x:hx, y:hy, vx:0, vy:0}));
+/* the canvas reaches past the logo box on every side so falling / pushed tiles fade out
+   in open space instead of being cut off at a hard rectangle */
+const clr = () => cx.clearRect(-PX0, -PY0, W + 2*PX0, H + 2*PY0);
 function drawTiles(src, list) {
-  cx.clearRect(0, 0, W, H);
+  clr();
   const s = src.c, d = DPR, td = T * d;
   for (const t of list) cx.drawImage(s, t.hx*d, t.hy*d, td, td, t.x, t.y, T, T);
 }
-function drawRest(src) { cx.clearRect(0, 0, W, H); if (src) cx.drawImage(src.c, 0, 0, W, H); }
+function drawRest(src) { clr(); if (src) cx.drawImage(src.c, 0, 0, W, H); }
 async function prepare() {
   const r = stage.getBoundingClientRect(); W = r.width; H = r.height; DPR = Math.min(2, devicePixelRatio || 1);
   T = W < 500 ? 5 : 6;
-  cv.width = Math.round(W*DPR); cv.height = Math.round(H*DPR); cx.setTransform(DPR,0,0,DPR,0,0);
+  PX0 = Math.round(W * .12); PY0 = Math.round(H * .9);
+  Object.assign(cv.style, {inset: 'auto', left: -PX0 + 'px', top: -PY0 + 'px', width: W + 2*PX0 + 'px', height: H + 2*PY0 + 'px'});
+  cv.width = Math.round((W + 2*PX0)*DPR); cv.height = Math.round((H + 2*PY0)*DPR); cx.setTransform(DPR,0,0,DPR,PX0*DPR,PY0*DPR);
   srcCache = {};
   if (REDUCE || !PX[S.names[hi].img]) return;
   const src = await source(hi);
@@ -746,7 +911,7 @@ function rain(from, to) {
     const ease = t => 1 - Math.pow(1 - t, 3), d = DPR, td = T * d, t0 = performance.now();
     function frame(now) {
       const t = now - t0;
-      cx.clearRect(0, 0, W, H);
+      clr();
       for (const p of outs) {
         const tt = t - p.d;
         if (tt < 0) { cx.drawImage(A.c, p.hx*d, p.hy*d, td, td, p.x, p.y, T, T); continue; }
@@ -837,7 +1002,8 @@ const dShort = s => s.d ? DAY[s.d.getDay()] + ' ' + String(s.d.getMonth()+1).pad
 
 /* ---------- strip ---------- */
 const stripItem = s => { const w = (s.venue || s.city || '').toUpperCase(), n = (s.tag || s.name).toUpperCase(); return dShort(s) + ' · ' + n + (w && w !== n ? ' @ ' + w : ''); };
-$('#stripIn').textContent = (upcoming.map(stripItem).join('   ✦   ') + '   ✦   ').repeat(upcoming.length < 3 ? 8 : 4);
+const stripList = [...upcoming.map(stripItem), ...(S.strip || [])];
+$('#stripIn').textContent = (stripList.join('   ✦   ') + '   ✦   ').repeat(stripList.length < 3 ? 8 : 4);
 
 /* ---------- titles + captions ---------- */
 ['tapes','been','about','gallery','booking','socials'].forEach(k => {
@@ -865,11 +1031,80 @@ if (boardWords.length > 1 && !REDUCE) new IntersectionObserver(es => {
   else { clearInterval(boardTimer); boardTimer = null; bi = 0; setBoard(boardWords[0]); }
 }, {threshold: .6}).observe(bt);
 const bc = $('#boardCap'); bc.textContent = B.cap || ''; bc.hidden = !B.cap;
-$('#gigs').innerHTML = upcoming.length ? upcoming.slice(0, 8).map(s => {
+/* tap a show: drops down with when / where / address, a small map (tap = directions), share + remind me */
+const VEN = S.venues || {};
+const venueOf = s => VEN[s.venue] || VEN[s.name] || VEN[s.loc] || {};
+const placeName = s => venueOf(s).place || s.venue || s.name;
+const addrOf = s => s.address || venueOf(s).address || '';
+const mapQ = s => encodeURIComponent(addrOf(s) ? placeName(s) + ', ' + addrOf(s) : placeName(s) + ', ' + (s.city || ''));
+const longDate = d => DAY[d.getDay()] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear();
+$('#gigs').innerHTML = upcoming.length ? upcoming.slice(0, 8).map((s, k) => {
   const date = s.d ? '<b>' + String(s.d.getDate()).padStart(2,'0') + '</b><span>' + MON[s.d.getMonth()] + ' · ' + DAY[s.d.getDay()] + '</span>' : '<b>' + esc(s.day || '∞') + '</b><span>EVERY WEEK</span>';
-  return '<div class="gig"><div class="g-date">' + date + '</div><div class="g-main"><h3>' + esc(s.tag || s.name) + '</h3>' + (s.with ? '<span class="b2b">B2B ' + esc(s.with).toUpperCase() + '</span>' : '') + '</div><div class="g-loc">' + esc(s.venue || s.city || '') + (s.venue && s.city ? '<small>' + esc(s.city) + '</small>' : '') + '</div></div>';
+  return '<div class="gig" role="button" tabindex="0" aria-expanded="false" data-k="' + k + '"><div class="g-date">' + date + '</div><div class="g-main"><h3>' + esc(s.tag || s.name) + '</h3>' +
+    (s.with ? '<span class="b2b">B2B ' + esc(s.with).toUpperCase() + '</span>' : '') + (s.time ? '<span class="g-time">' + esc(s.time) + '</span>' : '') + '</div>' +
+    '<div class="g-loc">' + esc(placeName(s)) + (s.city ? '<small>' + esc(s.city) + '</small>' : '') + '</div><span class="g-x" aria-hidden="true">+</span></div>' +
+    '<div class="gx"><div><div class="in"><dl>' +
+      '<dt>WHEN</dt><dd>' + (s.d ? longDate(s.d) : 'Every ' + esc(s.day || 'week')) + (s.time ? ' · ' + esc(s.time) : '') + '</dd>' +
+      '<dt>WHERE</dt><dd>' + esc(placeName(s)) + (s.with ? ' · b2b ' + esc(s.with) : '') + '</dd>' +
+      (addrOf(s) ? '<dt>ADDRESS</dt><dd>' + esc(addrOf(s)) + '</dd>' : '<dt>CITY</dt><dd>' + esc(s.city || '') + '</dd>') +
+    '</dl><div class="mr"><div class="map" data-q="' + mapQ(s) + '"><a href="https://www.google.com/maps/search/?api=1&query=' + mapQ(s) + '" target="_blank" rel="noopener" aria-label="Directions to ' + esc(placeName(s)) + '"></a><svg class="pin" viewBox="0 0 24 32"><use href="#i-pin"/></svg><small>DIRECTIONS ↗</small></div>' +
+    '<div class="bt"><button class="p" data-act="share">SHARE ↗</button><button data-act="remind">REMIND ME ⏰</button></div></div>' +
+    '<div class="gstat" role="status"></div></div></div></div>';
 }).join('') : '<div class="gig"><div class="g-date"><b>—</b></div><div class="g-main"><h3>New dates dropping soon</h3></div><div class="g-loc"></div></div>';
+const gigsEl = $('#gigs');
+function toggleGig(g) {
+  const x = g.nextElementSibling, open = !x.classList.contains('open');
+  $$('.gx.open', gigsEl).forEach(o => { o.classList.remove('open'); o.previousElementSibling.classList.remove('open'); o.previousElementSibling.setAttribute('aria-expanded', 'false'); });
+  if (!open) return;
+  const m = $('.map', x);
+  if (m && !m.dataset.on) { m.dataset.on = 1; m.insertAdjacentHTML('afterbegin', '<iframe loading="lazy" tabindex="-1" title="Map" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=' + m.dataset.q + '&z=15&output=embed"></iframe>'); }
+  x.classList.add('open'); g.classList.add('open'); g.setAttribute('aria-expanded', 'true');
+}
+/* .ics file: adds the night to the phone's calendar with an alert the day before + 2h before */
+function icsFor(s) {
+  const p = n => String(n).padStart(2, '0'), d = s.d, ymd = d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+  const nd = new Date(d); nd.setDate(nd.getDate() + 1);
+  let st = 'DTSTART;VALUE=DATE:' + ymd, en = 'DTEND;VALUE=DATE:' + nd.getFullYear() + p(nd.getMonth() + 1) + p(nd.getDate());
+  const tm = (s.time || '').match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
+  if (tm) {
+    const h = +tm[1] % 12 + (/pm/i.test(tm[3]) ? 12 : 0), mi = +(tm[2] || 0);
+    st = 'DTSTART:' + ymd + 'T' + p(h) + p(mi) + '00';
+    const e = new Date(d); e.setHours(h + 4, mi);
+    en = 'DTEND:' + e.getFullYear() + p(e.getMonth() + 1) + p(e.getDate()) + 'T' + p(e.getHours()) + p(e.getMinutes()) + '00';
+  }
+  const t = (s.tag || s.name) + ' — $H₹N', loc = placeName(s) + (addrOf(s) ? ', ' + addrOf(s) : s.city ? ', ' + s.city : '');
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//shrn.wav//shows//EN','BEGIN:VEVENT',
+    'UID:' + (s.date || '') + '-' + (s.tag || s.name).replace(/\W+/g, '') + '@shrn-wav',
+    'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', st, en,
+    'SUMMARY:' + t, 'LOCATION:' + loc.replace(/,/g, '\\,'),
+    'DESCRIPTION:$H₹N live' + (s.with ? ' b2b ' + s.with : '') + '. ' + location.origin + location.pathname + '#board',
+    'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:' + t + ' is tomorrow','END:VALARM',
+    'BEGIN:VALARM','TRIGGER:-PT2H','ACTION:DISPLAY','DESCRIPTION:' + t + ' tonight','END:VALARM',
+    'END:VEVENT','END:VCALENDAR'].join('\r\n');
+}
+gigsEl.addEventListener('click', async e => {
+  const b = e.target.closest('[data-act]');
+  if (b) {
+    const g = b.closest('.gx').previousElementSibling, s = upcoming[+g.dataset.k], st = $('.gstat', b.closest('.gx'));
+    if (b.dataset.act === 'share') {
+      const text = (s.tag || s.name) + ' · ' + (s.d ? longDate(s.d) : '') + ' @ ' + placeName(s) + ' — $H₹N', url = location.origin + location.pathname + '#board';
+      if (navigator.share) { try { await navigator.share({title: '$H₹N live', text, url}); } catch (_) {} }
+      else { try { await navigator.clipboard.writeText(text + ' ' + url); st.textContent = 'link copied ✓'; } catch (_) { st.textContent = url; } }
+    } else if (s.d) {
+      const blob = new Blob([icsFor(s)], {type: 'text/calendar'}), a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = ((s.tag || s.name) + '-shrn').replace(/[^\w-]+/g, '-').toLowerCase() + '.ics';
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      st.textContent = 'added to your calendar, with a reminder ✓';
+    }
+    return;
+  }
+  const g = e.target.closest('.gig[data-k]'); if (g) toggleGig(g);
+});
+gigsEl.addEventListener('keydown', e => { const g = e.target.closest('.gig[data-k]'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleGig(g); } });
 
+/* shared 'is a tape playing' state for the waves, EQ bars and tab icon */
+const MUSIC = {on: false, bpm: 126, t0: 0};
+const beatAt = now => MUSIC.on ? Math.exp(-(((now - MUSIC.t0) / 1000 * MUSIC.bpm / 60) % 1) * 7) : 0;
 /* =====================================================================
    02 ARCHIVE TAPES — drag through the crate, play on the deck
    ===================================================================== */
@@ -972,6 +1207,7 @@ const SC_OPTS = {color:'#d1fa1d', hide_related:true, show_comments:false, show_u
 const scFrame = $('#sc');
 scFrame.src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(S.soundcloudProfile) + '&color=%23d1fa1d&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false';
 $('#scLink').href = S.soundcloudProfile;
+let scReady = false, pendingPlay = null, playWatch = 0, fadeIn = false;
 let widget = null, sounds = [], scMode = 'profile', pulseTimer = null, vuTimer = null, duration = 0, seeking = false;
 const norm = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const art = u => u ? u.replace('-large', '-t500x500') : '';
@@ -979,6 +1215,7 @@ function matchSound(t) { return sounds.findIndex(x => x && x.title && norm(x.tit
 function initSC() {
   if (!window.SC || !SC.Widget) return;
   widget = SC.Widget(scFrame);
+  widget.bind(SC.Widget.Events.READY, () => { scReady = true; if (pendingPlay) { const f = pendingPlay; pendingPlay = null; f(); } }, {once:true});
   widget.bind(SC.Widget.Events.READY, () => widget.getSounds(list => {
     sounds = list || [];
     tapes.forEach(t => { const i = matchSound(t); if (i >= 0) { const x = sounds[i]; if (x.artwork_url) t.cover = art(x.artwork_url); t.soundcloud = x.permalink_url || t.soundcloud; t.duration = x.duration; } });
@@ -1006,9 +1243,14 @@ function withProfile(cb) {
   if (scMode === 'profile') return cb();
   widget.load(S.soundcloudProfile, {...SC_OPTS, auto_play:false, callback: () => { scMode = 'profile'; widget.getSounds(l => { sounds = l || []; cb(); }); }});
 }
+/* if a browser blocks the sound (iPhone / Instagram's browser), show SoundCloud's own player for one direct tap */
+function armWatch() { clearTimeout(playWatch); playWatch = setTimeout(() => { if (!deck.classList.contains('playing')) deck.classList.add('needtap'); }, 3500); }
 function scPlay(k) {
   const s = tapes[k];
-  if (!widget) { window.open(s.soundcloud || S.soundcloudProfile, '_blank', 'noopener'); return; }
+  if (!window.SC) { window.open(s.soundcloud || S.soundcloudProfile, '_blank', 'noopener'); return; }
+  armWatch();
+  if (!widget || !scReady) { pendingPlay = () => scPlay(k); return; }
+  fadeIn = true; widget.setVolume(0);
   withProfile(() => {
     const idx = matchSound(s);
     if (idx >= 0) { widget.skip(idx); widget.play(); }
@@ -1018,7 +1260,8 @@ function scPlay(k) {
 }
 function load(k) {
   if (!tapes[k]) return;
-  if (loaded === k) { widget ? widget.play() : scPlay(k); return; }
+  if (loaded === k) { if (widget && scReady) { armWatch(); widget.play(); } else scPlay(k); return; }
+  tapeSfx(); scPlay(k);   /* start the sound inside the tap itself: phones only allow audio that starts from a tap */
   const src = tapeEls[k].querySelector('.cas'), a = src.getBoundingClientRect();
   loaded = k; layCrate();
   const b = bay.getBoundingClientRect();
@@ -1027,7 +1270,7 @@ function load(k) {
     npEl.textContent = '▶ ' + tapes[k].title.toUpperCase();
     $('#scLink').href = tapes[k].soundcloud || S.soundcloudProfile;
     duration = tapes[k].duration || 0; tDur.textContent = duration ? fmt(duration) : '--:--'; tCur.textContent = '00:00'; seek.value = 0; seek.style.setProperty('--p', '0%');
-    scPlay(k);
+    bay.classList.remove('clunk'); void bay.offsetWidth; bay.classList.add('clunk');
     if (Math.round(target) === k && k < tapes.length - 1) goTape(k + 1);
   };
   if (REDUCE || a.width === 0) { done(); return; }
@@ -1042,19 +1285,21 @@ function eject() {
   if (widget) widget.pause();
   loaded = -1; emptyBay(); npEl.textContent = '— NO TAPE —'; tCur.textContent = '00:00'; tDur.textContent = '--:--'; seek.value = 0; seek.style.setProperty('--p', '0%'); layCrate();
 }
-$('#kPlay').addEventListener('click', () => loaded >= 0 ? (widget ? widget.play() : scPlay(loaded)) : load(Math.round(target)));
+$('#kPlay').addEventListener('click', () => loaded >= 0 ? ((widget && scReady) ? (armWatch(), widget.play()) : scPlay(loaded)) : load(Math.round(target)));
 $('#kPause').addEventListener('click', () => widget && widget.pause());
 $('#kNext').addEventListener('click', () => load(loaded >= 0 ? (loaded + 1) % tapes.length : Math.round(target)));
 $('#kEject').addEventListener('click', eject);
 const dockEl = $('#dock'), npBtn = $('#npBtn'), npTitle = $('#npTitle');
 function onPlay() {
+  clearTimeout(playWatch); deck.classList.remove('needtap'); MUSIC.on = true; MUSIC.t0 = performance.now();
+  if (fadeIn) { fadeIn = false; let v = 0; const up = setInterval(() => { v = Math.min(100, v + 8); widget.setVolume(v); if (v >= 100) clearInterval(up); }, 90); }
   deck.classList.add('playing'); dockEl.classList.add('playing'); npBtn.textContent = '❚❚';
   widget.getDuration(d => { if (d) { duration = d; tDur.textContent = fmt(d); } });
   widget.getCurrentSound(snd => {
     npTitle.textContent = (snd && snd.title) || (loaded >= 0 ? tapes[loaded].title : '$H₹N');
     if (loaded < 0 && snd) { const k = tapes.findIndex(t => norm(snd.title).includes(norm(t.match || t.title))); if (k >= 0) { loaded = k; bay.innerHTML = casHTML(tapes[k]); npEl.textContent = '▶ ' + tapes[k].title.toUpperCase(); layCrate(); } }
   });
-  const bpm = (loaded >= 0 && tapes[loaded].bpm) || S.bpm || 126;
+  const bpm = (loaded >= 0 && tapes[loaded].bpm) || S.bpm || 126; MUSIC.bpm = bpm;
   clearInterval(pulseTimer); clearInterval(vuTimer);
   if (!REDUCE) {
     pulseTimer = setInterval(() => { document.body.classList.add('pulse'); setTimeout(() => document.body.classList.remove('pulse'), 90); }, 60000 / bpm);
@@ -1062,6 +1307,7 @@ function onPlay() {
   }
 }
 function onStop() {
+  MUSIC.on = false;
   deck.classList.remove('playing'); npBtn.textContent = '▶';
   clearInterval(pulseTimer); clearInterval(vuTimer); document.body.classList.remove('pulse');
   $$('i', vu).forEach(b => b.style.height = '4px');
@@ -1090,19 +1336,23 @@ const TYPES = {club:'CLUB', popup:'POP-UP', radio:'RADIO', stream:'STREAM', fest
    slot, the event name, and the location under it. Tap a tile to watch.
    ===================================================================== */
 const thumbOf = u => u.replace(/\.[^.\/]+$/, '.thumb.jpg');
-const hlBtn = st => '<span class="hlslot">' + (st.length ? '<span class="hlb" aria-hidden="true"><span class="sc"><img src="' + esc(thumbOf(st[0])) + '" alt="" loading="lazy"></span><span class="hlt">HIGHLIGHTS<i>' + st.length + '</i></span></span>' : '') + '</span>';
+/* a story is a file path, or {src, link, label} when it carries a tappable link sticker */
+const srcOf = x => typeof x === 'string' ? x : (x && x.src) || '';
+const storiesOf = s => (s.stories || []).filter(x => srcOf(x));
 const placeOf = s => s.loc || s.venue || s.city || '';
 const showLabel = s => (s.tag || s.name) + (placeOf(s) ? ' — ' + placeOf(s) : '');
+/* one tile per night: rows on phones, square poster tiles on desktop (same markup, CSS decides).
+   Nights with stories get an Instagram-style highlight circle; the whole tile is tappable too. */
 const cardHTML = (s, n) => {
-  const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
-  const cover = g[0] || (st.length ? thumbOf(st[0]) : '');
-  const delay = ' style="animation-delay:' + Math.min(n, 12)*45 + 'ms"';
-  const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(showLabel(s)) + (st.length ? ', watch highlights' : ', view poster') + '"' : '';
-  return '<div class="card ' + (cover ? 'pic' + (g[0] ? '' : ' sb') : 'type') + '"' + act + delay + '>' +
-    (cover ? '<img src="' + esc(cover) + '" alt="" loading="lazy">' : SPARK) +
-    (!st.length && g.length ? '<span class="zoom">VIEW</span>' : '') +
-    '<div class="pd"><div class="big">' + String(s.d.getDate()).padStart(2,'0') + '</div><div class="mo">' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</div></div>' +
-    '<div class="ov">' + hlBtn(st) + '<b>' + esc(s.tag || s.name) + '</b><small class="tg">' + esc(placeOf(s)) + '</small></div></div>';
+  const g = s.gallery || [], st = storiesOf(s);
+  const cover = g[0] || (st.length ? thumbOf(srcOf(st[0])) : '');
+  const act = (st.length || g.length) ? ' role="button" tabindex="0" data-show="' + s.i + '" aria-label="' + esc(showLabel(s)) + (st.length ? ', watch ' + st.length + ' highlights' : ', view poster') + '"' : '';
+  return '<div class="show"' + act + ' style="animation-delay:' + Math.min(n, 12)*40 + 'ms">' +
+    '<div class="th' + (cover ? (g[0] ? '' : ' sb') : ' none') + '">' + (cover ? '<img src="' + esc(cover) + '" alt="" loading="lazy">' : SPARK) + '</div>' +
+    '<div class="dt"><b>' + String(s.d.getDate()).padStart(2,'0') + '</b><span>' + MON[s.d.getMonth()] + ' ' + s.d.getFullYear() + '</span></div>' +
+    '<div class="tx"><b>' + esc(s.tag || s.name) + '</b><small>' + esc(placeOf(s)) + (s.with ? ' · b2b ' + esc(s.with) : '') + '</small></div>' +
+    (st.length ? '<span class="hlr" aria-hidden="true"><span class="ring"><img src="' + esc(thumbOf(srcOf(st[0]))) + '" alt="" loading="lazy"></span><i>▶ ' + st.length + '</i></span>'
+               : g.length ? '<span class="vw">VIEW</span>' : '') + '</div>';
 };
 const tabs = $('#cityTabs'), subTabs = $('#subTabs'), subSum = $('#subSum'), cards = $('#cards');
 tabs.innerHTML = groups.map(([c,l],k) => '<button role="tab" aria-selected="' + (k===0) + '"' + (k===0 ? ' class="on"' : '') + ' data-k="' + k + '">' + esc(c.split(',')[0].toUpperCase()) + '<sup>' + l.length + '</sup></button>').join('');
@@ -1135,19 +1385,12 @@ function showCity(k) {
 tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCity(+b.dataset.k); });
 subTabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showSub(b.dataset.key); });
 const openShow = s => {
-  const g = s.gallery || [], st = (s.stories || []).filter(Boolean);
-  if (st.length) openStory([{title: showLabel(s), cover: thumbOf(st[0]), items: st, instagram: s.instagram || ''}], 0);
+  const g = s.gallery || [], st = storiesOf(s);
+  if (st.length) openStory([{title: showLabel(s), cover: thumbOf(srcOf(st[0])), items: st, instagram: s.instagram || ''}], 0);
   else if (g.length) openLB(g, 0);
 };
-cards.addEventListener('click', e => { const c = e.target.closest('.card[data-show]'); if (c) openShow(shows[+c.dataset.show]); });
-cards.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-show]')) { e.preventDefault(); openShow(shows[+e.target.dataset.show]); } });
-cards.addEventListener('pointermove', e => {
-  const c = e.target.closest('.card'); if (!c || REDUCE || e.pointerType !== 'mouse') return;
-  const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-  c.style.transform = 'rotateY(' + ((px - .5)*14).toFixed(1) + 'deg) rotateX(' + ((.5 - py)*14).toFixed(1) + 'deg) translateZ(10px)';
-  c.style.setProperty('--gx', (px*100).toFixed(0) + '%'); c.style.setProperty('--gy', (py*100).toFixed(0) + '%');
-});
-cards.addEventListener('pointerout', e => { const c = e.target.closest('.card'); if (c && !c.contains(e.relatedTarget)) c.style.transform = ''; });
+cards.addEventListener('click', e => { const c = e.target.closest('.show[data-show]'); if (c) openShow(shows[+c.dataset.show]); });
+cards.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.show[data-show]')) { e.preventDefault(); openShow(shows[+e.target.dataset.show]); } });
 showCity(0);
 
 /* ---------- about ---------- */
@@ -1172,25 +1415,47 @@ gal.addEventListener('click', e => { if (gd && gd.moved) return; const b = e.tar
    ===================================================================== */
 const story = $('#story'), stBars = $('#stBars'), stMedia = $('#stMedia');
 let SQ = [], sg = 0, si = 0, stDur = 5000, stRaf = 0, stPaused = false, stElapsed = 0, stLast = 0, stMuted = false, stToken = 0;
+/* Phone back-swipe / back button closes the story (or photo) and keeps you on the page,
+   instead of leaving the site: opening a viewer adds one history step, back removes it. */
+let histOpen = false;
+function pushView() { if (!histOpen) { history.pushState({shrnView: 1}, ''); histOpen = true; } }
+function popView() { if (histOpen) { histOpen = false; history.back(); } }
+addEventListener('popstate', () => {
+  if (!histOpen) return;
+  histOpen = false;
+  if (story.classList.contains('on')) closeStory(true);
+  if (lbEl && lbEl.classList.contains('on')) closeLBView(true);
+});
+let lbEl = null, closeLBView = () => {};
+let stAudio = null;
 function openStory(groups, g, start) {
   SQ = groups; sg = g; si = start || 0;
   if (widget) widget.pause();
   story.classList.add('on'); document.body.classList.add('modal');
+  pushView();
   showItem();
 }
 function stopVideo() {
   const v = $('video', stMedia);
   if (v) { v.pause(); v.src = ''; }
+  if (stAudio) { stAudio.pause(); stAudio = null; }
 }
-function closeStory() {
+function closeStory(fromBack) {
   story.classList.remove('on'); document.body.classList.remove('modal');
   cancelAnimationFrame(stRaf); stToken++;
   stopVideo(); stMedia.innerHTML = '';
+  if (fromBack !== true) popView();
 }
 function showItem() {
-  const grp = SQ[sg], src = grp.items[si], token = ++stToken;
+  const grp = SQ[sg], item = grp.items[si], src = srcOf(item), token = ++stToken;
   $('#stTitle').textContent = grp.title;
-  $('#stAv').src = grp.cover || grp.items.find(x => !isVid(x)) || 'assets/brand/shrn-icon.svg';
+  $('#stAv').src = grp.cover || 'assets/brand/shrn-icon.svg';
+  /* link sticker: tap to open the venue / promoter / ticket link for this story */
+  const lk = $('#stLink'), L = typeof item === 'object' && item.link;
+  lk.hidden = !L; if (L) { lk.href = L; lk.textContent = '🔗 ' + (item.label || L.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]);
+    /* at: [x%, y%] puts the tappable link right over the sticker printed in the clip; [w%, h%] in size makes it invisible */
+    const at = item.at || [50, 84]; lk.style.left = at[0] + '%'; lk.style.top = at[1] + '%';
+    lk.classList.toggle('over', !!item.size); if (item.size) { lk.style.width = item.size[0] + '%'; lk.style.height = item.size[1] + '%'; } else lk.style.width = lk.style.height = ''; }
   const ig = $('#stIg'); ig.hidden = !grp.instagram; if (grp.instagram) ig.href = grp.instagram;
   stBars.innerHTML = grp.items.map((_,k) => '<i><b style="width:' + (k < si ? 100 : 0) + '%"></b></i>').join('');
   $('#stPrevBtn').disabled = sg === 0 && si === 0;
@@ -1207,7 +1472,12 @@ function showItem() {
     $('#stMute').hidden = false; $('#stMute').textContent = stMuted ? '🔇' : '🔊';
   } else {
     const im = document.createElement('img'); im.src = src; im.alt = '';
-    stMedia.appendChild(im); stDur = 5000; $('#stMute').hidden = true;
+    stMedia.appendChild(im); stDur = (typeof item === 'object' && item.seconds ? item.seconds * 1000 : 5000); $('#stMute').hidden = !(typeof item === 'object' && item.music);
+  }
+  /* music bed for silent stories: {src, music:"assets/music/track.mp3", start: seconds} */
+  if (typeof item === 'object' && item.music) {
+    stAudio = new Audio(item.music); stAudio.loop = true; stAudio.muted = stMuted; stAudio.currentTime = item.start || 0;
+    stAudio.play().catch(() => {}); $('#stMute').textContent = stMuted ? '🔇' : '🔊';
   }
   stRaf = requestAnimationFrame(stTick);
 }
@@ -1224,7 +1494,7 @@ function stTick(now) {
 }
 function nextStory() { si++; if (si >= SQ[sg].items.length) { sg++; si = 0; } if (sg >= SQ.length) closeStory(); else showItem(); }
 function prevStory() { if (si > 0) si--; else if (sg > 0) { sg--; si = SQ[sg].items.length - 1; } showItem(); }
-function holdStory(on) { stPaused = on; const v = $('video', stMedia); if (v) on ? v.pause() : v.play().catch(() => {}); }
+function holdStory(on) { stPaused = on; const v = $('video', stMedia); if (v) on ? v.pause() : v.play().catch(() => {}); if (stAudio) on ? stAudio.pause() : stAudio.play().catch(() => {}); }
 [['#stPrev', prevStory], ['#stNext', nextStory]].forEach(([id, fn]) => {
   const b = $(id); let t0 = 0;
   b.addEventListener('pointerdown', () => { t0 = performance.now(); holdStory(true); });
@@ -1234,7 +1504,7 @@ function holdStory(on) { stPaused = on; const v = $('video', stMedia); if (v) on
 $('#stX').addEventListener('click', closeStory);
 $('#stPrevBtn').addEventListener('click', prevStory);
 $('#stNextBtn').addEventListener('click', nextStory);
-$('#stMute').addEventListener('click', () => { const v = $('video', stMedia); stMuted = v ? !v.muted : !stMuted; if (v) { v.muted = stMuted; if (v.paused) v.play().catch(() => {}); } $('#stMute').textContent = stMuted ? '🔇' : '🔊'; });
+$('#stMute').addEventListener('click', () => { const v = $('video', stMedia); stMuted = v ? !v.muted : !stMuted; if (v) { v.muted = stMuted; if (v.paused) v.play().catch(() => {}); } if (stAudio) { stAudio.muted = stMuted; stAudio.play().catch(() => {}); } $('#stMute').textContent = stMuted ? '🔇' : '🔊'; });
 story.addEventListener('click', e => { if (e.target === story) closeStory(); });
 
 /* ---------- booking ---------- */
@@ -1293,12 +1563,13 @@ listForm.addEventListener('submit', async e => {
 /* ---------- lightbox ---------- */
 const lb = $('#lb'), lbImg = $('#lbImg');
 let lbList = [], lbK = 0;
-function openLB(list, k) { lbList = list; lbK = k; lbImg.src = list[k]; lb.classList.add('on'); $('#lbP').style.display = $('#lbN').style.display = list.length > 1 ? '' : 'none'; }
+function openLB(list, k) { lbList = list; lbK = k; lbImg.src = list[k]; lb.classList.add('on'); pushView(); $('#lbP').style.display = $('#lbN').style.display = list.length > 1 ? '' : 'none'; }
 const lbGo = d => { lbK = (lbK + d + lbList.length) % lbList.length; lbImg.src = lbList[lbK]; };
-$('#lbX').addEventListener('click', () => lb.classList.remove('on'));
+const closeLB = fromBack => { lb.classList.remove('on'); if (fromBack !== true) popView(); }; lbEl = lb; closeLBView = closeLB;
+$('#lbX').addEventListener('click', closeLB);
 $('#lbP').addEventListener('click', () => lbGo(-1));
 $('#lbN').addEventListener('click', () => lbGo(1));
-lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('on'); });
+lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
 
 /* ---------- reveal, dock, nav tuck, scroll motion ---------- */
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); } }), {threshold:.1});
@@ -1349,7 +1620,7 @@ $('#egg').addEventListener('click', () => pad.classList.add('on'));
 let buf = '';
 addEventListener('keydown', e => {
   if (story.classList.contains('on')) { if (e.key === 'Escape') closeStory(); if (e.key === 'ArrowRight') nextStory(); if (e.key === 'ArrowLeft') prevStory(); return; }
-  if (lb.classList.contains('on')) { if (e.key === 'Escape') lb.classList.remove('on'); if (e.key === 'ArrowLeft') lbGo(-1); if (e.key === 'ArrowRight') lbGo(1); return; }
+  if (lb.classList.contains('on')) { if (e.key === 'Escape') closeLB(); if (e.key === 'ArrowLeft') lbGo(-1); if (e.key === 'ArrowRight') lbGo(1); return; }
   if (pad.classList.contains('on')) { if (e.key === 'Escape') pad.classList.remove('on'); const n = parseInt(e.key, 10); if (n >= 1 && n <= 8) hit(n-1); return; }
   const t = e.target;
   if ((t && t.closest && t.closest('input,textarea,select')) || !e.key || e.key.length !== 1) return;
@@ -1357,6 +1628,182 @@ addEventListener('keydown', e => {
   if (buf === '303') pad.classList.add('on');
 });
 pad.addEventListener('click', e => { if (e.target === pad) pad.classList.remove('on'); });
+
+/* =====================================================================
+   v2 EXTRAS — tape sound, socials, waves, EQ, strings, tab icon, eggs
+   ===================================================================== */
+
+/* ---------- tape load: rewind whir + static + the clunk of the cassette locking in (made in code, no file) ---------- */
+let TAC = null;
+function tapeSfx() {
+  try {
+    TAC = TAC || new (window.AudioContext || window.webkitAudioContext)();
+    if (TAC.state === 'suspended') TAC.resume();
+    const t = TAC.currentTime, sr = TAC.sampleRate, len = Math.floor(sr * 1.1), buf = TAC.createBuffer(1, len, sr), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const n = TAC.createBufferSource(); n.buffer = buf;
+    const bp = TAC.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 5;
+    bp.frequency.setValueAtTime(260, t); bp.frequency.exponentialRampToValueAtTime(4200, t + .8);
+    const lfo = TAC.createOscillator(), lg = TAC.createGain(); lfo.frequency.value = 21; lg.gain.value = 240; lfo.connect(lg); lg.connect(bp.frequency);
+    const g = TAC.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.2, t + .06); g.gain.setValueAtTime(.2, t + .7); g.gain.exponentialRampToValueAtTime(.001, t + 1);
+    n.connect(bp); bp.connect(g); g.connect(TAC.destination); n.start(t); n.stop(t + 1.05); lfo.start(t); lfo.stop(t + 1.05);
+    const o = TAC.createOscillator(), og = TAC.createGain(); o.type = 'square';
+    o.frequency.setValueAtTime(150, t + .72); o.frequency.exponentialRampToValueAtTime(48, t + .8);
+    og.gain.setValueAtTime(0, t + .72); og.gain.linearRampToValueAtTime(.22, t + .725); og.gain.exponentialRampToValueAtTime(.001, t + .83);
+    o.connect(og); og.connect(TAC.destination); o.start(t + .72); o.stop(t + .86);
+  } catch (_) {}
+}
+
+/* ---------- socials: side rail on desktop, icon row under MADISON, WI on phones ---------- */
+const socIcon = s => { const id = s.name.toLowerCase(); return document.getElementById('i-' + id) ? '<svg class="ico"><use href="#i-' + id + '"/></svg>' : esc(s.name[0]); };
+const socLinks = socials.map(s => '<a href="' + esc(s.url) + '" target="_blank" rel="noopener" aria-label="' + esc(s.name) + '" title="' + esc(s.name) + '">' + socIcon(s) + '</a>').join('');
+$('#rail').innerHTML = socLinks + '<span>FOLLOW</span>';
+$('#hsoc').innerHTML = socLinks;
+
+/* ---------- shared helpers for the reactive canvases ---------- */
+const ACID = '209,250,29';
+function fitCanvas(cv) {
+  const dpr = Math.min(2, devicePixelRatio || 1), ctx = cv.getContext('2d'), st = {w: 0, h: 0, ctx};
+  const r = () => { st.w = cv.clientWidth; st.h = cv.clientHeight; cv.width = Math.round(st.w * dpr); cv.height = Math.round(st.h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  r(); addEventListener('resize', r); return st;
+}
+function watchVisible(el) { const st = {v: false}; new IntersectionObserver(([e]) => st.v = e.isIntersecting).observe(el); return st; }
+function trackPointer(el) {
+  const P = {x: -1e4, y: -1e4, in: false, energy: 0}; let lx = null, ly = null;
+  const mv = e => { const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (lx !== null) P.energy = Math.min(1, P.energy + Math.hypot(x - lx, y - ly) / 60 + .01);
+    lx = x; ly = y; P.x = x; P.y = y; P.in = true; };
+  el.addEventListener('pointermove', mv, {passive: true}); el.addEventListener('pointerdown', mv, {passive: true});
+  el.addEventListener('pointerleave', () => { P.in = false; lx = ly = null; });
+  return P;
+}
+
+/* ---------- hero: three thin lines behind the logo that ripple where your pointer is ---------- */
+if (!REDUCE) (() => {
+  const hero = $('#top'), cv = $('#wave'), C = fitCanvas(cv), P = trackPointer(hero), V = watchVisible(hero);
+  const N = 160, amp = [new Float32Array(N), new Float32Array(N), new Float32Array(N)];
+  (function f(now) {
+    requestAnimationFrame(f); if (!V.v || document.hidden) return;
+    const {w, h, ctx} = C, t = now / 1000, sr = stage.getBoundingClientRect(), hr = hero.getBoundingClientRect();
+    const mid = sr.top - hr.top + sr.height * .62, b = beatAt(now);
+    ctx.clearRect(0, 0, w, h); P.energy *= .965;
+    for (let L = 0; L < 3; L++) {
+      const base = mid + L * Math.max(18, sr.height * .1), A = amp[L]; ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        const x = i / (N - 1) * w, dx = (x - P.x) / 110;
+        const near = P.in ? Math.exp(-dx * dx) * Math.max(0, 1 - Math.abs(P.y - base) / 260) : 0;
+        A[i] += (near * (12 + P.energy * 38) - A[i]) * .12;
+        let y = base + Math.sin(x * .011 + t * (1.1 + L * .3) + L) * (2.5 + L) + Math.sin((x - P.x) * .085 - t * 9) * A[i];
+        if (MUSIC.on) y += Math.sin(x * (.018 + L * .007) - t * 5.5) * (4 + 20 * b) * (.55 + .45 * Math.sin(x * .004 + L));
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(' + ACID + ',' + [.75, .38, .18][L] + ')'; ctx.lineWidth = [1.5, 1.1, 1][L];
+      ctx.shadowColor = 'rgba(' + ACID + ',.55)'; ctx.shadowBlur = L ? 0 : 8; ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+  })(performance.now());
+})();
+
+/* ---------- EQ bars above the tape deck: jump near your pointer, become the music meter while a tape plays ---------- */
+if (!REDUCE) (() => {
+  const box = $('#eq'), cv = $('canvas', box), C = fitCanvas(cv), P = trackPointer($('#tapes')), V = watchVisible(box);
+  const N = 48, hgt = new Float32Array(N), peak = new Float32Array(N);
+  (function f(now) {
+    requestAnimationFrame(f); if (!V.v || document.hidden) return;
+    const {w, h, ctx} = C, t = now / 1000, b = beatAt(now), br = box.getBoundingClientRect(), sr = $('#tapes').getBoundingClientRect();
+    const px = P.x - (br.left - sr.left), py = P.y - (br.top - sr.top);
+    ctx.clearRect(0, 0, w, h); P.energy *= .96;
+    const gap = 3, bw = (w - gap * (N - 1)) / N, maxH = h - 10;
+    for (let i = 0; i < N; i++) {
+      const x = i * (bw + gap), dx = (x + bw / 2 - px) / 60;
+      const near = P.in ? Math.exp(-dx * dx) * Math.max(0, 1 - Math.abs(py - h) / 420) * (.3 + P.energy * .7) : 0;
+      let target = .05 + .03 * Math.sin(t * 2 + i * .5) + near * .9;
+      if (MUSIC.on) { const fq = i / N; target = Math.max(target, (1 - fq) * .7 * (.35 + .65 * b) + .2 * Math.abs(Math.sin(t * (3 + fq * 9) + i)) * (1 - fq * .5) + near * .35); }
+      hgt[i] += (Math.min(1, target) - hgt[i]) * (target > hgt[i] ? .35 : .08);
+      peak[i] = Math.max(peak[i] - .006, hgt[i]);
+      const bh = Math.max(2, hgt[i] * maxH), seg = 5;
+      for (let yy = 0; yy < bh; yy += seg) { ctx.fillStyle = 'rgba(' + ACID + ',' + (.22 + .78 * yy / maxH).toFixed(3) + ')'; ctx.fillRect(x, h - yy - seg + 1, bw, seg - 1.5); }
+      ctx.fillStyle = 'rgb(' + ACID + ')'; ctx.fillRect(x, h - peak[i] * maxH - 6, bw, 2);
+    }
+  })(performance.now());
+})();
+
+/* ---------- plucky strings between sections: swipe across one and it twangs (pulses while a tape plays) ---------- */
+(() => {
+  const list = $$('.string').map(el => {
+    const cv = $('canvas', el), C = fitCanvas(cv), N = 120, S2 = {el, C, N, y: new Float32Array(N), v: new Float32Array(N), py: null, live: 0, vis: false};
+    new IntersectionObserver(([e]) => { S2.vis = e.isIntersecting; if (S2.vis) S2.live = 30; }).observe(el);
+    el.addEventListener('pointermove', e => {
+      const r = cv.getBoundingClientRect(), x = e.clientX - r.left, yy = e.clientY - r.top - r.height / 2, i = Math.round(x / r.width * (N - 1));
+      if (i > 0 && i < N - 1) {
+        if (S2.py !== null && Math.sign(S2.py) !== Math.sign(yy)) for (let k = -6; k <= 6; k++) { const j = i + k; if (j > 0 && j < N - 1) S2.v[j] += (yy - S2.py) * 1.3 * Math.exp(-k * k / 14); }
+        else if (Math.abs(yy) < 22) for (let k = -4; k <= 4; k++) { const j = i + k; if (j > 0 && j < N - 1) S2.y[j] += (yy - S2.y[j]) * .25 * Math.exp(-k * k / 8); }
+      }
+      S2.py = yy; S2.live = 120;
+    }, {passive: true});
+    el.addEventListener('pointerleave', () => { S2.py = null; });
+    return S2;
+  });
+  const draw = s => {
+    const {w, h, ctx} = s.C; ctx.clearRect(0, 0, w, h); ctx.beginPath();
+    for (let i = 0; i < s.N; i++) { const x = i / (s.N - 1) * w; i ? ctx.lineTo(x, h / 2 + s.y[i]) : ctx.moveTo(x, h / 2 + s.y[i]); }
+    ctx.strokeStyle = 'rgba(' + ACID + ',.75)'; ctx.lineWidth = 1.5; ctx.shadowColor = 'rgba(' + ACID + ',.6)'; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(' + ACID + ',.5)'; ctx.fillRect(0, h / 2 - 3, 2, 6); ctx.fillRect(w - 2, h / 2 - 3, 2, 6);
+  };
+  let tt = 0;
+  (function f(now) {
+    requestAnimationFrame(f); tt = now / 1000;
+    const b = beatAt(now);
+    for (const s of list) {
+      if (!s.vis) continue;
+      if (MUSIC.on && !REDUCE) { s.live = 30; for (let i = 1; i < s.N - 1; i++) s.v[i] += Math.sin(i / (s.N - 1) * Math.PI * 2) * b * .5 * Math.sin(tt * 3 + i * .05); }
+      if (s.live <= 0) continue;
+      for (let k = 0; k < 4; k++) for (let i = 1; i < s.N - 1; i++) { s.v[i] += (s.y[i - 1] + s.y[i + 1] - 2 * s.y[i]) * .5; s.v[i] *= .99; }
+      let e = 0; const lim = s.C.h / 2 - 3;
+      for (let i = 1; i < s.N - 1; i++) { s.y[i] = Math.max(-lim, Math.min(lim, s.y[i] + s.v[i] * .25)); e += Math.abs(s.y[i]) + Math.abs(s.v[i]); }
+      draw(s); if (e < .5 && !MUSIC.on) s.live--;
+    }
+  })(performance.now());
+})();
+
+/* ---------- tab icon: a black record with your $₹ icon; it spins only while a tape plays ---------- */
+(() => {
+  const icon = new Image(), c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d'); let a = 0, v = 0, last = performance.now(), lastSet = 0, still = false;
+  function draw() {
+    x.clearRect(0, 0, 64, 64);
+    x.beginPath(); x.arc(32, 32, 31.5, 0, Math.PI * 2); x.fillStyle = '#050505'; x.fill();
+    x.lineWidth = 4.5; x.strokeStyle = '#D1FA1D'; x.beginPath(); x.arc(32, 32, 29.2, 0, Math.PI * 2); x.stroke();
+    if (icon.naturalWidth) { const w = 38, h = w * icon.naturalHeight / icon.naturalWidth; x.save(); x.translate(32, 32); x.rotate(a); x.drawImage(icon, -w / 2, -h / 2, w, h); x.restore(); }
+    let link = document.querySelector('link[rel~="icon"]'); if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+    link.type = 'image/png'; link.href = c.toDataURL('image/png');
+  }
+  icon.onload = draw; icon.src = 'assets/brand/shrn-icon.svg';
+  setInterval(() => {
+    const now = performance.now(), dt = Math.min(.5, (now - last) / 1000); last = now;
+    v += ((MUSIC.on ? Math.PI * 2 / 1.8 : 0) - v) * Math.min(1, dt * 2.5);
+    if (v < .02 && !MUSIC.on) { if (!still) { a = 0; draw(); still = true; } return; }
+    still = false; a += v * dt; if (now - lastSet > 70) { lastSet = now; draw(); }
+  }, 80);
+})();
+
+/* ---------- easter eggs ---------- */
+/* 1) type "shrn" anywhere (not in a form) for bass dealer mode */
+(() => {
+  let buf = '';
+  addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input,textarea,select')) return;
+    buf = (buf + (e.key || '').toLowerCase()).slice(-4);
+    if (buf !== 'shrn') return;
+    buf = '';
+    const o = document.createElement('div'); o.className = 'bdm'; o.innerHTML = '<b>BASS DEALER MODE</b><span>need a bass dealer for the night? i got you.</span>';
+    document.body.appendChild(o); if (!REDUCE) o.classList.add('flash');
+    tapeSfx(); setTimeout(() => o.remove(), 2400);
+  });
+})();
+/* 2) a note for anyone reading the code */
+console.log('%c$H₹N', 'font:900 48px serif;color:#D1FA1D;background:#050505;padding:6px 18px');
+console.log('%cdigging through the code? respect. copying it? nah.\nthis site, its design and its logos are © $H₹N. all rights reserved.\nwant your own? book me instead → ' + (S.email || 'artist.shrn@gmail.com'), 'font:13px monospace;color:#9cbb15');
 </script>
 </body>
 </html>
