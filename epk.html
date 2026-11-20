@@ -158,17 +158,17 @@ $('nums').innerHTML = [
 $('facts').innerHTML = [
   ['BASED', 'Madison, WI'],
   ['SOUND', esc(S.genres)],
-  ['PLAYS', 'Clubs, warehouses, open decks, radio, pop-ups and private desi celebrations'],
+  ['PLAYS', 'Clubs, open decks, warehouses, radio, pop-ups and private desi celebrations'],
   ['NEXT UP', upcoming.length ? upcoming.slice(0, 2).map(s => esc(s.tag || s.name) + ' · ' + MON[s.d.getMonth()] + ' ' + s.d.getDate() + ' @ ' + esc(s.venue || s.name)).join('<br>') : 'Dates dropping soon'],
   ['BOOKING', '<a href="mailto:' + esc(S.email) + '">' + esc(S.email) + '</a>'],
 ].map(([k, v]) => '<dt>' + k + '</dt><dd>' + v + '</dd>').join('');
 
 /* Madison residencies, counted from the show list */
 const RES = [
-  ['Nattspil', 'Episode series', 'A running episode series at one of Madison\'s underground spots.'],
-  ['Liquid', 'Themed club nights', 'GTA Rave, Nostalgia Night, Thrillaween and more on Madison\'s biggest club stage.'],
-  ['Ruby', 'Host · Open Decks', 'Hosts Open Decks and the London Underground UKG nights at Ruby (Liquid).'],
-  ['Local Motive', 'Tech house b2bs', 'Tech house b2b sessions with Madison selectors.'],
+  ['Liquid', 'Themed club nights', 'Tech house, baile, hip-hop, dub and UKG across Liquid\'s themed nights: GTA Rave, Nostalgia Night, Thrillaween.'],
+  ['Ruby', 'Host · Open Decks', 'Hosts Open Decks and the London Underground nights. Techno, speed garage, UKG and bass.'],
+  ['Local Motive', 'House + disco', 'House and disco sessions, including b2bs with Madison selectors.'],
+  ['Nattspil', 'Episode series', 'Acid house, funky house, disco and the occasional rock curveball.'],
 ];
 $('res').innerHTML = RES.map(([n, role, txt]) => { const c = mad.filter(s => (s.loc || s.venue || s.name) === n || s.name === n).length;
   return '<div><b>' + n + '</b><em>' + role + (c ? ' · ' + c + (c === 1 ? ' night' : ' nights') : '') + '</em><p>' + txt + '</p></div>'; }).join('');

@@ -108,13 +108,13 @@ window.SITE = {
   ],
 
   /* ---------- bio ---------- */
-  bioShort: "$H₹N is a Madison, WI DJ playing high-energy, groove-heavy sets across tech house, bass house, UK garage and drum & bass, with desi roots running underneath. He's a regular across Madison's underground (Nattspil, Liquid, Ruby, Local Motive), hosts Open Decks at Ruby, and records his nights as the Archive Tapes series. Now building a collective around freestyle b2b sessions, livestreams and an online radio.",
+  bioShort: "$H₹N is a Madison, WI DJ who treats every booth like a lab. One week it's tech house, baile and UKG at Liquid; the next it's techno and speed garage at Ruby, where he hosts Open Decks; then house and disco at Local Motive, or acid house, funky house and the odd rock edit at Nattspil. Desi roots, no fixed lane, always testing a new idea on the floor, and every night ends up on his Archive Tapes.",
   bioLong: [
-    "$H₹N plays club music with a desi heartbeat: the groove of tech house, the weight of bass music, and the swing of UK garage, mixed with an ear for the sounds he grew up on.",
-    "Madison is home base. He's played the Nattspil episode series, Liquid's themed nights (GTA Rave, Nostalgia Night, Thrillaween) and tech-house b2bs at Local Motive. He hosts Open Decks at Ruby and its London Underground UKG nights. Before Madison he built his name in LA: Phase 1 afters in DTLA, the YOUR SHOT 2025 DJ competition, and sunset pop-ups in Malibu and Topanga. He's also played pool parties at Viajero in South Beach, camp sets at Elements Festival, a live set on Birdcage Radio (Utrecht) and HÖR's Maximum Heat contest.",
-    "Every night goes into the Archive Tapes, his series of raw live recordings. Next up is a collective of DJs doing freestyle b2b sessions for YouTube and livestream, growing into an online radio. Plays clubs, warehouses and private celebrations.",
+    "$H₹N doesn't pick a lane, he picks a room. A Madison, WI DJ with desi roots and a restless ear, he builds every set around the crowd in front of him and whatever idea he can't stop thinking about that week: a baile edit dropped into tech house, a speed garage run that tips over into techno, a rock record that somehow makes sense in an acid house set.",
+    "You'll find him all over Madison's underground. At Liquid it's tech house, baile, hip-hop, dub and UKG. At Ruby, where he hosts Open Decks and the London Underground nights, it's techno, speed garage, UKG and bass. Local Motive gets house and disco; Nattspil's episode series gets acid house, funky house, disco and the occasional rock curveball. Before Madison he cut his teeth in LA (Phase 1 afters in DTLA, the YOUR SHOT 2025 DJ competition, sunset pop-ups in Malibu and Topanga) and played pool parties in South Beach, camp sets at Elements Festival, a live set on Birdcage Radio in Utrecht and HÖR's Maximum Heat contest.",
+    "Every night lands in the Archive Tapes, his series of raw live recordings, happy accidents included. Next up is a collective built on freestyle b2b sessions (no plan, just selectors reading each other live), filmed for YouTube and streamed, and growing into an online radio. If it hasn't been tried on a dancefloor yet, he's probably already working on it.",
   ],
-  genres: "Tech House · Bass House · UKG · DnB · Hip-Hop",
+  genres: "Tech House · UKG · Techno · Speed Garage · Baile · House · Disco · Acid House",
 
   /* ---------- press photos (shown on About + downloadable in the EPK) ---------- */
   press: [
