@@ -58,13 +58,13 @@
   const cv = panel.querySelector('#arCv'), g = cv.getContext('2d'), msg = panel.querySelector('#arMsg');
   const icon = new Image(); icon.src = 'assets/brand/shrn-icon.svg';
 
-  let T = 20, W = 0, H = 0, grid, dots, player, foes, score, lives, level, state = 'idle', frightT = 0, raf = 0, last = 0, startedAt = 0, open = false;
+  let safeT = 0, T = 20, W = 0, H = 0, grid, dots, player, foes, score, lives, level, state = 'idle', frightT = 0, raf = 0, last = 0, startedAt = 0, open = false;
 
   const tileAt = (x, y) => { if (y < 0 || y >= ROWS) return '#'; x = (x + COLS) % COLS; return grid[y][x]; };
   const walk = (x, y, foe) => { const c = tileAt(x, y); return c !== '#' && (foe || c !== '-'); };
 
   function reset(full) {
-    if (full) { score = 0; lives = 3; level = 1; }
+    if (full) { score = 0; lives = 5; level = 1; }
     grid = MAZE.map(r => r.split(''));
     dots = 0;
     const homes = [];
@@ -74,12 +74,12 @@
       if (c === 'E') { homes.push([x, y]); grid[y][x] = ' '; }
     }));
     const order = [[9, 7], [8, 9], [9, 9], [10, 9]];
-    foes = order.map(([x, y], i) => ({x, y, hx: x, hy: y, d: [0, -1], p: 0, mode: i === 0 ? 'chase' : 'wait', wait: i * 2.2, kind: i, dead: 0}));
+    foes = order.map(([x, y], i) => ({x, y, hx: x, hy: y, d: [0, -1], p: 0, mode: i === 0 ? 'chase' : 'wait', wait: i * 5, kind: i, dead: 0}));
     frightT = 0;
   }
   function placeAfterHit() {
     player.x = 9; player.y = 15; player.d = [0, 0]; player.want = [0, 0]; player.p = 0;
-    foes.forEach((f, i) => { const o = [[9, 7], [8, 9], [9, 9], [10, 9]][i]; f.x = o[0]; f.y = o[1]; f.p = 0; f.d = [0, -1]; f.mode = i === 0 ? 'chase' : 'wait'; f.wait = i * 2.2; f.dead = 0; });
+    foes.forEach((f, i) => { const o = [[9, 7], [8, 9], [9, 9], [10, 9]][i]; f.x = o[0]; f.y = o[1]; f.p = 0; f.d = [0, -1]; f.mode = i === 0 ? 'chase' : 'wait'; f.wait = 2 + i * 5; f.dead = 0; });
     frightT = 0;
   }
 
@@ -111,23 +111,23 @@
     const p = player;
     if (f.dead) return [9, 7];
     if (f.kind === 0) return [p.x, p.y];
-    if (f.kind === 1) return [p.x + p.d[0] * 4, p.y + p.d[1] * 4];
-    if (f.kind === 2) return Math.hypot(f.x - p.x, f.y - p.y) > 6 ? [p.x, p.y] : [1, 19];
-    return [(p.x + (Date.now() >> 11) % 7) % COLS, p.y];
+    return null;   /* the others wander */
   }
   function chooseFoeDir(f) {
     if (f.dead && f.x === 9 && f.y === 7) { f.dead = 0; f.mode = 'chase'; }
     const opts = Object.values(DIRS).filter(([dx, dy]) => !(dx === -f.d[0] && dy === -f.d[1]) && walk(f.x + dx, f.y + dy, true) && !(tileAt(f.x + dx, f.y + dy) === '-' && dy > 0 && !f.dead));
     if (!opts.length) { f.d = [-f.d[0], -f.d[1]]; return; }
     if (frightT > 0 && !f.dead) { f.d = opts[Math.floor(Math.random() * opts.length)]; return; }
-    const [tx, ty] = targetFor(f);
+    const tg = targetFor(f);
+    if (!tg || (f.kind === 0 && Math.random() < .3)) { f.d = opts[Math.floor(Math.random() * opts.length)]; return; }
+    const [tx, ty] = tg;
     opts.sort((a, b) => Math.hypot(f.x + a[0] - tx, f.y + a[1] - ty) - Math.hypot(f.x + b[0] - tx, f.y + b[1] - ty));
     f.d = opts[0];
   }
   function eat(x, y) {
     const c = grid[y][x];
     if (c === '.') { grid[y][x] = ' '; dots--; score += 10; if (score % 50 === 0) blip(900, 1200, .05, 'square', .025); }
-    if (c === 'o') { grid[y][x] = ' '; dots--; score += 50; frightT = Math.max(3.5, 8 - level * .8); blip(200, 1400, .35, 'sawtooth', .05); foes.forEach(f => { if (!f.dead && f.mode !== 'wait') f.d = [-f.d[0], -f.d[1]]; }); }
+    if (c === 'o') { grid[y][x] = ' '; dots--; score += 50; frightT = Math.max(7, 11 - level * .5); blip(200, 1400, .35, 'sawtooth', .05); foes.forEach(f => { if (!f.dead && f.mode !== 'wait') f.d = [-f.d[0], -f.d[1]]; }); }
     if (dots <= 0) { level++; state = 'clear'; showMsg('LEVEL ' + (level - 1) + ' CLEARED', 'tap / any key for level ' + level); blip(400, 1600, .5, 'triangle', .06); }
     hud();
   }
@@ -135,24 +135,27 @@
   /* ---------- loop ---------- */
   function update(dt) {
     const tempo = BPM() / 120;
-    const ps = 6.2 * (.95 + .05 * tempo);
+    const ps = 4.4;
     if (player.d[0] || player.d[1] || player.want[0] || player.want[1]) {
       if (!player.d[0] && !player.d[1]) choosePlayerDir(player);
       if ((player.want[0] === -player.d[0] && player.want[1] === -player.d[1]) && (player.d[0] || player.d[1])) {
         player.x = (player.x + player.d[0] + COLS) % COLS; player.y += player.d[1]; player.p = 1 - player.p; player.d = player.want.slice();
       }
+      const w = player.want, dd = player.d;
+      if ((w[0] || w[1]) && (w[0] !== dd[0] || w[1] !== dd[1]) && !(w[0] === -dd[0] && w[1] === -dd[1]) && player.p < .35 && walk(player.x + w[0], player.y + w[1])) { player.p = 0; player.d = w.slice(); }
       stepEntity(player, ps, dt, false);
     }
     player.a += dt * (player.d[0] || player.d[1] ? 9 : 2);
     if (frightT > 0) frightT = Math.max(0, frightT - dt);
-    const fs = (4.6 + level * .35) * (.9 + .1 * tempo);
+    if (safeT > 0) safeT = Math.max(0, safeT - dt);
+    const fs = Math.min(3.6, 2.5 + level * .2);
     for (const f of foes) {
       if (f.mode === 'wait') { f.wait -= dt; if (f.wait <= 0) { f.mode = 'chase'; f.x = 9; f.y = 7; f.p = 0; f.d = [-1, 0]; } continue; }
-      stepEntity(f, f.dead ? 11 : frightT > 0 ? 3.2 : fs, dt, true);
+      stepEntity(f, f.dead ? 8 : frightT > 0 ? 1.8 : fs, dt, true);
       const fx = f.x + f.d[0] * f.p, fy = f.y + f.d[1] * f.p, px = player.x + player.d[0] * player.p, py = player.y + player.d[1] * player.p;
-      if (!f.dead && Math.abs(fx - px) + Math.abs(fy - py) < .7) {
+      if (!f.dead && safeT <= 0 && Math.abs(fx - px) + Math.abs(fy - py) < .55) {
         if (frightT > 0) { f.dead = 1; score += 200; blip(1200, 80, .4, 'sawtooth', .06); hud(); }
-        else { lives--; blip(600, 40, .8, 'triangle', .07); hud(); if (lives <= 0) { state = 'over'; const b = Math.max(best(), score); saveBest(b); hud(); showMsg('GAME OVER', 'score ' + score + ' · tap / any key to run it back'); } else { placeAfterHit(); state = 'ready'; showMsg('OUCH', 'tap / any key to keep going'); } return; }
+        else { lives--; blip(600, 40, .8, 'triangle', .07); hud(); if (lives <= 0) { state = 'over'; const b = Math.max(best(), score); saveBest(b); hud(); showMsg('GAME OVER', 'score ' + score + ' · tap / any key to run it back'); } else { placeAfterHit(); safeT = 2; state = 'ready'; showMsg('OUCH', 'tap / any key to keep going'); } return; }
       }
     }
   }
@@ -196,6 +199,7 @@
     }
     /* player: the spinning $H₹N record */
     const px = (player.x + player.d[0] * player.p) * T + T / 2, py = (player.y + player.d[1] * player.p) * T + T / 2, r = T * .46;
+    if (safeT > 0 && Math.floor(now / 120) % 2) return;
     g.beginPath(); g.arc(px, py, r, 0, 7); g.fillStyle = '#050505'; g.fill(); g.lineWidth = Math.max(1.5, T * .1); g.strokeStyle = ACID; g.stroke();
     if (icon.naturalWidth) { const w = r * 1.35, h = w * icon.naturalHeight / icon.naturalWidth; g.save(); g.translate(px, py); g.rotate(player.a); g.drawImage(icon, -w / 2, -h / 2, w, h); g.restore(); }
   }
@@ -247,7 +251,7 @@
     open = true; panel.classList.add('on'); panel.setAttribute('aria-hidden', 'false'); document.body.classList.add('arcade-on');
     dispatchEvent(new CustomEvent('arcade', {detail: {open: true}}));
     const np = document.getElementById('npTitle'); panel.querySelector('#arNow').textContent = (typeof MUSIC !== 'undefined' && MUSIC.on && np && np.textContent && np.textContent !== '—') ? '▶ ' + np.textContent : '— no tape playing · load one for the full vibe —';
-    requestAnimationFrame(() => { size(); if (state === 'idle') { reset(true); hud(); showMsg('CRATE CHASE', 'collect every ✦ · grab a cassette to flip the chase · tap or press any arrow to start'); } last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); });
+    requestAnimationFrame(() => { size(); if (state === 'idle') { reset(true); hud(); showMsg('CRATE CHASE', 'collect every ✦ · grab a cassette to flip the chase · 5 lives · tap or press any arrow to start'); } last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); });
   }
   function close() {
     if (!open) return;
